@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd 
+                        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+
+  <mvc:resources location="/images/" mapping="/images/**" />
+  <mvc:resources location="/assets/" mapping="/assets/**" />
+
+<mvc:annotation-driven />
+
+<!--  configuration for handling browser back button  -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*"/>
+            <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+                <property name="cacheSeconds" value="0"/>
+                <property name="useExpiresHeader" value="true"/>
+                <property name="useCacheControlHeader" value="true"/>
+                <property name="useCacheControlNoStore" value="true"/>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+<context:component-scan base-package="cl.rticket" />
+
+
+<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+	<property name="basename" value="jdbc" />
+</bean>
+
+  <bean id="templateResolver"
+        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+    <property name="prefix" value="/WEB-INF/templates/" />
+    <property name="suffix" value=".html" />
+    
+    <property name="templateMode" value="HTML5" />
+    <!-- Template cache is true by default. Set to false if you want -->
+    <!-- templates to be automatically updated when modified.        -->
+    <property name="cacheable" value="true" />
+    <property name="characterEncoding" value="UTF-8" />
+     
+  </bean>
+
+  <bean id="templateEngine"
+        class="org.thymeleaf.spring4.SpringTemplateEngine">
+    <property name="templateResolver" ref="templateResolver" />
+    <!-- These lines add the dialect to Thymeleaf -->
+    <!-- 
+    <property name="additionalDialects">
+      <set>
+      <bean class="nz.net.ultraq.thymeleaf.LayoutDialect"/>
+      </set>
+    </property>
+     -->
+  </bean>
+   
+  <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+    <property name="templateEngine" ref="templateEngine" />
+    <property name="viewNames" value="*" />
+    <property name="order" value="1" />
+  </bean>   
+  
+  <!--  
+	<jee:jndi-lookup id="dataSource"
+	   jndi-name="jdbc/Aplicacion"
+	   expected-type="javax.sql.DataSource" />
+  -->
+<!--  
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="cl.rticket.model"/>
+		
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	 
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="cl.rticket.mappers" />
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+-->	
+
+ <!-- Mappers 
+    <bean id="loginMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cl.demre.aplicacion.mappers.LoginMapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+     <bean id="actaPSUMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cl.demre.aplicacion.mappers.ActaPSUMapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+-->
+  <!--  JASPER REPORT
+  	<bean class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="location" value="/WEB-INF/config/jasper-view.xml"/>
+        <property name="order" value="0"/>
+    </bean> 
+    -->
+     <!-- ======================================================================================== -->
+     <!--  SHIRO CONFIGURACION  -->
+     <!-- ======================================================================================== -->
+   
+    <!-- Caching  
+     <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"> </bean>
+
+    <bean id="realm" class="cl.demre.aplicacion.utils.AccesoRealm">  
+         <property name="credentialsMatcher" ref="credMatcher"></property>     
+    </bean>
+    <bean id="credMatcher" class="org.apache.shiro.authc.credential.Sha256CredentialsMatcher"/>
+    
+   
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="realm"/>    
+        <property name="cacheManager" ref="cacheManager"/>  
+      
+    </bean>
+   
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>   
+        <property name="loginUrl" value="/" /> 
+     
+        <property name="successUrl" value="/index.html" />
+        
+        <property name="filterChainDefinitions">
+            <value>
+                  /assets/** = anon
+                  /acceso = anon                  
+                    /** = authc       
+            </value>
+        </property>
+       
+    </bean>
+-->
+    <!-- Spring Integration 
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+    
+   
+    <bean id="annotationProxy"
+        class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+        depends-on="lifecycleBeanPostProcessor" >
+           <property name="proxyTargetClass" value="true" />
+     </bean>
+    
+     <bean
+        class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+            <property name="securityManager" ref="securityManager" />
+     </bean>
+    -->
+    
+<!--  FIN SHIRO CONFIGURACION ================================================================================ --> 
+ <bean id="applicationContextProvder"
+                        class="cl.rticket.utils.ApplicationContextProvider"/>
+	
+</beans>
