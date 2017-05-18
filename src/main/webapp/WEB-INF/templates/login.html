@@ -44,7 +44,7 @@
 		</div>
 		
 		<div class="login-box center-block">
-				<form action="#"   class="form-horizontal" method="POST">
+				<form action="#"  th:action="@{/acceso}"   th:object="${usuario}"  class="form-horizontal" method="POST">
 				<div  th:if="${error_message != null}" >
 		      		<div class="alert alert-danger " th:text="${error_message}">
 						Error general																	
@@ -54,7 +54,7 @@
 					<div class="form-group">						
 						<div class="col-sm-12">
 							<div class="input-group">								
-								<input type="text" name="user"  maxlength="12"   id="user" class="form-control" placeholder="USUARIO"/>
+								<input type="text" th:field="*{username}" maxlength="12"   id="user" class="form-control" placeholder="USUARIO"/>
 								<span class="input-group-addon"><i class="fa fa-user"></i></span> 
 						    </div>							
 						</div>
@@ -64,7 +64,7 @@
 						<div class="col-sm-12">
 							<div class="input-group">
 								
-								<input type="password" name="clave"   maxlength="12"  id="clave" class="form-control" placeholder="PASSWORD"/>
+								<input type="password" th:field="*{password}"   maxlength="12"  id="clave" class="form-control" placeholder="PASSWORD"/>
 								 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
 							</div>
 							

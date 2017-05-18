@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cl.rticket.mappers.LoginMapper">
+
+<select id="obtenerUsuario" resultType="Usuario" parameterType="String">
+   select usr_username username,
+          usr_password password,
+          usr_rut rut,
+          usr_dv  dv,
+          usr_nombre nombre,
+          usr_apellidos apellidos
+    from usuario where usr_username = #{username}
+</select>
+
+</mapper>
+
+ 

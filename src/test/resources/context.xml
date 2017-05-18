@@ -1,14 +1,14 @@
 <Context antiJARLocking="true" path="/rticket">
  
-  <!--  
-     <Resource name="jdbc/Aplicacion" auth="Container" type="javax.sql.DataSource"
-              username="prodemr" password="demre2014"
-              url="jdbc:oracle:thin:@//oracle11gdesa.uchile.cl:1521/demre"
-              driverClassName="oracle.jdbc.driver.OracleDriver"
+
+     <Resource name="jdbc/RTicket" auth="Container" type="javax.sql.DataSource"
+              username="" password=""
+              url="jdbc:mysql://IP_SERVIDOR/NOMBRE_BD"
+              driverClassName="com.mysql.jdbc.Driver"
               initialSize="5" maxWait="5000"
               maxActive="10" maxIdle="8"
-              validationQuery="select 1 from dual" />
-  -->             
+      />
+             
 
     
 

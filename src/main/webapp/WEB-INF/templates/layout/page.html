@@ -41,7 +41,9 @@
 							<div class="logged-user">
 								<div class="btn-group">
 									<a href="#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">										
-										<i class="fa fa-user" aria-hidden="true"></i><span class="name">USUARIO</span> <span class="caret"></span>
+										<i class="fa fa-user" aria-hidden="true"></i>
+										    <span class="name" th:text="${session.usuario.nombre}+' '+${session.usuario.apellidos}">USUARIO</span> 
+										    <span class="caret"></span>
 									</a>
 									<ul class="dropdown-menu" role="menu">										
 										<li>
@@ -97,10 +99,30 @@
 							<ul class="sub-menu">
 								<li >
 									<a href="#" >
-									   <span class="text">Item 1</span></a>
-									
-								</li>
-								
+									   <span class="text">Entradas</span>
+									 </a>									
+								</li>								
+							</ul>
+							<ul class="sub-menu">
+								<li >
+									<a href="#" >
+									   <span class="text">Usuarios</span>
+									 </a>									
+								</li>								
+							</ul>
+							<ul class="sub-menu">
+								<li >
+									<a href="#" >
+									   <span class="text">Partidos</span>
+									 </a>									
+								</li>								
+							</ul>
+							<ul class="sub-menu">
+								<li >
+									<a href="#" >
+									   <span class="text">Sectores</span>
+									 </a>									
+								</li>								
 							</ul>
 						</li>
 					</ul>

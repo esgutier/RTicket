@@ -68,12 +68,12 @@
     <property name="order" value="1" />
   </bean>   
   
-  <!--  
+  
 	<jee:jndi-lookup id="dataSource"
-	   jndi-name="jdbc/Aplicacion"
+	   jndi-name="jdbc/RTicket"
 	   expected-type="javax.sql.DataSource" />
-  -->
-<!--  
+ 
+
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="typeAliasesPackage" value="cl.rticket.model"/>
@@ -93,13 +93,14 @@
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
--->	
 
- <!-- Mappers 
+
+ <!-- Mappers -->
     <bean id="loginMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="cl.demre.aplicacion.mappers.LoginMapper" />
+        <property name="mapperInterface" value="cl.rticket.mappers.LoginMapper" />
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
     </bean>
+ <!-- 
      <bean id="actaPSUMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="cl.demre.aplicacion.mappers.ActaPSUMapper" />
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
@@ -115,15 +116,15 @@
      <!--  SHIRO CONFIGURACION  -->
      <!-- ======================================================================================== -->
    
-    <!-- Caching  
+    <!-- Caching  -->
      <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"> </bean>
 
-    <bean id="realm" class="cl.demre.aplicacion.utils.AccesoRealm">  
+    <bean id="realm" class="cl.rticket.utils.AccesoRealm">  
          <property name="credentialsMatcher" ref="credMatcher"></property>     
     </bean>
-    <bean id="credMatcher" class="org.apache.shiro.authc.credential.Sha256CredentialsMatcher"/>
-    
+    <bean id="credMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher"/>
    
+   <!--  Md5CredentialsMatcher  Sha256CredentialsMatcher-->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="realm"/>    
         <property name="cacheManager" ref="cacheManager"/>  
@@ -145,8 +146,8 @@
         </property>
        
     </bean>
--->
-    <!-- Spring Integration 
+
+    <!-- Spring Integration  -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
     
    
@@ -160,7 +161,7 @@
         class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
             <property name="securityManager" ref="securityManager" />
      </bean>
-    -->
+   
     
 <!--  FIN SHIRO CONFIGURACION ================================================================================ --> 
  <bean id="applicationContextProvder"

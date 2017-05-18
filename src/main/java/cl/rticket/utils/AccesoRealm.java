@@ -1,10 +1,17 @@
 package cl.rticket.utils;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+
+import cl.rticket.model.Usuario;
+import cl.rticket.services.LoginService;
 
 public class AccesoRealm extends AuthorizingRealm {
 	
@@ -30,22 +37,20 @@ public class AccesoRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken token) {
-		/*ApplicationContextProvider appContext = new ApplicationContextProvider();
+		ApplicationContextProvider appContext = new ApplicationContextProvider();
 		LoginService service = appContext.getApplicationContext().getBean("loginService", LoginService.class);		
 		UsernamePasswordToken upToken = (UsernamePasswordToken) token;
-        Usuario usuario = service.obtenerDatosUsuario(upToken.getUsername());
-		//String password = service.obtenerClave(upToken.getUsername(),1);
+        Usuario usuario = service.obtenerUsuario(upToken.getUsername());
+		
         String password = "";
         if(usuario !=null){
-            Subject subject = SecurityUtils.getSubject();
-            //subject.getSession().setAttribute("username", upToken.getUsername());
-            password = usuario.getPassword();
-           
-            usuario.setUsuario(upToken.getUsername());
+            Subject subject = SecurityUtils.getSubject();            
+            password = usuario.getPassword();          
+            usuario.setUsername(upToken.getUsername());
             subject.getSession().setAttribute("usuario", usuario);
         }
 		return new SimpleAuthenticationInfo(upToken.getUsername(),
-				password, getName());*/
-		return null;
+				password, getName());
+		
 	}
 }
