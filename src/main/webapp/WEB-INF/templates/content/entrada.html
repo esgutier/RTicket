@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+        $(document).ready(function (){	
+        	
+        	$("#selectIdPartido").change(function(){
+        		document.forms[0].action = "carga-entradas-partido";
+        		document.forms[0].submit();
+        	});
+        })
+    </script>
+  
+  
+    <h1>Ingreso de Entrada a Partidos</h1>
+    <hr/>
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Entrada</h3>
+		     </div>
+			 <div class="widget-content">
+			 <form action="#" th:action="@{/insertar-entrada}"  th:object="${entrada}" method="POST">
+			   <div class="form-horizontal">	
+				     <div  th:if="${error != null}" >
+			      		<div class="alert alert-danger " th:text="${error}">
+							Aqui van los mensajes de error																	
+				  		</div>
+					 </div>	
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Partido</label>
+							<div class="col-md-10">
+								<select th:field="*{idPartido}"   class="form-control" id="selectIdPartido">
+								    <option value="0" >Seleccione...</option>	
+								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}" >partido</option>													
+								</select>
+							</div>
+					 </div>
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Sector</label>
+							<div class="col-md-10">
+								<select th:field="*{idSector}"  class="form-control">
+								    <option value="0" >Seleccione...</option>	
+								    <option th:each="sector : ${sectores}" th:value="${sector.idSector}" th:text="${sector.descripcion}" >partido</option>													
+								</select>
+							</div>
+					 </div>
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Valor</label>
+							<div class="col-md-2">
+							  <div class="input-group">
+							     <span class="input-group-addon">$</span>
+								 <input th:field="*{precio}" pattern="[0-9]*" maxlength="4" type="text" class="form-control" />
+							  </div>
+							</div>
+					 </div>
+					 <div class="form-group">
+						    <label class="col-md-2 control-label"></label>
+							<div class="col-md-2">
+							   <button type="submit" class="btn btn-custom-primary"><i class="fa fa-plus" aria-hidden="true"></i>Agregar</button>
+							</div>
+					 </div>
+					 
+					 <div class="row">	
+					     <div class="col-md-2">	</div>
+					     <div class="col-md-8">				 
+						 <table class="table table-bordered">
+								<thead>
+									<tr>
+									  <th>Partido</th>
+									  <th>Sector</th>
+									  <th>Precio</th>								  
+									  <th>Eliminar</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="ent : ${entradas}">
+										<td th:text="${ent.descPartido}">1</td>
+										<td th:text="${ent.descSector}">xxx</td>
+										<td th:text="${ent.precio}">xxx</td>									
+										<td><a href="#" th:href="@{/eliminar-entrada(idEntrada=${ent.idEntrada},idPartido=${ent.idPartido})}"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+									</tr>											
+								</tbody>
+						   </table>
+						   </div>
+						   <div class="col-md-2">	</div>
+					   </div>
+				</div>
+				</form>
+			 </div>
+	   </div>
+          
+  </div>
+ </html>

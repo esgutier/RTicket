@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cl.rticket.mappers.ItemMapper">
+
+<select id="obtenerPartidos" resultType="Partido" >
+   select par_id idPartido,
+          CONCAT (par_desc, ' ',DATE_FORMAT(par_fecha , '%d/%m/%Y')) descripcion         
+    from partido
+</select>
+
+<select id="obtenerSectores" resultType="Sector" >
+   select sec_id idSector,
+          sec_desc descripcion
+    from sector
+</select>
+
+
+<select id="obtenerEntradas" resultType="Entrada" parameterType="int">
+   select  a.ent_id idEntrada, a.par_id idPartido , a.ent_precio precio ,
+           p.par_desc descPartido, s.sec_desc descSector
+          
+   from entrada a, partido p, sector s
+   where
+	   a.par_id = #{idPartido} and
+	   a.sec_id = s.sec_id and
+	   a.par_id = p.par_id
+</select>
+
+<insert id="insertarEntrada" parameterType="Entrada">
+   insert into entrada (ent_id, sec_id, par_id, ent_precio, ent_fecha_creacion)
+   values 
+       (NULL, #{idSector}, #{idPartido}, #{precio},NOW())
+</insert>
+
+<delete id="eliminarEntrada" parameterType="int">
+  delete from entrada where ent_id = #{idEntrada}
+</delete>
+</mapper>

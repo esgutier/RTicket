@@ -100,12 +100,12 @@
         <property name="mapperInterface" value="cl.rticket.mappers.LoginMapper" />
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
     </bean>
- <!-- 
-     <bean id="actaPSUMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="cl.demre.aplicacion.mappers.ActaPSUMapper" />
+  
+     <bean id="itemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cl.rticket.mappers.ItemMapper" />
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
     </bean>
--->
+
   <!--  JASPER REPORT
   	<bean class="org.springframework.web.servlet.view.XmlViewResolver">
         <property name="location" value="/WEB-INF/config/jasper-view.xml"/>

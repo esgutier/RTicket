@@ -89,13 +89,13 @@ CREATE TABLE partido (
   PRIMARY KEY  (par_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-insert into partido values(1,'BARCELONA F.C','05-10-2017');
-insert into partido values(2,'JUVENTUS','05-11-2017');
-insert into partido values(3,'ARSENAL','10-11-2017');
+insert into partido values(1,'BARCELONA F.C',STR_TO_DATE('13-06-2017', '%d-%m-%Y'));
+insert into partido values(2,'JUVENTUS',STR_TO_DATE('22-06-2017', '%d-%m-%Y'));
+insert into partido values(3,'ARSENAL',STR_TO_DATE('13-10-2017', '%d-%m-%Y'));
 
 
 CREATE TABLE entrada (
-  ent_id int(3) NOT NULL,
+  ent_id int  NOT NULL AUTO_INCREMENT,
   sec_id int(3) NOT NULL,
   par_id int(3) NOT NULL,
   ent_precio int(6) NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE entrada (
 
 
 CREATE TABLE compra (
-  com_id int NOT NULL,
+  com_id int  NOT NULL AUTO_INCREMENT,
   ent_id int(3) NOT NULL,
   hin_rut int(10) NOT NULL,
   usr_username varchar(20) NOT NULL,

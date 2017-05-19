@@ -2,12 +2,12 @@
  
 
      <Resource name="jdbc/RTicket" auth="Container" type="javax.sql.DataSource"
-              username="" password=""
-              url="jdbc:mysql://IP_SERVIDOR/NOMBRE_BD"
+              username="admision" password="admision2015"
+              url="jdbc:mysql://172.16.187.237/cas"
               driverClassName="com.mysql.jdbc.Driver"
               initialSize="5" maxWait="5000"
               maxActive="10" maxIdle="8"
-      />
+               />
              
 
     
