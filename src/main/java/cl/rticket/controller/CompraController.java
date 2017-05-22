@@ -1,0 +1,51 @@
+package cl.rticket.controller;
+
+import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import cl.rticket.model.Compra;
+import cl.rticket.model.Usuario;
+import cl.rticket.services.ItemService;
+
+@Controller
+public class CompraController {
+
+	@Autowired
+	ItemService itemService;
+	
+	@RequestMapping(value="/carga-ingreso-compra", method=RequestMethod.GET)
+	public String cargaIngresoCompra(Model model) {
+		
+		model.addAttribute("compra", new Compra());
+		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		
+		return "content/compra";
+	}
+
+	@RequestMapping(value="/carga-entradas-disponibles", method=RequestMethod.POST)
+	public String cargaEntradasDisponibles(Model model, Compra compra) {
+		
+		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),compra.getIdPartido()));
+		
+		return "content/compra";
+	}
+	
+	@RequestMapping(value="/compra-buscar-hincha", method=RequestMethod.POST)
+	public String buscarHinchaCompra(Model model, Compra compra) {
+		
+		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),compra.getIdPartido()));
+		
+		return "content/compra";
+	}
+	
+	private Integer obtenerEquipo() {
+		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		return usuario.getIdEquipo();
+	}
+}

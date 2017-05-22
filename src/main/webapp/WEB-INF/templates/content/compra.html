@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+        $(document).ready(function (){	
+        	
+        	$("#selectIdPartido").change(function(){
+        		document.forms[0].action = "carga-entradas-disponibles";      		
+        		document.forms[0].submit();
+        	});
+        	
+        	$("#btnBuscarHincha").click(function(){
+        		
+        		document.forms[0].action = "buscar-hincha-compra";      		
+        		document.forms[0].submit();
+        	});
+        })
+    </script>
+  
+  
+    <h1>Compra de Tickets Nominativos</h1>
+    <hr/>
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Compra de Tickets</h3>
+		     </div>
+			 <div class="widget-content">
+			 <form action="#" th:action="@{/insertar-compra}"  th:object="${compra}" method="POST">
+			   <input type="hidden" th:field="*{rut}" />
+			   <div class="form-horizontal">	
+				     <div  th:if="${error != null}" >
+			      		<div class="alert alert-danger " th:text="${error}">
+							Aqui van los mensajes de error																	
+				  		</div>
+					 </div>	
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Partido</label>
+							<div class="col-md-10">
+								<select th:field="*{idPartido}"   class="form-control" id="selectIdPartido">
+								    <option value="0" >Seleccione...</option>	
+								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}" >partido</option>													
+								</select>
+							</div>
+					 </div>
+					 
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Entradas Disponibles</label>
+							<div class="col-md-10">
+								<select th:field="*{idEntrada}"  class="form-control">
+								    <option value="0" >Seleccione...</option>	
+								    <option th:each="entrada : ${entradas}" th:value="${entrada.idEntrada}" th:text="${entrada.descSector}" >partido</option>													
+								</select>
+							</div>
+					 </div>
+					 
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">RUT</label>
+							<div class="col-md-10">
+								  <ul class="nav nav-tabs" role="tablist">
+												<li class="active"><a href="#scanear" role="tab" data-toggle="tab"><i class="fa fa-home"></i> Escanear Cédula</a></li>
+												<li><a href="#digitar" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Digitar RUT</a></li>						
+								 </ul>
+								 <div class="tab-content">
+								    <div class="tab-pane fade in active" id="scanear">
+										    <input th:field="*{rutEscaneado}"  type="text" class="form-control" />
+									</div>
+									<div class="tab-pane fade" id="digitar">
+									     <div class="row">
+									        <div class="col-md-2">
+											    <input th:field="*{rutDigitado}"  maxlength="20" type="text" class="form-control"  placeholder="12345678-K"/>											    
+											</div>  
+											<div class="col-md-2"><button type="button"  class="btn btn-primary" id="btnBuscarHincha">Buscar Hincha</button></div>
+											<div class="col-md-8"></div>
+									     </div>	
+									</div>
+								 </div>
+								 
+							</div>
+					 </div>
+					 
+					 <div class="form-group" th:if="${compra.nombreHincha != null }">
+						    <label class="col-md-2 control-label">Nombre Hincha</label>
+							<div class="col-md-10">
+								 <input th:field="*{nombreHincha}"  maxlength="20" type="text" class="form-control" disabled="disabled" />
+							</div>
+					 </div>
+					 
+					 
+					 
+					 
+					 <!--  -->
+					 <div class="form-group">
+						    <label class="col-md-2 control-label"></label>
+							<div class="col-md-2">
+							   <button type="submit" class="btn btn-custom-primary"><i class="fa fa-plus" aria-hidden="true"></i>Agregar Ticket</button>
+							</div>
+					 </div>
+					 
+					 <div class="row">	
+					     <div class="col-md-2">	</div>
+					     <div class="col-md-8">				 
+						 <table class="table table-bordered">
+								<thead>
+									<tr>
+									  <th>RUT</th>
+									  <th>PARTIDO</th>
+									  <th>FECHA</th>								  
+									  <th>ELIMINAR</th>
+									</tr>
+								</thead>
+								<!-- 
+								<tbody>
+									<tr th:each="ent : ${entradas}">
+										<td th:text="${ent.descPartido}">1</td>
+										<td th:text="${ent.descSector}">xxx</td>
+										<td th:text="${ent.precio}">xxx</td>									
+										<td><a href="#" th:href="@{/eliminar-entrada(idEntrada=${ent.idEntrada},idPartido=${ent.idPartido})}"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+									</tr>											
+								</tbody>
+								 -->
+						   </table>
+						   </div>
+						   <div class="col-md-2">	</div>
+					   </div>
+					
+				</div>
+				</form>
+			 </div>
+	   </div>
+          
+  </div>
+ </html>

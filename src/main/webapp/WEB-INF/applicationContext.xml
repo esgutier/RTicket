@@ -105,6 +105,11 @@
         <property name="mapperInterface" value="cl.rticket.mappers.ItemMapper" />
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
     </bean>
+    
+    <bean id="hinchaMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cl.rticket.mappers.HinchaMapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
 
   <!--  JASPER REPORT
   	<bean class="org.springframework.web.servlet.view.XmlViewResolver">

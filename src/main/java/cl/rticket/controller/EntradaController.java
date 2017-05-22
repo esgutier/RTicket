@@ -1,5 +1,6 @@
 package cl.rticket.controller;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cl.rticket.model.Entrada;
+import cl.rticket.model.Usuario;
 import cl.rticket.services.ItemService;
 
 @Controller
@@ -17,19 +19,20 @@ public class EntradaController {
 	ItemService itemService;
 	
 	@RequestMapping(value="/carga-ingreso-entrada", method=RequestMethod.GET)
-	public String cargaIngresoEntrada(Model model) {	
+	public String cargaIngresoEntrada(Model model) {
+		
 		model.addAttribute("entrada", new Entrada());
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("sectores", itemService.obtenerSectores());
+		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		model.addAttribute("sectores", itemService.obtenerSectores(obtenerEquipo()));
 		return "content/entrada";
 	}
 	
 	@RequestMapping(value="/carga-entradas-partido", method=RequestMethod.POST)
 	public String cargaEntradasPartido(Model model, Entrada entrada) {	
 		
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("sectores", itemService.obtenerSectores());
-		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
+		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		model.addAttribute("sectores", itemService.obtenerSectores(obtenerEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),entrada.getIdPartido()));
 		return "content/entrada";
 	}
 	
@@ -48,12 +51,13 @@ public class EntradaController {
 			flagError = 1;
 		}
 			
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("sectores", itemService.obtenerSectores());					
+		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		model.addAttribute("sectores", itemService.obtenerSectores(obtenerEquipo()));					
 		if(flagError == 0) {
+			 entrada.setIdEquipo(obtenerEquipo());
 		     itemService.insertarEntrada(entrada);
 		}
-		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),entrada.getIdPartido()));
 		return "content/entrada";
 	}
 	
@@ -63,11 +67,16 @@ public class EntradaController {
 			                      @RequestParam(value="idPartido")Integer idPartido) {	
 		
 		model.addAttribute("entrada", new Entrada());
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("sectores", itemService.obtenerSectores());
-		itemService.eliminarEntrada(idEntrada);
-		model.addAttribute("entradas", itemService.obtenerEntradas(idPartido));
+		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		model.addAttribute("sectores", itemService.obtenerSectores(obtenerEquipo()));
+		itemService.eliminarEntrada(obtenerEquipo(),idEntrada);
+		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),idPartido));
 		return "content/entrada";
+	}
+	
+	private Integer obtenerEquipo() {
+		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		return usuario.getIdEquipo();
 	}
 	
 	

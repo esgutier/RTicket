@@ -5,37 +5,42 @@
 
 <mapper namespace="cl.rticket.mappers.ItemMapper">
 
-<select id="obtenerPartidos" resultType="Partido" >
-   select par_id idPartido,
+<select id="obtenerPartidos" resultType="Partido" parameterType="int">
+   select equ_id idEquipo,
+          par_id idPartido,
           CONCAT (par_desc, ' ',DATE_FORMAT(par_fecha , '%d/%m/%Y')) descripcion         
-    from partido
+    from partido where equ_id=#{idEquipo}
 </select>
 
-<select id="obtenerSectores" resultType="Sector" >
-   select sec_id idSector,
+<select id="obtenerSectores" resultType="Sector" parameterType="int">
+   select equ_id idEquipo,
+          sec_id idSector,
           sec_desc descripcion
-    from sector
+    from sector where equ_id=#{idEquipo}
 </select>
 
 
-<select id="obtenerEntradas" resultType="Entrada" parameterType="int">
+<select id="obtenerEntradas" resultType="Entrada" parameterType="map">
    select  a.ent_id idEntrada, a.par_id idPartido , a.ent_precio precio ,
-           p.par_desc descPartido, s.sec_desc descSector
+           p.par_desc descPartido, CONCAT(s.sec_desc,' - $',a.ent_precio) descSector
           
    from entrada a, partido p, sector s
    where
-	   a.par_id = #{idPartido} and
+	   a.par_id = #{idPartido} and 
+	   a.equ_id = #{idEquipo} and
 	   a.sec_id = s.sec_id and
 	   a.par_id = p.par_id
 </select>
 
+
+
 <insert id="insertarEntrada" parameterType="Entrada">
-   insert into entrada (ent_id, sec_id, par_id, ent_precio, ent_fecha_creacion)
+   insert into entrada (equ_id,ent_id, sec_id, par_id, ent_precio, ent_fecha_creacion)
    values 
-       (NULL, #{idSector}, #{idPartido}, #{precio},NOW())
+       (#{idEquipo},NULL, #{idSector}, #{idPartido}, #{precio},NOW())
 </insert>
 
-<delete id="eliminarEntrada" parameterType="int">
-  delete from entrada where ent_id = #{idEntrada}
+<delete id="eliminarEntrada" parameterType="map">
+  delete from entrada where equ_id=#{idEquipo}  and ent_id = #{idEntrada}
 </delete>
 </mapper>

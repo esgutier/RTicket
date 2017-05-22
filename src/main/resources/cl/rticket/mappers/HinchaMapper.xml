@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cl.rticket.mappers.HinchaMapper">
+
+<select id="obtenerHincha" resultType="Hincha" parameterType="int">
+  select  equ_id idEquipo, hin_rut rut, hin_dv dv, 
+	        hin_nombres nombres, hin_apellidos apellidos, hin_direccion direccion,
+	        hin_genero genero,  hin_telefono telefono,  hin_email email,hin_fecha_nac fechaNac,
+	        hin_fecha_ingreso, hin_categoria categoria
+	from hincha
+	where hin_rut = #{rut}
+
+</select>
+</mapper>

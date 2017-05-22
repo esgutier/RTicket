@@ -8,6 +8,7 @@ public class Usuario implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private Integer idEquipo;
 	private String username;
 	private String password;
 	private Integer rut;
@@ -51,6 +52,12 @@ public class Usuario implements Serializable{
 	}
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
+	}
+	public Integer getIdEquipo() {
+		return idEquipo;
+	}
+	public void setIdEquipo(Integer idEquipo) {
+		this.idEquipo = idEquipo;
 	}
 
 }

@@ -16,23 +16,23 @@ public class ItemServiceImpl implements ItemService{
 	@Autowired
 	ItemMapper itemMapper ;
 	
-	public ArrayList<Partido> obtenerPartidos() {
-		return itemMapper.obtenerPartidos();
+	public ArrayList<Partido> obtenerPartidos(Integer idEquipo) {
+		return itemMapper.obtenerPartidos(idEquipo);
 	}
-	public ArrayList<Sector> obtenerSectores() {
-		return itemMapper.obtenerSectores();
+	public ArrayList<Sector> obtenerSectores(Integer idEquipo) {
+		return itemMapper.obtenerSectores(idEquipo);
 	}
 	
-	public ArrayList<Sector> obtenerEntradas(Integer idPartido) {
-		return itemMapper.obtenerEntradas(idPartido);
+	public ArrayList<Sector> obtenerEntradas(Integer idEquipo, Integer idPartido) {
+		return itemMapper.obtenerEntradas(idEquipo, idPartido);
 	}
 	
 	public void insertarEntrada(Entrada entrada) {
 		itemMapper.insertarEntrada(entrada);
 	}
 	
-	public void eliminarEntrada(Integer idEntrada) {
-		itemMapper.eliminarEntrada(idEntrada);
+	public void eliminarEntrada(Integer idEquipo, Integer idEntrada) {
+		itemMapper.eliminarEntrada(idEquipo, idEntrada);
 	}
 
 }

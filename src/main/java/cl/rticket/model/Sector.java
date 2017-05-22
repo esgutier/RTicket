@@ -9,6 +9,7 @@ public class Sector implements Serializable{
 	 */
 	private static final long serialVersionUID = 8222184296659798446L;
 	
+	private Integer idEquipo;
 	private Integer idSector;
 	private String descripcion;
 	
