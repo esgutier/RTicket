@@ -13,4 +13,5 @@ public interface ItemService {
 	public ArrayList<Sector>    obtenerEntradas(Integer idEquipo, Integer idPartido);
 	public void insertarEntrada(Entrada entrada);
 	public void eliminarEntrada(Integer idEquipo,Integer idEntrada);
+	public Entrada obtenerEntrada(Integer idEntrada);
 }

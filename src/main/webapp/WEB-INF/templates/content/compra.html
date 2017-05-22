@@ -6,6 +6,7 @@
     <script type="text/javascript">
         $(document).ready(function (){	
         	
+        	$("#inputRutDigitado").val('');
         	$("#selectIdPartido").change(function(){
         		document.forms[0].action = "carga-entradas-disponibles";      		
         		document.forms[0].submit();
@@ -59,7 +60,7 @@
 						    <label class="col-md-2 control-label">RUT</label>
 							<div class="col-md-10">
 								  <ul class="nav nav-tabs" role="tablist">
-												<li class="active"><a href="#scanear" role="tab" data-toggle="tab"><i class="fa fa-home"></i> Escanear Cédula</a></li>
+												<li class="active"><a href="#scanear" role="tab" data-toggle="tab"><i class="fa fa-barcode" aria-hidden="true"></i>Escanear Cédula</a></li>
 												<li><a href="#digitar" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Digitar RUT</a></li>						
 								 </ul>
 								 <div class="tab-content">
@@ -69,7 +70,7 @@
 									<div class="tab-pane fade" id="digitar">
 									     <div class="row">
 									        <div class="col-md-2">
-											    <input th:field="*{rutDigitado}"  maxlength="20" type="text" class="form-control"  placeholder="12345678-K"/>											    
+											    <input th:field="*{rutDigitado}" id="inputRutDigitado" maxlength="20" type="text" class="form-control"  placeholder="12345678-K"/>											    
 											</div>  
 											<div class="col-md-2"><button type="button"  class="btn btn-primary" id="btnBuscarHincha">Buscar Hincha</button></div>
 											<div class="col-md-8"></div>
@@ -106,7 +107,7 @@
 									<tr>
 									  <th>RUT</th>
 									  <th>PARTIDO</th>
-									  <th>FECHA</th>								  
+									  <th>SECTOR</th>										  					  
 									  <th>ELIMINAR</th>
 									</tr>
 								</thead>

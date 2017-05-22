@@ -19,6 +19,8 @@ public class Compra implements Serializable {
 	private String username;
 	private String rutEscaneado;
 	private String rutDigitado;
+	private Integer monto;
+	private Integer token;
 	
 	public Integer getIdEquipo() {
 		return idEquipo;
@@ -79,6 +81,18 @@ public class Compra implements Serializable {
 	}
 	public void setNombreHincha(String nombreHincha) {
 		this.nombreHincha = nombreHincha;
+	}
+	public Integer getMonto() {
+		return monto;
+	}
+	public void setMonto(Integer monto) {
+		this.monto = monto;
+	}
+	public Integer getToken() {
+		return token;
+	}
+	public void setToken(Integer token) {
+		this.token = token;
 	}
 	
 }

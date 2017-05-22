@@ -44,6 +44,17 @@ public class CompraController {
 		return "content/compra";
 	}
 	
+	@RequestMapping(value="/agregar-entrada-carro", method=RequestMethod.POST)
+	public String agregarEntradaCarro(Model model, Compra compra) {
+		
+		
+		
+		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),compra.getIdPartido()));
+		
+		return "content/compra";
+	}
+	
 	private Integer obtenerEquipo() {
 		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		return usuario.getIdEquipo();

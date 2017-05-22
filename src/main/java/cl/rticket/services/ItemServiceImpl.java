@@ -34,5 +34,9 @@ public class ItemServiceImpl implements ItemService{
 	public void eliminarEntrada(Integer idEquipo, Integer idEntrada) {
 		itemMapper.eliminarEntrada(idEquipo, idEntrada);
 	}
+	
+	public Entrada obtenerEntrada(Integer idEntrada) {
+		return itemMapper.obtenerEntrada(idEntrada);
+	}
 
 }

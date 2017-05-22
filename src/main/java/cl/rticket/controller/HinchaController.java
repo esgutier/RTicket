@@ -12,6 +12,7 @@ import cl.rticket.model.Hincha;
 import cl.rticket.model.Usuario;
 import cl.rticket.services.HinchaService;
 import cl.rticket.services.ItemService;
+import cl.rticket.utils.Util;
 
 @Controller
 public class HinchaController {
@@ -28,20 +29,26 @@ public class HinchaController {
 		if(compra.getRutDigitado() != null && !compra.getRutDigitado().isEmpty()) {
 			//el rut es digitado
 			//validar formato de rut
-			String[] parts = compra.getRutDigitado().split("-");
-			String nro = parts[0]; // 004
-			String dv = parts[1]; // 034556
-			Integer rut = Integer.parseInt(nro);
-			//validar rut
-			
-			Hincha hincha = hinchaService.obtenerHincha(rut);
-			if(hincha == null) {
-				//hincha no está redireccionar a formulario de ingreso de hincha
+			if(Util.verificaRUT(compra.getRutDigitado())) {
+				String[] parts = compra.getRutDigitado().split("-");
+				String nro = parts[0]; // 004
+				String dv = parts[1]; // 034556
+				Integer rut = Integer.parseInt(nro);
+				//validar rut
+				
+				Hincha hincha = hinchaService.obtenerHincha(rut);
+				if(hincha == null) {
+					//hincha no está redireccionar a formulario de ingreso de hincha
+				} else {
+				   compra.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
+				}
 			} else {
-			   compra.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
+				model.addAttribute("error", "El Rut ingresado no es válido");
 			}
 			
 			
+		} else {
+			model.addAttribute("error", "El Rut ingresado no es válido");
 		}
 			
 		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));

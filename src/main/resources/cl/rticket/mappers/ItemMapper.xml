@@ -32,6 +32,17 @@
 	   a.par_id = p.par_id
 </select>
 
+<select id="obtenerEntrada" resultType="Entrada" parameterType="int">
+      select  a.ent_id idEntrada, a.par_id idPartido , a.ent_precio precio ,
+           p.par_desc descPartido, CONCAT(s.sec_desc,' - $',a.ent_precio) descSector
+          
+   from entrada a, partido p, sector s
+   where
+	   a.ent_id = #{idEntrada} and 	
+	   a.sec_id = s.sec_id and
+	   a.par_id = p.par_id
+</select>
+
 
 
 <insert id="insertarEntrada" parameterType="Entrada">
