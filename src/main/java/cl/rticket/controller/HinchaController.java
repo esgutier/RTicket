@@ -136,12 +136,41 @@ public class HinchaController {
 		if(insert > 0) {
 			Hincha tmp = hinchaService.obtenerHincha(rut);
 			compra.setNombreHincha(tmp.getNombres()+" "+tmp.getApellidos());
+			 //agregar la entrada al carro
+			Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
+			Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+			Compra ticket = new Compra();
+			ticket.setIdEntrada(compra.getIdEntrada());
+			ticket.setRut(rut);
+			ticket.setRutCompleto(compra.getRutDigitado());
+			ticket.setUsername(usuario.getUsername());
+			ticket.setMonto(entrada.getPrecio());
+			ticket.setToken("ABCD234SWQ"); //debe ser string
+			ticket.setNominativa("S");
+			ticket.setDescPartido(entrada.getDescPartido());
+			ticket.setDescSector(entrada.getDescSector());
+			ticket.setNombreHincha(compra.getNombreHincha());
+			
+			ArrayList<Compra> ticketList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
+			if(ticketList != null) {
+			    ticketList.add(ticket);
+			} else {
+				ticketList = new ArrayList<Compra>();
+				 ticketList.add(ticket);
+			}
+			SecurityUtils.getSubject().getSession().setAttribute("carro",ticketList);
+			int total = 0;
+			for(Compra c: ticketList) {
+				total = total + c.getMonto();
+			}
+			SecurityUtils.getSubject().getSession().setAttribute("totalCompra",total);
 		} else {
 			model.addAttribute("error", "No se pudo ingresar el hincha");
 		}
 		model.addAttribute("compra", compra);
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		
 		return "content/compra";
 		
 		
