@@ -6,7 +6,7 @@
 <mapper namespace="cl.rticket.mappers.LoginMapper">
 
 <select id="obtenerUsuario" resultType="Usuario" parameterType="String">
-   select equ_id idEquipo,
+   select 
           usr_username username,
           usr_password password,
           usr_rut rut,

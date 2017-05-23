@@ -9,7 +9,7 @@ public class Partido implements Serializable {
 	 */
 	private static final long serialVersionUID = 4557967664465038694L;
 	
-	private Integer idEquipo;
+
 	private Integer idPartido;
 	private String descripcion;
 	
@@ -25,11 +25,6 @@ public class Partido implements Serializable {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	public Integer getIdEquipo() {
-		return idEquipo;
-	}
-	public void setIdEquipo(Integer idEquipo) {
-		this.idEquipo = idEquipo;
-	}
+	
 	
 }

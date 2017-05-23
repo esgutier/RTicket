@@ -11,10 +11,10 @@ import cl.rticket.model.Sector;
 
 public interface ItemMapper {
    
-	public ArrayList<Partido>   obtenerPartidos(Integer idEquipo);
-	public ArrayList<Sector>    obtenerSectores(Integer idEquipo);
-	public ArrayList<Sector>    obtenerEntradas(@Param("idEquipo") Integer idEquipo,@Param("idPartido")Integer idPartido);
+	public ArrayList<Partido>   obtenerPartidos();
+	public ArrayList<Sector>    obtenerSectores();
+	public ArrayList<Sector>    obtenerEntradas(@Param("idPartido")Integer idPartido);
 	public void insertarEntrada(Entrada entrada);
-	public void eliminarEntrada(@Param("idEquipo") Integer idEquipo, @Param("idEntrada")Integer idEntrada);
+	public void eliminarEntrada( @Param("idEntrada")Integer idEntrada);
 	public Entrada obtenerEntrada(Integer idEntrada);
 }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cl.rticket.model.Compra;
-import cl.rticket.model.Usuario;
 import cl.rticket.services.ItemService;
 
 @Controller
@@ -21,7 +20,9 @@ public class CompraController {
 	public String cargaIngresoCompra(Model model) {
 		
 		model.addAttribute("compra", new Compra());
-		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		SecurityUtils.getSubject().getSession().removeAttribute("carro");
+		SecurityUtils.getSubject().getSession().removeAttribute("totalCompra");
 		
 		return "content/compra";
 	}
@@ -29,8 +30,8 @@ public class CompraController {
 	@RequestMapping(value="/carga-entradas-disponibles", method=RequestMethod.POST)
 	public String cargaEntradasDisponibles(Model model, Compra compra) {
 		
-		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
-		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),compra.getIdPartido()));
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
 		
 		return "content/compra";
 	}
@@ -38,8 +39,8 @@ public class CompraController {
 	@RequestMapping(value="/compra-buscar-hincha", method=RequestMethod.POST)
 	public String buscarHinchaCompra(Model model, Compra compra) {
 		
-		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
-		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),compra.getIdPartido()));
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
 		
 		return "content/compra";
 	}
@@ -49,14 +50,11 @@ public class CompraController {
 		
 		
 		
-		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
-		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),compra.getIdPartido()));
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
 		
 		return "content/compra";
 	}
 	
-	private Integer obtenerEquipo() {
-		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		return usuario.getIdEquipo();
-	}
+	
 }

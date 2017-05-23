@@ -22,17 +22,17 @@ public class EntradaController {
 	public String cargaIngresoEntrada(Model model) {
 		
 		model.addAttribute("entrada", new Entrada());
-		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
-		model.addAttribute("sectores", itemService.obtenerSectores(obtenerEquipo()));
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("sectores", itemService.obtenerSectores());
 		return "content/entrada";
 	}
 	
 	@RequestMapping(value="/carga-entradas-partido", method=RequestMethod.POST)
 	public String cargaEntradasPartido(Model model, Entrada entrada) {	
 		
-		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
-		model.addAttribute("sectores", itemService.obtenerSectores(obtenerEquipo()));
-		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),entrada.getIdPartido()));
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("sectores", itemService.obtenerSectores());
+		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
 		return "content/entrada";
 	}
 	
@@ -51,13 +51,12 @@ public class EntradaController {
 			flagError = 1;
 		}
 			
-		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
-		model.addAttribute("sectores", itemService.obtenerSectores(obtenerEquipo()));					
-		if(flagError == 0) {
-			 entrada.setIdEquipo(obtenerEquipo());
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("sectores", itemService.obtenerSectores());					
+		if(flagError == 0) {			
 		     itemService.insertarEntrada(entrada);
 		}
-		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),entrada.getIdPartido()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
 		return "content/entrada";
 	}
 	
@@ -67,17 +66,13 @@ public class EntradaController {
 			                      @RequestParam(value="idPartido")Integer idPartido) {	
 		
 		model.addAttribute("entrada", new Entrada());
-		model.addAttribute("partidos", itemService.obtenerPartidos(obtenerEquipo()));
-		model.addAttribute("sectores", itemService.obtenerSectores(obtenerEquipo()));
-		itemService.eliminarEntrada(obtenerEquipo(),idEntrada);
-		model.addAttribute("entradas", itemService.obtenerEntradas(obtenerEquipo(),idPartido));
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("sectores", itemService.obtenerSectores());
+		itemService.eliminarEntrada(idEntrada);
+		model.addAttribute("entradas", itemService.obtenerEntradas(idPartido));
 		return "content/entrada";
 	}
 	
-	private Integer obtenerEquipo() {
-		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		return usuario.getIdEquipo();
-	}
 	
 	
 }

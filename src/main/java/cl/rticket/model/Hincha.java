@@ -7,10 +7,10 @@ public class Hincha implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4570698422292479318L;
-	private Integer idEquipo;
+	private static final long serialVersionUID = 4570698422292479318L;	
 	private Integer rut;
 	private String dv;
+	private String rutCompleto;
 	private String nombres;
 	private String apellidos;
 	private String direccion;
@@ -21,14 +21,6 @@ public class Hincha implements Serializable{
 	private String categoria;
 	
 
-	
-	
-	public Integer getIdEquipo() {
-		return idEquipo;
-	}
-	public void setIdEquipo(Integer idEquipo) {
-		this.idEquipo = idEquipo;
-	}
 	public Integer getRut() {
 		return rut;
 	}
@@ -88,6 +80,12 @@ public class Hincha implements Serializable{
 	}
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+	public String getRutCompleto() {
+		return rutCompleto;
+	}
+	public void setRutCompleto(String rutCompleto) {
+		this.rutCompleto = rutCompleto;
 	}
 
 }

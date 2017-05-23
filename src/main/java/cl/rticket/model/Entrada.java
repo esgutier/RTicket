@@ -8,7 +8,7 @@ public class Entrada implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 6106597309665239368L;
-	private Integer idEquipo;
+	
 	private Integer idEntrada;
 	private Integer idPartido;
 	private String  descPartido;
@@ -53,11 +53,6 @@ public class Entrada implements Serializable{
 	public void setDescSector(String descSector) {
 		this.descSector = descSector;
 	}
-	public Integer getIdEquipo() {
-		return idEquipo;
-	}
-	public void setIdEquipo(Integer idEquipo) {
-		this.idEquipo = idEquipo;
-	}
+	
 
 }

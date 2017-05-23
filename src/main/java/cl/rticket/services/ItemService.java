@@ -8,10 +8,10 @@ import cl.rticket.model.Sector;
 
 public interface ItemService {
 
-	public ArrayList<Partido>   obtenerPartidos(Integer idEquipo);
-	public ArrayList<Sector>    obtenerSectores(Integer idEquipo);
-	public ArrayList<Sector>    obtenerEntradas(Integer idEquipo, Integer idPartido);
+	public ArrayList<Partido>   obtenerPartidos();
+	public ArrayList<Sector>    obtenerSectores();
+	public ArrayList<Sector>    obtenerEntradas(Integer idPartido);
 	public void insertarEntrada(Entrada entrada);
-	public void eliminarEntrada(Integer idEquipo,Integer idEntrada);
+	public void eliminarEntrada(Integer idEntrada);
 	public Entrada obtenerEntrada(Integer idEntrada);
 }

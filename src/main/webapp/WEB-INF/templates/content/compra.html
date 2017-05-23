@@ -6,6 +6,10 @@
     <script type="text/javascript">
         $(document).ready(function (){	
         	
+            /*$('#inputRutEscaneado').on('input',function(e){
+        	     alert('Changed!')
+        	});*/
+        	
         	$("#inputRutDigitado").val('');
         	$("#selectIdPartido").change(function(){
         		document.forms[0].action = "carga-entradas-disponibles";      		
@@ -20,12 +24,9 @@
         })
     </script>
   
-  
-    <h1>Compra de Tickets Nominativos</h1>
-    <hr/>
       <div class="widget">
 			 <div class="widget-header">
-				<h3><i class="fa fa-edit"></i> Compra de Tickets</h3>
+				<h3><i class="fa fa-edit"></i> Compra de Tickets Nominativos</h3>
 		     </div>
 			 <div class="widget-content">
 			 <form action="#" th:action="@{/insertar-compra}"  th:object="${compra}" method="POST">
@@ -39,7 +40,7 @@
 					 <div class="form-group">
 						    <label class="col-md-2 control-label">Partido</label>
 							<div class="col-md-10">
-								<select th:field="*{idPartido}"   class="form-control" id="selectIdPartido">
+								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido">
 								    <option value="0" >Seleccione...</option>	
 								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}" >partido</option>													
 								</select>
@@ -49,7 +50,7 @@
 					 <div class="form-group">
 						    <label class="col-md-2 control-label">Entradas Disponibles</label>
 							<div class="col-md-10">
-								<select th:field="*{idEntrada}"  class="form-control">
+								<select th:field="*{idEntrada}"  class="form-control input-sm">
 								    <option value="0" >Seleccione...</option>	
 								    <option th:each="entrada : ${entradas}" th:value="${entrada.idEntrada}" th:text="${entrada.descSector}" >partido</option>													
 								</select>
@@ -65,12 +66,12 @@
 								 </ul>
 								 <div class="tab-content">
 								    <div class="tab-pane fade in active" id="scanear">
-										    <input th:field="*{rutEscaneado}"  type="text" class="form-control" />
+										    <input th:field="*{rutEscaneado}"  id="inputRutEscaneado" type="text" class="form-control input-sm" />
 									</div>
 									<div class="tab-pane fade" id="digitar">
 									     <div class="row">
 									        <div class="col-md-2">
-											    <input th:field="*{rutDigitado}" id="inputRutDigitado" maxlength="20" type="text" class="form-control"  placeholder="12345678-K"/>											    
+											    <input th:field="*{rutDigitado}" id="inputRutDigitado" maxlength="20" type="text" class="form-control input-sm"  placeholder="12345678-K"/>											    
 											</div>  
 											<div class="col-md-2"><button type="button"  class="btn btn-primary" id="btnBuscarHincha">Buscar Hincha</button></div>
 											<div class="col-md-8"></div>
@@ -91,14 +92,14 @@
 					 
 					 
 					 
-					 <!--  -->
+					 <!-- 
 					 <div class="form-group">
 						    <label class="col-md-2 control-label"></label>
 							<div class="col-md-2">
 							   <button type="submit" class="btn btn-custom-primary"><i class="fa fa-plus" aria-hidden="true"></i>Agregar Ticket</button>
 							</div>
 					 </div>
-					 
+					  -->
 					 <div class="row">	
 					     <div class="col-md-2">	</div>
 					     <div class="col-md-8">				 
@@ -106,21 +107,27 @@
 								<thead>
 									<tr>
 									  <th>RUT</th>
+									  <th>NOMBRE</th>
 									  <th>PARTIDO</th>
 									  <th>SECTOR</th>										  					  
 									  <th>ELIMINAR</th>
 									</tr>
 								</thead>
-								<!-- 
+								
 								<tbody>
-									<tr th:each="ent : ${entradas}">
-										<td th:text="${ent.descPartido}">1</td>
-										<td th:text="${ent.descSector}">xxx</td>
-										<td th:text="${ent.precio}">xxx</td>									
-										<td><a href="#" th:href="@{/eliminar-entrada(idEntrada=${ent.idEntrada},idPartido=${ent.idPartido})}"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+									<tr th:each="ticket : ${session.carro}">
+										<td th:text="${ticket.rutCompleto}">1</td>
+										<td th:text="${ticket.nombreHincha}">1</td>
+										<td th:text="${ticket.descPartido}">xxx</td>
+										<td th:text="${ticket.descSector}">xxx</td>									
+										<td><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+									</tr>
+									<tr>
+									   <td colspan="4" style="text-align:right"><strong>TOTAL: $</strong></td>
+									   <td th:text="${session.totalCompra}" ></td>
 									</tr>											
 								</tbody>
-								 -->
+								
 						   </table>
 						   </div>
 						   <div class="col-md-2">	</div>
@@ -130,6 +137,8 @@
 				</form>
 			 </div>
 	   </div>
+	   
+	   
           
   </div>
  </html>

@@ -15,4 +15,8 @@ public class HinchaServiceImpl implements HinchaService{
 	public Hincha obtenerHincha(Integer rut) {
 		return hinchaMapper.obtenerHincha(rut);
 	}
+	
+	public int insertarHincha(Hincha hincha) {
+		return hinchaMapper.insertarHincha(hincha);
+	}
 }

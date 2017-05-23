@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+       
+    </script>
+  
+  <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Ingreso de Hincha</h3>
+		     </div>
+			 <div class="widget-content">
+			     <div class="form-horizontal">
+			     <form action="#" th:action="@{/ingresar-hincha-compra}"  th:object="${hincha}" method="POST">
+			              <div  th:if="${error != null}" >
+				      		<div class="alert alert-danger " th:text="${error}">
+								Aqui van los mensajes de error																	
+					  		</div>
+						  </div>	
+			              <input type="hidden" th:name="idPartido" th:value="${compra.idPartido}" />
+			              <input type="hidden" th:name="idEntrada" th:value="${compra.idEntrada}" />
+													<div class="form-group">
+														<label class="col-md-2 control-label">RUT</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{rutCompleto}" class="form-control input-sm" placeholder="" readonly="readonly"/>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="col-md-2 control-label">Nombres</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{nombres}" maxlength="50" required="required" pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-md-2 control-label">Apellidos</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{apellidos}" maxlength="70" required="required" pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-md-2 control-label">Dirección</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{direccion}" maxlength="100" required="required" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-md-2 control-label">Teléfono</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{telefono}" maxlength="9" required="required" pattern="[0-9]+" title="Ingrese solo numeros" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-md-2 control-label">Email</label>
+														<div class="col-md-10">
+															<input type="email" th:field="*{email}" maxlength="100" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" title="Ingrese email valido" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-md-2 control-label">Fecha Nacimiento (dd/mm/aaaa)</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{fechaNac}" maxlength="10" required="required" pattern="\d{1,2}/\d{1,2}/\d{4}" title="Ingrese el formato solicitado"  class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="col-md-2 control-label">Género</label>
+														<div class="col-md-10">
+															<div class="radio">
+																<label>
+																	<input type="radio" th:field="*{genero}" value="M" /> Masculino
+																</label>
+															</div>
+															<div class="radio">
+																<label>
+																	<input type="radio" th:field="*{genero}" value="F" /> Femenino
+																</label>
+															</div>
+															
+														</div>
+													</div>
+													<div class="form-group">
+													    <label class="col-md-2 control-label">Categoría</label>
+														<div class="col-md-10">
+															<select th:field="*{categoria}"  class="form-control">
+															    <option value="0" >Seleccione...</option>	
+															    <option value="A">Abonado</option>
+															    <option value="S">Socio</option>	
+															    <option value="N">Normal</option>												
+															</select>
+														</div>
+												    </div>
+													<div align="center">
+													<button type="submit" class="btn btn-primary" id="btnIngresarHincha">Ingresar Hincha</button>
+													</div>
+													
+												
+												</form>	
+						</div>
+			 </div>
+	   </div>
+	   </div>
+	   <div class="col-md-2"></div>
+	   </div>
+	   
+	   
+          
+  </div>
+ </html>

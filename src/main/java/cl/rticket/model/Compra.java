@@ -9,8 +9,9 @@ public class Compra implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8713347487018145144L;
-	private Integer idEquipo;
-	private Integer idPartido;
+	private Integer idPartido;	
+	private String descPartido;
+	private String descSector;
 	private Integer idEntrada;
 	private String idHincha;
 	private String nombreHincha;
@@ -19,15 +20,11 @@ public class Compra implements Serializable {
 	private String username;
 	private String rutEscaneado;
 	private String rutDigitado;
+	private String rutCompleto;
 	private Integer monto;
-	private Integer token;
+	private String token;
 	
-	public Integer getIdEquipo() {
-		return idEquipo;
-	}
-	public void setIdEquipo(Integer idEquipo) {
-		this.idEquipo = idEquipo;
-	}
+	
 	public Integer getIdEntrada() {
 		return idEntrada;
 	}
@@ -88,11 +85,29 @@ public class Compra implements Serializable {
 	public void setMonto(Integer monto) {
 		this.monto = monto;
 	}
-	public Integer getToken() {
+	public String getToken() {
 		return token;
 	}
-	public void setToken(Integer token) {
+	public void setToken(String token) {
 		this.token = token;
+	}
+	public String getDescPartido() {
+		return descPartido;
+	}
+	public void setDescPartido(String descPartido) {
+		this.descPartido = descPartido;
+	}
+	public String getRutCompleto() {
+		return rutCompleto;
+	}
+	public void setRutCompleto(String rutCompleto) {
+		this.rutCompleto = rutCompleto;
+	}
+	public String getDescSector() {
+		return descSector;
+	}
+	public void setDescSector(String descSector) {
+		this.descSector = descSector;
 	}
 	
 }
