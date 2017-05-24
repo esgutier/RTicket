@@ -1,5 +1,7 @@
 package cl.rticket.utils;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.StringTokenizer;
 
 public class Util {
@@ -55,4 +57,17 @@ public class Util {
 		    
 		    return false;   
 		} 
+	
+
+
+	public static String random() {
+	    SecureRandom random = new SecureRandom();	 
+	    return new BigInteger(130, random).toString(32);
+	  
+	}
+	
+	public static void main(String args[]) {
+		for(int i = 0 ; i < 10000 ; i++)
+		   System.out.println("---->13859176|"+ random());
+	}
 }

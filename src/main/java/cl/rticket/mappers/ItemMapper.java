@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
-
+import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
@@ -17,4 +17,5 @@ public interface ItemMapper {
 	public void insertarEntrada(Entrada entrada);
 	public void eliminarEntrada( @Param("idEntrada")Integer idEntrada);
 	public Entrada obtenerEntrada(Integer idEntrada);
+	public int insertarCompra(Compra compra);
 }

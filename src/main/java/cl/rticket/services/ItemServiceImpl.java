@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import cl.rticket.exception.UpdateException;
 import cl.rticket.mappers.ItemMapper;
+import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
@@ -37,6 +40,17 @@ public class ItemServiceImpl implements ItemService{
 	
 	public Entrada obtenerEntrada(Integer idEntrada) {
 		return itemMapper.obtenerEntrada(idEntrada);
+	}
+	
+	@Transactional(rollbackFor={UpdateException.class})
+	public void insertarCompra(ArrayList<Compra> list) throws UpdateException {
+		int inserta = 0;
+		for(Compra ticket: list) {
+			inserta = itemMapper.insertarCompra(ticket);
+			if(inserta < 1) {
+				throw new UpdateException();
+			}
+		}		
 	}
 
 }

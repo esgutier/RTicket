@@ -53,4 +53,13 @@
 <delete id="eliminarEntrada" parameterType="map">
   delete from entrada where ent_id = #{idEntrada}
 </delete>
+
+
+<insert id="insertarCompra" parameterType="Compra">
+ insert into compra (com_id,ent_id,hin_rut,usr_username,com_monto,com_token,com_nominativa,com_fecha) 
+ values (NULL,#{idEntrada},#{rut},#{username},#{monto},#{token},#{nominativa},NOW())
+
+</insert>
+
+
 </mapper>

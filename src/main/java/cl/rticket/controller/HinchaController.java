@@ -56,16 +56,17 @@ public class HinchaController {
 					Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
 					Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 					Compra ticket = new Compra();
+					ticket.setIdPartido(entrada.getIdPartido());
 					ticket.setIdEntrada(compra.getIdEntrada());
 					ticket.setRut(rut);
 					ticket.setRutCompleto(compra.getRutDigitado());
 					ticket.setUsername(usuario.getUsername());
 					ticket.setMonto(entrada.getPrecio());
-					ticket.setToken("ABCD234SWQ"); //debe ser string
+					ticket.setToken(rut+""+Util.random()); //debe ser string
 					ticket.setNominativa("S");
 					ticket.setDescPartido(entrada.getDescPartido());
 					ticket.setDescSector(entrada.getDescSector());
-					ticket.setNombreHincha(compra.getNombreHincha());
+					ticket.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
 					
 					ArrayList<Compra> ticketList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
 					if(ticketList != null) {
@@ -140,16 +141,17 @@ public class HinchaController {
 			Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
 			Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 			Compra ticket = new Compra();
+			ticket.setIdPartido(entrada.getIdPartido());
 			ticket.setIdEntrada(compra.getIdEntrada());
 			ticket.setRut(rut);
 			ticket.setRutCompleto(compra.getRutDigitado());
 			ticket.setUsername(usuario.getUsername());
 			ticket.setMonto(entrada.getPrecio());
-			ticket.setToken("ABCD234SWQ"); //debe ser string
+			ticket.setToken(rut+""+Util.random()); 
 			ticket.setNominativa("S");
 			ticket.setDescPartido(entrada.getDescPartido());
 			ticket.setDescSector(entrada.getDescSector());
-			ticket.setNombreHincha(compra.getNombreHincha());
+			ticket.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
 			
 			ArrayList<Compra> ticketList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
 			if(ticketList != null) {
