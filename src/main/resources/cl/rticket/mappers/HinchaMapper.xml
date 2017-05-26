@@ -8,7 +8,7 @@
 <select id="obtenerHincha" resultType="Hincha" parameterType="int">
   select    hin_rut rut, hin_dv dv, 
 	        hin_nombres nombres, hin_apellidos apellidos, hin_direccion direccion,
-	        hin_genero genero,  hin_telefono telefono,  hin_email email,hin_fecha_nac fechaNac,
+	        hin_genero genero,  hin_telefono telefono,  hin_email email,DATE_FORMAT(hin_fecha_nac, '%d/%m/%Y') fechaNac,
 	        hin_fecha_ingreso, hin_categoria categoria
 	from hincha
 	where hin_rut = #{rut}
@@ -16,6 +16,19 @@
 </select>
 <insert id="insertarHincha"  parameterType="Hincha">
 insert into hincha (hin_rut, hin_dv,hin_nombres, hin_apellidos, hin_direccion,hin_genero, hin_telefono,hin_email ,hin_fecha_nac,hin_fecha_ingreso,hin_categoria) 
-values (#{rut},#{dv},UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#{genero},#{telefono},#{email},STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),NOW(),#{categoria})
+values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#{genero},#{telefono},#{email},STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),NOW(),#{categoria})
 </insert>
+
+<update id="actualizarHincha" parameterType="Hincha">
+
+  update hincha set hin_nombres = #{nombres},
+                    hin_apellidos = #{apellidos},
+                    hin_direccion = #{direccion},
+                    hin_genero = #{genero},
+                    hin_telefono = #{telefono},
+                    hin_email = #{email},
+                    hin_fecha_nac =STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),
+                    hin_categoria = #{categoria}
+                 where hin_rut = #{rut}
+</update>
 </mapper>

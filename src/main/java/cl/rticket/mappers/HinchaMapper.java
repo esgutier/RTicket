@@ -7,4 +7,6 @@ public interface HinchaMapper {
 	
 	public Hincha obtenerHincha(Integer rut);
 	public int insertarHincha(Hincha hincha);
+	public int actualizarHincha(Hincha hincha);
+	
 }

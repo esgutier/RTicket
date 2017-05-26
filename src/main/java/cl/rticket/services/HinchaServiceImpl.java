@@ -19,4 +19,8 @@ public class HinchaServiceImpl implements HinchaService{
 	public int insertarHincha(Hincha hincha) {
 		return hinchaMapper.insertarHincha(hincha);
 	}
+	
+	public int actualizarHincha(Hincha hincha) {
+		return hinchaMapper.actualizarHincha(hincha);
+	}
 }

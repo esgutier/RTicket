@@ -117,7 +117,7 @@ CREATE TABLE compra (
   hin_rut int(10) NOT NULL,
   usr_username varchar(20) NOT NULL,  
   com_monto int(6) NOT NULL,
-  com_token varchar(12) NOT NULL,
+  com_token varchar(50) NOT NULL,
   com_nominativa varchar(1) NOT NULL,
   com_fecha date NOT NULL,
   PRIMARY KEY  (com_id),

@@ -17,7 +17,7 @@
     
       <div class="widget">
 			 <div class="widget-header">
-				<h3><i class="fa fa-edit"></i> Ingreso de Tipos de Entrada a Partidos</h3>
+				<h3><i class="fa fa-edit"></i> Ingreso de Entrada a Partidos</h3>
 		     </div>
 			 <div class="widget-content">
 			 <form action="#" th:action="@{/insertar-entrada}"  th:object="${entrada}" method="POST">
@@ -30,7 +30,7 @@
 					 <div class="form-group">
 						    <label class="col-md-2 control-label">Partido</label>
 							<div class="col-md-10">
-								<select th:field="*{idPartido}"   class="form-control" id="selectIdPartido">
+								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido">
 								    <option value="0" >Seleccione...</option>	
 								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}" >partido</option>													
 								</select>
@@ -39,7 +39,7 @@
 					 <div class="form-group">
 						    <label class="col-md-2 control-label">Sector</label>
 							<div class="col-md-10">
-								<select th:field="*{idSector}"  class="form-control">
+								<select th:field="*{idSector}"  class="form-control input-sm">
 								    <option value="0" >Seleccione...</option>	
 								    <option th:each="sector : ${sectores}" th:value="${sector.idSector}" th:text="${sector.descripcion}" >partido</option>													
 								</select>
@@ -50,7 +50,7 @@
 							<div class="col-md-2">
 							  <div class="input-group">
 							     <span class="input-group-addon">$</span>
-								 <input th:field="*{precio}" pattern="[0-9]*" maxlength="4" type="text" class="form-control" />
+								 <input th:field="*{precio}" pattern="[0-9]*" maxlength="4" type="text" class="form-control input-sm" />
 							  </div>
 							</div>
 					 </div>

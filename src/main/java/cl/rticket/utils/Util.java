@@ -2,6 +2,8 @@ package cl.rticket.utils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Util {
@@ -66,8 +68,26 @@ public class Util {
 	  
 	}
 	
+	public static Map<String, String> getQueryMap(String query)  
+	{  
+	    String[] params = query.split("&");  
+	    Map<String, String> map = new HashMap<String, String>();  
+	    for (String param : params)  
+	    {  
+	        String name = param.split("=")[0];  
+	        String value = param.split("=")[1];  
+	        map.put(name, value);  
+	    }  
+	    return map;  
+	}
+	
 	public static void main(String args[]) {
-		for(int i = 0 ; i < 10000 ; i++)
-		   System.out.println("---->13859176|"+ random());
+		//for(int i = 0 ; i < 10000 ; i++)
+		  // System.out.println("---->13859176|"+ random());
+		Map<String, String> map = getQueryMap("https://portal.sidiv.registrocivil.cl/docstatus?RUN=23235193-4&type=CEDULA&serial=110719966&mrz=110719966810012882201281");
+		//map.get("RUN");
+		System.out.println("--->"+map.get("RUN"));
+		
+			
 	}
 }

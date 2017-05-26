@@ -2,8 +2,8 @@
  
 
      <Resource name="jdbc/RTicket" auth="Container" type="javax.sql.DataSource"
-              username="admision" password="admision2015"
-              url="jdbc:mysql://172.16.187.237/cas"
+              username="rticket" password="123456"
+              url="jdbc:mysql://192.168.0.15/rticket"
               driverClassName="com.mysql.jdbc.Driver"
               initialSize="5" maxWait="5000"
               maxActive="10" maxIdle="8"

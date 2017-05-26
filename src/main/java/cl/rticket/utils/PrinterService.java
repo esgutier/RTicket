@@ -43,7 +43,7 @@ public class PrinterService implements Printable {
 		if (page > 0) { // We have only one page, and 'page' is zero-based 
 			return NO_SUCH_PAGE;
 		}
-
+ System.out.println("acacaca");
 	
 		 // User (0,0) is typically outside the imageable area, so we must
 		 // translate by the X and Y values in the PageFormat to avoid clipping
@@ -78,6 +78,7 @@ public class PrinterService implements Printable {
 			bytes = text.getBytes("CP437");
 
 			Doc doc = new SimpleDoc(bytes, flavor, null);
+			
 
 			
 			job.print(doc, null);
@@ -132,12 +133,15 @@ public class PrinterService implements Printable {
 		System.out.println(printerService.getPrinters());
 				
 		//print some stuff
-		printerService.printString("EPSON-TM-T20II", "\n\n testing testing 1 2 3eeeee \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		printerService.printString("zebra", "\n\n testing testing 1 2 3eeeee \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		
+		
+		
 
 		// cut that paper!
 		byte[] cutP = new byte[] { 0x1d, 'V', 1 };
 
-		printerService.printBytes("EPSON-TM-T20II", cutP);
+		printerService.printBytes("zebra", cutP);
 	
 	}
 

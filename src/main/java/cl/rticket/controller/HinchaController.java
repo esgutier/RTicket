@@ -30,14 +30,116 @@ public class HinchaController {
 	ItemService itemService;
 	
 	
+	//Ingresar hincha desde una compra
+	@RequestMapping(value="/cargar-hincha-mantenedor", method=RequestMethod.GET)
+	public String cargarHinchaMantenedor(Model model) {
+		model.addAttribute("hincha", new Hincha());
+		return "content/hinchaMantenedor";
+	}
+	
+	@RequestMapping(value="/buscar-hincha-mantenedor", method=RequestMethod.POST)
+	public String buscarHinchaMantenedor(Model model, Hincha hincha) {
+		if(Util.verificaRUT(hincha.getRutCompleto())) {
+			String[] parts = hincha.getRutCompleto().split("-");
+			String nro = parts[0]; 	
+			String dv = parts[1];
+			Integer rut = Integer.parseInt(nro);
+					
+			Hincha hin = hinchaService.obtenerHincha(rut);
+			if(hin == null) {
+				model.addAttribute("accion", "INSERTAR");
+				hin = new Hincha();
+				hin.setRutCompleto(hincha.getRutCompleto());
+				hin.setRut(rut);
+				hin.setDv(dv);
+				model.addAttribute("hincha", hin);
+				model.addAttribute("info", "Hincha no se encuentra registrado");
+			} else {
+				hin.setRutCompleto(hincha.getRutCompleto());
+				model.addAttribute("accion", "ACTUALIZAR");
+				model.addAttribute("hincha", hin);
+			}
+		} else {
+			model.addAttribute("error", "El Rut ingresado no es válido");
+		}
+		return "content/hinchaMantenedor";
+	}
+	
+	@RequestMapping(value="/actualizar-hincha-mantenedor", method=RequestMethod.POST)
+	public String actualizarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
+		//validacion de inputs
+		int error = 0;
+	    if(GenericValidator.isBlankOrNull(hincha.getGenero())) {
+			model.addAttribute("error", "Debe indicar un género");
+			error = 1;
+		} else if(hincha.getCategoria().equals("0")) {
+			model.addAttribute("error", "Debe indicar una categoría");
+			error = 1;
+		}
+		if(error == 1) {
+			model.addAttribute("accion", "ACTUALIZAR");
+			return "content/hinchaMantenedor";
+		}
+		
+		
+		int result = hinchaService.actualizarHincha(hincha);
+		if(result > 0) {
+			flash.addFlashAttribute("info", "La actualización se realizó correctamente");
+			return "redirect:/cargar-hincha-mantenedor";
+		} else {
+			model.addAttribute("error", "Error: No se puedo realizar la actualización");
+		}
+		return "content/hinchaMantenedor";
+	}
+	
+	@RequestMapping(value="/insertar-hincha-mantenedor", method=RequestMethod.POST)
+	public String insertarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
+		//validar inputs
+		int error = 0;
+	    if(GenericValidator.isBlankOrNull(hincha.getGenero())) {
+			model.addAttribute("error", "Debe indicar un género");
+			error = 1;
+		} else if(hincha.getCategoria().equals("0")) {
+			model.addAttribute("error", "Debe indicar una categoría");
+			error = 1;
+		}
+		if(error == 1) {
+			model.addAttribute("accion", "INSERTAR");
+			return "content/hinchaMantenedor";
+		}
+		
+		int result = hinchaService.insertarHincha(hincha);
+		if(result > 0) {
+			flash.addFlashAttribute("info", "El registro fue agregado correctamente");
+			return "redirect:/cargar-hincha-mantenedor";
+		} else {
+			model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
+		}
+		
+		return "content/hinchaMantenedor";
+	}
+	
+	
+	
 	@RequestMapping(value="/buscar-hincha-compra", method=RequestMethod.POST)
 	public String buscarHinchaCompra(Model model, Compra compra) {
 		
+		System.out.println("rut escaneado ="+compra.getRutEscaneado()+" compra.getIdEntrada():"+compra.getIdEntrada());
+		String rutBusqueda = "";
 		if(compra.getRutDigitado() != null && !compra.getRutDigitado().isEmpty()) {
-			//el rut es digitado
+			rutBusqueda = compra.getRutDigitado();
+		} else if(compra.getRutEscaneado() != null && !compra.getRutEscaneado().isEmpty()) {
+			rutBusqueda = compra.getRutEscaneado();
+		} else {
+			model.addAttribute("error", "Debe ingresar el RUT del Hincha");
+			model.addAttribute("partidos", itemService.obtenerPartidos());
+			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+			return "content/compra";
+		}
+		
 			//validar formato de rut
-			if(Util.verificaRUT(compra.getRutDigitado())) {
-				String[] parts = compra.getRutDigitado().split("-");
+			if(Util.verificaRUT(rutBusqueda)) {
+				String[] parts = rutBusqueda.split("-");
 				String nro = parts[0]; 				
 				Integer rut = Integer.parseInt(nro);
 				//validar rut
@@ -47,7 +149,7 @@ public class HinchaController {
 					//hincha no está redireccionar a formulario de ingreso de hincha				
 					model.addAttribute("compra", compra);
 					hincha = new Hincha();
-					hincha.setRutCompleto(compra.getRutDigitado());					
+					hincha.setRutCompleto(rutBusqueda);					
 					model.addAttribute("hincha", hincha);
 					return "content/ingresoHinchaCompra";
 				} else {
@@ -59,10 +161,10 @@ public class HinchaController {
 					ticket.setIdPartido(entrada.getIdPartido());
 					ticket.setIdEntrada(compra.getIdEntrada());
 					ticket.setRut(rut);
-					ticket.setRutCompleto(compra.getRutDigitado());
+					ticket.setRutCompleto(rutBusqueda);
 					ticket.setUsername(usuario.getUsername());
 					ticket.setMonto(entrada.getPrecio());
-					ticket.setToken(rut+""+Util.random()); //debe ser string
+					ticket.setToken("E"+rut+"-"+Util.random()); //debe ser string
 					ticket.setNominativa("S");
 					ticket.setDescPartido(entrada.getDescPartido());
 					ticket.setDescSector(entrada.getDescSector());
@@ -85,11 +187,7 @@ public class HinchaController {
 			} else {
 				model.addAttribute("error", "El Rut ingresado no es válido");
 			}
-			
-			
-		} else {
-			model.addAttribute("error", "El Rut ingresado no es válido");
-		}
+	
 			
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
@@ -115,10 +213,10 @@ public class HinchaController {
 		//validar datos de entrada
 		int error = 0;
 	    if(GenericValidator.isBlankOrNull(hincha.getGenero())) {
-			model.addAttribute("error", "Debe ingresar nombres");
+			model.addAttribute("error", "Debe indicar el género");
 			error = 1;
 		} else if(hincha.getCategoria().equals("0")) {
-			model.addAttribute("error", "Debe ingresar nombres");
+			model.addAttribute("error", "Debe indicbar la categoría");
 			error = 1;
 		}
 		if(error == 1) {
@@ -144,14 +242,14 @@ public class HinchaController {
 			ticket.setIdPartido(entrada.getIdPartido());
 			ticket.setIdEntrada(compra.getIdEntrada());
 			ticket.setRut(rut);
-			ticket.setRutCompleto(compra.getRutDigitado());
+			ticket.setRutCompleto(tmp.getRut()+"-"+tmp.getDv());
 			ticket.setUsername(usuario.getUsername());
 			ticket.setMonto(entrada.getPrecio());
-			ticket.setToken(rut+""+Util.random()); 
+			ticket.setToken("E"+rut+"-"+Util.random()); 
 			ticket.setNominativa("S");
 			ticket.setDescPartido(entrada.getDescPartido());
 			ticket.setDescSector(entrada.getDescSector());
-			ticket.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
+			ticket.setNombreHincha(tmp.getNombres()+" "+tmp.getApellidos());
 			
 			ArrayList<Compra> ticketList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
 			if(ticketList != null) {
@@ -173,9 +271,9 @@ public class HinchaController {
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
 		
-		return "content/compra";
-		
-		
+		return "content/compra";	
 	}
+	
+	
 	
 }
