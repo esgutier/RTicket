@@ -12,6 +12,7 @@ import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
+import cl.rticket.utils.Util;
 
 @Service("itemService")
 public class ItemServiceImpl implements ItemService{
@@ -42,15 +43,30 @@ public class ItemServiceImpl implements ItemService{
 		return itemMapper.obtenerEntrada(idEntrada);
 	}
 	
-	@Transactional(rollbackFor={UpdateException.class})
+	@Transactional(rollbackFor={UpdateException.class, Exception.class})
 	public void insertarCompra(ArrayList<Compra> list) throws UpdateException {
-		int inserta = 0;
+		
 		for(Compra ticket: list) {
-			inserta = itemMapper.insertarCompra(ticket);
-			if(inserta < 1) {
+			//inserto compra con token 0
+			itemMapper.insertarCompra(ticket);			
+			if(ticket.getIdCompra() < 1) {
 				throw new UpdateException();
+			} else {
+				//la compra inserto bien, ahora creo el token con el id de secuencia retornado mas 
+				//un numero random y actualizo la tabla compra con el id correspondiente
+				String tmp = ticket.getIdCompra()+""+Util.randomNumber();
+				Integer token = new Integer(tmp);
+				int result = itemMapper.actualizarTokenCompra(ticket.getIdCompra(),token);
+				ticket.setToken(token);
+				if(result < 1) {
+					throw new UpdateException();
+				}
 			}
 		}		
+	}
+	
+	public int obtenerTotalSectorVendidas(Integer idEntrada, Integer idPartido) {
+		return itemMapper.obtenerTotalSectorVendidas(idEntrada, idPartido);
 	}
 
 }

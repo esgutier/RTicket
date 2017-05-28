@@ -9,6 +9,7 @@ public class Compra implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8713347487018145144L;
+	private Integer idCompra;
 	private Integer idPartido;	
 	private String descPartido;
 	private String descSector;
@@ -22,7 +23,7 @@ public class Compra implements Serializable {
 	private String rutDigitado;
 	private String rutCompleto;
 	private Integer monto;
-	private String token;
+	private Integer token;
 	
 	
 	public Integer getIdEntrada() {
@@ -85,10 +86,10 @@ public class Compra implements Serializable {
 	public void setMonto(Integer monto) {
 		this.monto = monto;
 	}
-	public String getToken() {
+	public Integer getToken() {
 		return token;
 	}
-	public void setToken(String token) {
+	public void setToken(Integer token) {
 		this.token = token;
 	}
 	public String getDescPartido() {
@@ -108,6 +109,12 @@ public class Compra implements Serializable {
 	}
 	public void setDescSector(String descSector) {
 		this.descSector = descSector;
+	}
+	public Integer getIdCompra() {
+		return idCompra;
+	}
+	public void setIdCompra(Integer idCompra) {
+		this.idCompra = idCompra;
 	}
 	
 }

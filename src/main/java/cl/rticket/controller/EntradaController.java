@@ -57,6 +57,10 @@ public class EntradaController {
 		     itemService.insertarEntrada(entrada);
 		}
 		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
+		entrada.setMaximo(null);
+		entrada.setComentario("");
+		entrada.setPrecio(null);
+		
 		return "content/entrada";
 	}
 	

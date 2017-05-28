@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 public class Util {
@@ -67,6 +68,18 @@ public class Util {
 	    return new BigInteger(130, random).toString(32);
 	  
 	}
+	
+	public static Integer randomNumber() {
+		 Random randomGenerator = new Random();
+		    int a = randomGenerator.nextInt(9);
+		    int b = randomGenerator.nextInt(9);
+		    int c = randomGenerator.nextInt(9);
+		    int d = randomGenerator.nextInt(9);
+		    int e = randomGenerator.nextInt(9);
+		    
+		 return new Integer(a+""+b+""+c+""+d+""+e);
+	}
+	
 	
 	public static Map<String, String> getQueryMap(String query)  
 	{  

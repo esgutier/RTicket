@@ -17,4 +17,5 @@ public interface ItemService {
 	public void eliminarEntrada(Integer idEntrada);
 	public Entrada obtenerEntrada(Integer idEntrada);
 	public void insertarCompra(ArrayList<Compra> list) throws UpdateException;
+	public int obtenerTotalSectorVendidas(Integer idEntrada, Integer idPartido);
 }

@@ -17,5 +17,9 @@ public interface ItemMapper {
 	public void insertarEntrada(Entrada entrada);
 	public void eliminarEntrada( @Param("idEntrada")Integer idEntrada);
 	public Entrada obtenerEntrada(Integer idEntrada);
-	public int insertarCompra(Compra compra);
+	public void insertarCompra(Compra compra);
+	public int actualizarTokenCompra(@Param("idCompra")Integer idCompra,
+			                         @Param("token")Integer token);
+	public Integer obtenerTotalSectorVendidas(@Param("idEntrada")Integer idEntrada,
+			                                  @Param("idPartido")Integer idPartido);
 }

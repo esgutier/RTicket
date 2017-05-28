@@ -15,6 +15,8 @@ public class Entrada implements Serializable{
 	private Integer idSector;
 	private String  descSector;
 	private Integer precio;
+	private Integer maximo;
+	private String comentario;
 	
 	
 	public Integer getIdEntrada() {
@@ -48,10 +50,22 @@ public class Entrada implements Serializable{
 		this.descPartido = descPartido;
 	}
 	public String getDescSector() {
-		return descSector;
+		return descSector +" - ($"+this.precio+") "+this.comentario;
 	}
 	public void setDescSector(String descSector) {
 		this.descSector = descSector;
+	}
+	public Integer getMaximo() {
+		return maximo;
+	}
+	public void setMaximo(Integer maximo) {
+		this.maximo = maximo;
+	}
+	public String getComentario() {
+		return comentario;
+	}
+	public void setComentario(String comentario) {
+		this.comentario = comentario;
 	}
 	
 

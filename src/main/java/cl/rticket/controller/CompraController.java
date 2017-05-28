@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.rticket.exception.UpdateException;
 import cl.rticket.model.Compra;
+import cl.rticket.model.Entrada;
 import cl.rticket.services.ItemService;
 import cl.rticket.utils.PrinterService;
 
@@ -91,8 +92,31 @@ public class CompraController {
 	public String confirmarCompra(Model model, Compra compra,RedirectAttributes flash) {
 		
 		ArrayList<Compra> ticketList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
+		
+		//aca se valida la disponibilidad de las entradas
+		Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
+		System.out.println("BUSCAR HINCHA Entrada     idEntrada="+compra.getIdEntrada()+"   idPartido="+compra.getIdPartido());
+		Integer totalvendidas = itemService.obtenerTotalSectorVendidas(compra.getIdEntrada(), compra.getIdPartido());
+		System.out.println("BUSCAR HINCHA Entrada     MAXIMO="+entrada.getMaximo()+"   TOTAL="+totalvendidas);
+		if((totalvendidas + ticketList.size())  > entrada.getMaximo()){
+			model.addAttribute("partidos", itemService.obtenerPartidos());
+			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+			model.addAttribute("error", "Error: La venta excede el total de entradas disponibles para el sector seleccionado");
+			return "content/compra";
+		}
+		
+		//aca se chequea que este disponible la impresora
+		
+		
 		try {
 			itemService.insertarCompra(ticketList);
+			
+			for(Compra c: ticketList) {
+				System.out.println("--->"+c.getIdCompra()+" "+c.getToken());
+			}
+			
+			
+			
 		} catch (UpdateException e) {
 			model.addAttribute("error", "Error: No se pudo registrar la compra");
 			SecurityUtils.getSubject().getSession().removeAttribute("carro");

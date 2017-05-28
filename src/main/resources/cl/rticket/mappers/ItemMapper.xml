@@ -4,11 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cl.rticket.mappers.ItemMapper">
-
+<!-- 
+SELECT date_format(NOW(),'%W %d de %M de %Y')
+SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <select id="obtenerPartidos" resultType="Partido" >
  select 
           par_id idPartido,
-          CONCAT (par_desc, ' (',par_fecha,')') descripcion         
+          par_desc descripcion ,
+          date_format(par_fecha,'%d-%m-%Y %H:%i') fecha   
     from partido 
 </select>
 
@@ -20,9 +23,34 @@
 </select>
 
 
+<!-- =================================================================================================== -->
+<!-- PAGINA DE ENTRADAS==================================================================================-->
+<!-- =================================================================================================== -->
+
+<insert id="insertarEntrada" parameterType="Entrada">
+   insert into entrada (ent_id, sec_id, par_id, ent_precio, ent_fecha_creacion,ent_comentario, ent_maximo)
+   values 
+       (NULL, #{idSector}, #{idPartido}, #{precio},NOW(),UPPER(#{comentario}),#{maximo})
+</insert>
+
+<delete id="eliminarEntrada" parameterType="map">
+  delete from entrada where ent_id = #{idEntrada}
+</delete>
+
+<select id="obtenerEntrada" resultType="Entrada" parameterType="int">
+      select  a.ent_id idEntrada, a.par_id idPartido , a.ent_precio precio ,
+           p.par_desc descPartido, s.sec_desc descSector, a.ent_comentario comentario, a.ent_maximo maximo
+          
+   from entrada a, partido p, sector s
+   where 
+	   a.ent_id = #{idEntrada} and 	
+	   a.sec_id = s.sec_id and
+	   a.par_id = p.par_id
+</select>
+
 <select id="obtenerEntradas" resultType="Entrada" parameterType="map">
    select  a.ent_id idEntrada, a.par_id idPartido , a.ent_precio precio ,
-           p.par_desc descPartido, CONCAT(s.sec_desc,' - $',a.ent_precio) descSector
+           p.par_desc descPartido, s.sec_desc descSector, ent_comentario comentario, ent_maximo maximo
           
    from entrada a, partido p, sector s
    where
@@ -31,35 +59,29 @@
 	   a.par_id = p.par_id
 </select>
 
-<select id="obtenerEntrada" resultType="Entrada" parameterType="int">
-      select  a.ent_id idEntrada, a.par_id idPartido , a.ent_precio precio ,
-           p.par_desc descPartido, CONCAT(s.sec_desc,' - $',a.ent_precio) descSector
-          
-   from entrada a, partido p, sector s
-   where
-	   a.ent_id = #{idEntrada} and 	
-	   a.sec_id = s.sec_id and
-	   a.par_id = p.par_id
+<!-- =================================================================================================== -->
+<!-- PAGINA DE COMPRAS ==================================================================================-->
+<!-- =================================================================================================== -->
+
+<insert id="insertarCompra" parameterType="Compra"  useGeneratedKeys="true" keyProperty="idCompra"  keyColumn="com_id">
+ insert into compra (ent_id,hin_rut,usr_username,com_monto,com_token,com_nominativa,com_fecha) 
+ values (#{idEntrada},#{rut},#{username},#{monto},#{token},#{nominativa},NOW())
+ <selectKey keyProperty="idCompra" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+ </selectKey>
+</insert>
+
+<update id="actualizarTokenCompra" parameterType="int">
+ update compra set com_token = #{token}
+      where com_id = #{idCompra}
+</update>
+
+<select id="obtenerTotalSectorVendidas"  parameterType="map" resultType="int">
+
+   select count(*) from entrada e, compra c
+   where e.ent_id = #{idEntrada} and e.par_id = #{idPartido} and e.ent_id = c.ent_id
+
 </select>
-
-
-
-<insert id="insertarEntrada" parameterType="Entrada">
-   insert into entrada (ent_id, sec_id, par_id, ent_precio, ent_fecha_creacion)
-   values 
-       (NULL, #{idSector}, #{idPartido}, #{precio},NOW())
-</insert>
-
-<delete id="eliminarEntrada" parameterType="map">
-  delete from entrada where ent_id = #{idEntrada}
-</delete>
-
-
-<insert id="insertarCompra" parameterType="Compra">
- insert into compra (com_id,ent_id,hin_rut,usr_username,com_monto,com_token,com_nominativa,com_fecha) 
- values (NULL,#{idEntrada},#{rut},#{username},#{monto},#{token},#{nominativa},NOW())
-
-</insert>
 
 
 </mapper>

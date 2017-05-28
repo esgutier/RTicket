@@ -164,7 +164,7 @@ public class HinchaController {
 					ticket.setRutCompleto(rutBusqueda);
 					ticket.setUsername(usuario.getUsername());
 					ticket.setMonto(entrada.getPrecio());
-					ticket.setToken("E"+rut+"-"+Util.random()); //debe ser string
+					ticket.setToken(123); //debe ser string
 					ticket.setNominativa("S");
 					ticket.setDescPartido(entrada.getDescPartido());
 					ticket.setDescSector(entrada.getDescSector());
@@ -237,6 +237,7 @@ public class HinchaController {
 			compra.setNombreHincha(tmp.getNombres()+" "+tmp.getApellidos());
 			 //agregar la entrada al carro
 			Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
+			
 			Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 			Compra ticket = new Compra();
 			ticket.setIdPartido(entrada.getIdPartido());
@@ -245,7 +246,7 @@ public class HinchaController {
 			ticket.setRutCompleto(tmp.getRut()+"-"+tmp.getDv());
 			ticket.setUsername(usuario.getUsername());
 			ticket.setMonto(entrada.getPrecio());
-			ticket.setToken("E"+rut+"-"+Util.random()); 
+			ticket.setToken(123); 
 			ticket.setNominativa("S");
 			ticket.setDescPartido(entrada.getDescPartido());
 			ticket.setDescSector(entrada.getDescSector());

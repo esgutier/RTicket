@@ -32,7 +32,7 @@
 							<div class="col-md-10">
 								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido">
 								    <option value="0" >Seleccione...</option>	
-								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}" >partido</option>													
+								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}+' ('+${partido.fecha}+')'" >partido</option>													
 								</select>
 							</div>
 					 </div>
@@ -50,7 +50,24 @@
 							<div class="col-md-2">
 							  <div class="input-group">
 							     <span class="input-group-addon">$</span>
-								 <input th:field="*{precio}" pattern="[0-9]*" maxlength="4" type="text" class="form-control input-sm" />
+								 <input th:field="*{precio}" pattern="[0-9]*" required="required" maxlength="5" type="text" class="form-control input-sm" />
+							  </div>
+							</div>
+					 </div>
+					  <div class="form-group">
+						    <label class="col-md-2 control-label">Máximo</label>
+							<div class="col-md-2">
+							  <div class="input-group">							    
+								 <input th:field="*{maximo}" pattern="[0-9]*" required="required" maxlength="5" type="text" class="form-control input-sm" />
+							  </div>
+							</div>
+					 </div>
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Comentario</label>
+							<div class="col-md-6">
+							  <div class="input-group">
+							
+								 <input th:field="*{comentario}" pattern="[0-9a-zA-ZñÑáéíóúÁÉÍÓÚ\s]*" maxlength="15" type="text" class="form-control input-sm" />
 							  </div>
 							</div>
 					 </div>
@@ -69,7 +86,7 @@
 									<tr>
 									  <th>Partido</th>
 									  <th>Sector</th>
-									  <th>Precio</th>								  
+									  <th>Cantidad Máxima</th>								  
 									  <th>Eliminar</th>
 									</tr>
 								</thead>
@@ -77,7 +94,7 @@
 									<tr th:each="ent : ${entradas}">
 										<td th:text="${ent.descPartido}">1</td>
 										<td th:text="${ent.descSector}">xxx</td>
-										<td th:text="${ent.precio}">xxx</td>									
+										<td th:text="${ent.maximo}">xxx</td>									
 										<td><a href="#" th:href="@{/eliminar-entrada(idEntrada=${ent.idEntrada},idPartido=${ent.idPartido})}"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
 									</tr>											
 								</tbody>

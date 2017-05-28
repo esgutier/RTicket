@@ -63,7 +63,7 @@ CREATE TABLE hincha (
   hin_telefono varchar(9) NOT NULL,
   hin_email varchar(100) NOT NULL,
   hin_fecha_nac date NOT NULL,
-  hin_fecha_ingreso date NOT NULL,
+  hin_fecha_ingreso datetime NOT NULL,
   hin_categoria varchar(2) NOT NULL,
   PRIMARY KEY  (hin_rut) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
@@ -86,16 +86,15 @@ insert into sector values(null,'SUR');
 
 CREATE TABLE partido (
   
-  par_id int(2) NOT NULL AUTO_INCREMENT,  
+  par_id int(4) NOT NULL AUTO_INCREMENT,  
   par_desc varchar(50) NOT NULL, 
-  par_fecha varchar(10) NOT NULL,
-  par_hora varchar(5) NOT NULL,
+  par_fecha datetime NOT NULL,
   PRIMARY KEY  (par_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-insert into partido values(null,'BARCELONA F.C','13-06-2017','15:30');
-insert into partido values(null,'JUVENTUS','22-06-2017', '16:30');
-insert into partido values(null,'ARSENAL','13-10-2017', '17:00');
+insert into partido values(null,'BARCELONA F.C',STR_TO_DATE('13-06-2017 23:30', '%d-%m-%Y %H:%i'));
+insert into partido values(null,'JUVENTUS',STR_TO_DATE('13-06-2017 23:30', '%d-%m-%Y %H:%i'));
+insert into partido values(null,'ARSENAL',STR_TO_DATE('13-06-2017 23:30', '%d-%m-%Y %H:%i'));
 
 
 CREATE TABLE entrada (  
@@ -103,8 +102,9 @@ CREATE TABLE entrada (
   sec_id int(3) NOT NULL,
   par_id int(3) NOT NULL,  
   ent_precio int(6) NOT NULL,
-  ent_fecha_creacion date NOT NULL,
+  ent_fecha_creacion datetime NOT NULL,
   ent_comentario varchar(100),
+  ent_maximo int NOT NULL,
   PRIMARY KEY  (ent_id),
   FOREIGN KEY (sec_id) REFERENCES sector(sec_id),
   FOREIGN KEY (par_id) REFERENCES partido(par_id) 
@@ -117,9 +117,9 @@ CREATE TABLE compra (
   hin_rut int(10) NOT NULL,
   usr_username varchar(20) NOT NULL,  
   com_monto int(6) NOT NULL,
-  com_token varchar(50) NOT NULL,
+  com_token int NOT NULL,
   com_nominativa varchar(1) NOT NULL,
-  com_fecha date NOT NULL,
+  com_fecha datetime NOT NULL,
   PRIMARY KEY  (com_id),
   FOREIGN KEY (ent_id) REFERENCES entrada(ent_id),
   FOREIGN KEY (hin_rut) REFERENCES hincha(hin_rut),

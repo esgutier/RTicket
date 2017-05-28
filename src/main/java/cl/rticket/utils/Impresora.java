@@ -17,6 +17,11 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
+import javax.print.DocFlavor;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -25,9 +30,18 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
-public class MyPrintable {
+import cl.rticket.exception.ImpresoraNoDisponibleException;
+import cl.rticket.model.Ticket;
+
+public class Impresora {
 	
-	public static class Impresora implements Printable {		 
+	private static final String PRINTER_NAME = "zebra";
+	
+	
+	
+	public static class MyPrintable implements Printable {	
+		
+		private Ticket ticket;
 		@Override
 		  public int print(Graphics graphics, PageFormat pageFormat, 
 			                int pageIndex) throws PrinterException {    
@@ -54,13 +68,13 @@ public class MyPrintable {
 		                         BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
 		                         g2d.drawImage(read,x,y,imagewidth,imageheight,null); 
 		                         drawCenteredString(g2d,"V/S",rec1,70,fontVS);
-		                         drawCenteredString(g2d,"BARCELONA",rec1,85,font);
-		                         drawCenteredString(g2d,"Domingo 15 de Septiembre 2017",rec1,98,fontFecha);
-		                         drawCenteredString(g2d,"15:30 Hrs.",rec1,107,fontFecha);
+		                         drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
+		                         drawCenteredString(g2d,ticket.getFecha(),rec1,98,fontFecha);
+		                         drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   
-		                         drawCenteredString(g2d,"PACIFICO",rec1,148,fontSector);
-		                         drawCenteredString(g2d,"Socio",rec1,158,fontSocio);
+		                         drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
+		                         drawCenteredString(g2d,ticket.getCategoria(),rec1,158,fontSocio);
 		                         g2d.drawLine(20, 170, 185, 170); 
 		                         
 		                         
@@ -68,7 +82,7 @@ public class MyPrintable {
 		                 			Hashtable hintMap = new Hashtable();
 			                 		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 			                        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-									BitMatrix byteMatrix = qrCodeWriter.encode("demo",BarcodeFormat.QR_CODE, 100, 100, hintMap);
+									BitMatrix byteMatrix = qrCodeWriter.encode(""+ticket.getToken(),BarcodeFormat.QR_CODE, 100, 100, hintMap);
 									int matrixWidth = byteMatrix.getWidth();
 									BufferedImage qr = new BufferedImage(matrixWidth, matrixWidth,BufferedImage.TYPE_INT_RGB);
 									qr.createGraphics();
@@ -84,43 +98,29 @@ public class MyPrintable {
 												grap.fillRect(i, j, 1, 1);
 											}
 										}
-									}
-									
-									
+									}																		
 									g2d.drawImage(qr,50,175,100,100,null); 
 									
 									
 								} catch (WriterException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
-								}
-		                         
-		                         
-		                         //g2d.drawLine(10, y+60, 180, y+60);                          
-		                                 } catch (IOException e) {
+								}                       
+		                      } catch (IOException e) {
 			        			e.printStackTrace();
 			        		}
-			               // Rectangle rec2 = new Rectangle(5,105,200,100);
-			               // g2d.draw(rec2);	
-		      		try{
-			        /*Draw Header*/
-		                    int y=80;
-			             // g2d.drawString("ABC Shopping Complex", 30,y);  
-			             // g2d.drawString("CopyWrite 2009-2014", 50,y+10);                 //shift a line by adding 10 to y value
-			             // g2d.drawString(now(), 10, y+20);                                //print date
-			            //  g2d.drawString("Cashier : admin", 10, y+30);  
-			        		
-			           
-		            }
-		            catch(Exception r){
-		              r.printStackTrace();
-		            }
-		  
+			             		      
 			                result = PAGE_EXISTS;    
 			            }    
 			            return result;    
 		      } //fin print
-		   }
+		public Ticket getTicket() {
+			return ticket;
+		}
+		public void setTicket(Ticket ticket) {
+			this.ticket = ticket;
+		}
+    }
 	
 	
 	public static void drawCenteredString(Graphics2D g, String text, Rectangle rect, int y, Font font) {
@@ -167,13 +167,49 @@ public class MyPrintable {
             
             return pf;
 }
+	private static PrintService findPrintService(String printerName,
+			PrintService[] services) {
+		for (PrintService service : services) {
+			if (service.getName().equalsIgnoreCase(printerName)) {
+				return service;
+			}
+		}
+		return null;
+	}
+	
+	public void imprimirTicket(Ticket ticket) throws ImpresoraNoDisponibleException {
+		
+		//verificar si esta disponible la impresora
+		DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
+		PrintService service = findPrintService(PRINTER_NAME, printService);
+		if(service == null) {
+			throw new ImpresoraNoDisponibleException();
+		}
+		
+		//imprimir
+		PrinterJob pj = PrinterJob.getPrinterJob();
+		MyPrintable myPrintable = new MyPrintable();
+		myPrintable.setTicket(ticket);
+		try {
+			pj.setPrintService(service);
+			pj.setPrintable(myPrintable,getPageFormat(pj));
+			pj.print();
+		} catch (PrinterException e) {			
+			throw new ImpresoraNoDisponibleException();
+		}
+		
+		
+	}
 	
 	public static void main(String args[]){
-		MyPrintable ps=new MyPrintable();
+		Impresora ps=new Impresora();
 		 
-		       
+		/*       
 		 PrinterJob pj = PrinterJob.getPrinterJob();
-		 pj.setPrintable(new Impresora(),getPageFormat(pj));
+		 
+		 pj.setPrintable(new MyPrintable(),getPageFormat(pj));
 		       try {
 		    	  // for(int i = 0; i < 6 ; i++) {
 		            pj.print();
@@ -182,5 +218,22 @@ public class MyPrintable {
 		        catch (PrinterException ex) {
 		                ex.printStackTrace();
 		            }
+		       
+		   */
+		DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
+		PrintService service = findPrintService("Zewwbra", printService);
+		System.out.println(service);
+		PrinterJob pj = PrinterJob.getPrinterJob();
+		try {
+			pj.setPrintService(service);
+		} catch (PrinterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
+	
 }

@@ -12,6 +12,9 @@ public class Partido implements Serializable {
 
 	private Integer idPartido;
 	private String descripcion;
+	private String fecha;
+	private String hora;
+	private String fechaTexto;
 	
 	public Integer getIdPartido() {
 		return idPartido;
@@ -24,6 +27,24 @@ public class Partido implements Serializable {
 	}
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+	public String getFecha() {
+		return fecha;
+	}
+	public void setFecha(String fecha) {
+		this.fecha = fecha;
+	}
+	public String getHora() {
+		return hora;
+	}
+	public void setHora(String hora) {
+		this.hora = hora;
+	}
+	public String getFechaTexto() {
+		return fechaTexto;
+	}
+	public void setFechaTexto(String fechaTexto) {
+		this.fechaTexto = fechaTexto;
 	}
 	
 	
