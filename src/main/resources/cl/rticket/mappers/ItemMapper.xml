@@ -64,8 +64,8 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- =================================================================================================== -->
 
 <insert id="insertarCompra" parameterType="Compra"  useGeneratedKeys="true" keyProperty="idCompra"  keyColumn="com_id">
- insert into compra (ent_id,hin_rut,usr_username,com_monto,com_token,com_nominativa,com_fecha) 
- values (#{idEntrada},#{rut},#{username},#{monto},#{token},#{nominativa},NOW())
+ insert into compra (ent_id,hin_rut,usr_username,com_monto,com_token,com_nominativa,com_anulada,com_fecha) 
+ values (#{idEntrada},#{rut},#{username},#{monto},#{token},#{nominativa},#{anulada},NOW())
  <selectKey keyProperty="idCompra" resultType="int" order="AFTER">
             SELECT LAST_INSERT_ID();
  </selectKey>

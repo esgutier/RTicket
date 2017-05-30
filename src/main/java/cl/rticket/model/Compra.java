@@ -24,6 +24,7 @@ public class Compra implements Serializable {
 	private String rutCompleto;
 	private Integer monto;
 	private Integer token;
+	private String anulada;
 	
 	
 	public Integer getIdEntrada() {
@@ -116,5 +117,12 @@ public class Compra implements Serializable {
 	public void setIdCompra(Integer idCompra) {
 		this.idCompra = idCompra;
 	}
+	public String getAnulada() {
+		return anulada;
+	}
+	public void setAnulada(String anulada) {
+		this.anulada = anulada;
+	}
+	
 	
 }

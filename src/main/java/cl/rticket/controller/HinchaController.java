@@ -166,6 +166,7 @@ public class HinchaController {
 					ticket.setMonto(entrada.getPrecio());
 					ticket.setToken(123); //debe ser string
 					ticket.setNominativa("S");
+					ticket.setAnulada("N");					
 					ticket.setDescPartido(entrada.getDescPartido());
 					ticket.setDescSector(entrada.getDescSector());
 					ticket.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
@@ -248,6 +249,7 @@ public class HinchaController {
 			ticket.setMonto(entrada.getPrecio());
 			ticket.setToken(123); 
 			ticket.setNominativa("S");
+			ticket.setAnulada("N");
 			ticket.setDescPartido(entrada.getDescPartido());
 			ticket.setDescSector(entrada.getDescSector());
 			ticket.setNombreHincha(tmp.getNombres()+" "+tmp.getApellidos());

@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS hincha;
 DROP TABLE IF EXISTS sector;
 DROP TABLE IF EXISTS partido;
 
+SET lc_time_names = 'es_CL';
 
 CREATE TABLE usuario (
   usr_username varchar(20) NOT NULL,
@@ -119,6 +120,7 @@ CREATE TABLE compra (
   com_monto int(6) NOT NULL,
   com_token int NOT NULL,
   com_nominativa varchar(1) NOT NULL,
+  com_anulada varchar(1) NOT NULL,
   com_fecha datetime NOT NULL,
   PRIMARY KEY  (com_id),
   FOREIGN KEY (ent_id) REFERENCES entrada(ent_id),
