@@ -66,5 +66,9 @@ public class Ticket implements Serializable{
 		this.apellidos = apellidos;
 	}
 	
+	public void print() {
+		System.out.println(" Rival:"+this.rival+" Fecha:"+this.fecha+" Hora:"+this.hora+" Nombre:"+this.nombres+" Apellidos:"+this.apellidos);
+	}
+	
 
 }

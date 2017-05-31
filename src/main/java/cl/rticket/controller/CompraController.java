@@ -3,6 +3,8 @@ package cl.rticket.controller;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.print.PrintService;
+
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import cl.rticket.exception.ImpresoraNoDisponibleException;
 import cl.rticket.exception.UpdateException;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
+import cl.rticket.model.Ticket;
 import cl.rticket.services.ItemService;
-import cl.rticket.utils.PrinterService;
+import cl.rticket.utils.Impresora;
 
 @Controller
 public class CompraController {
@@ -91,14 +95,14 @@ public class CompraController {
 	@RequestMapping(value="/confirmar-compra", method=RequestMethod.POST)
 	public String confirmarCompra(Model model, Compra compra,RedirectAttributes flash) {
 		
-		ArrayList<Compra> ticketList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
+		ArrayList<Compra> compraList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
 		
 		//aca se valida la disponibilidad de las entradas
 		Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
 		System.out.println("BUSCAR HINCHA Entrada     idEntrada="+compra.getIdEntrada()+"   idPartido="+compra.getIdPartido());
 		Integer totalvendidas = itemService.obtenerTotalSectorVendidas(compra.getIdEntrada(), compra.getIdPartido());
 		System.out.println("BUSCAR HINCHA Entrada     MAXIMO="+entrada.getMaximo()+"   TOTAL="+totalvendidas);
-		if((totalvendidas + ticketList.size())  > entrada.getMaximo()){
+		if((totalvendidas + compraList.size())  > entrada.getMaximo()){
 			model.addAttribute("partidos", itemService.obtenerPartidos());
 			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
 			model.addAttribute("error", "Error: La venta excede el total de entradas disponibles para el sector seleccionado");
@@ -106,13 +110,30 @@ public class CompraController {
 		}
 		
 		//aca se chequea que este disponible la impresora
+		Impresora impresora = new Impresora();
+		PrintService service = impresora.obtenerImpresoraService();
+		System.out.println("service:"+service);
+		if(service == null) {
+			model.addAttribute("partidos", itemService.obtenerPartidos());
+			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+			model.addAttribute("error", "Error: Verifique que la impresora esté conectada y que posea el nombre de ticket");
+			return "content/compra";
+		}
 		
 		
 		try {
-			itemService.insertarCompra(ticketList);
-			
-			for(Compra c: ticketList) {
-				System.out.println("--->"+c.getIdCompra()+" "+c.getToken());
+			ArrayList<Ticket> listaTicket = itemService.insertarCompra(compraList);	
+			System.out.println("---->size:"+listaTicket.size());
+			for(Ticket ticket: listaTicket) {				
+				try {
+					System.out.println("id compra="+ticket.getToken());
+					impresora.imprimirTicket(ticket,service);
+				} catch (ImpresoraNoDisponibleException e) {
+					model.addAttribute("partidos", itemService.obtenerPartidos());
+					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+					model.addAttribute("error", "Error: Verifique que la impresora esté conectada y que posea el nombre de ticket");
+					return "content/compra";
+				}
 			}
 			
 			

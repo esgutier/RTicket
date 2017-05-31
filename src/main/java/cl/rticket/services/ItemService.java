@@ -7,6 +7,7 @@ import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
+import cl.rticket.model.Ticket;
 
 public interface ItemService {
 
@@ -16,6 +17,7 @@ public interface ItemService {
 	public void insertarEntrada(Entrada entrada);
 	public void eliminarEntrada(Integer idEntrada);
 	public Entrada obtenerEntrada(Integer idEntrada);
-	public void insertarCompra(ArrayList<Compra> list) throws UpdateException;
+	public ArrayList<Ticket> insertarCompra(ArrayList<Compra> list) throws UpdateException;
 	public int obtenerTotalSectorVendidas(Integer idEntrada, Integer idPartido);
+	//public Ticket obtenerDatosTicketNominativo(Integer idCompra);
 }

@@ -83,5 +83,20 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 
 </select>
 
+<select id="obtenerDatosTicketNominativo" parameterType="int" resultType="Ticket">
+   select h.hin_nombres nombres, h.hin_apellidos apellidos, p.par_desc rival ,
+	      date_format(p.par_fecha,'%W %d de %M de %Y') fecha,
+	      date_format(p.par_fecha,' %H:%i') hora,
+	      s.sec_desc sector ,
+	      c.com_token token,
+	      h.hin_categoria categoria
+	from compra c, entrada e, partido p,hincha h, sector s
+	where c.com_id = #{idCompra} and
+	      c.ent_id = e.ent_id and
+	      c.hin_rut = h.hin_rut and
+	      e.sec_id = s.sec_id and
+	      e.par_id = p.par_id
+</select>
+
 
 </mapper>

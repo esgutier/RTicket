@@ -12,6 +12,7 @@ import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
+import cl.rticket.model.Ticket;
 import cl.rticket.utils.Util;
 
 @Service("itemService")
@@ -44,29 +45,36 @@ public class ItemServiceImpl implements ItemService{
 	}
 	
 	@Transactional(rollbackFor={UpdateException.class, Exception.class})
-	public void insertarCompra(ArrayList<Compra> list) throws UpdateException {
+	public ArrayList<Ticket> insertarCompra(ArrayList<Compra> list) throws UpdateException {
 		
-		for(Compra ticket: list) {
+		ArrayList<Ticket> listaTickets = new ArrayList<Ticket>();
+		for(Compra compra: list) {
 			//inserto compra con token 0
-			itemMapper.insertarCompra(ticket);			
-			if(ticket.getIdCompra() < 1) {
+			itemMapper.insertarCompra(compra);			
+			if(compra.getIdCompra() < 1) {
 				throw new UpdateException();
 			} else {
 				//la compra inserto bien, ahora creo el token con el id de secuencia retornado mas 
 				//un numero random y actualizo la tabla compra con el id correspondiente
-				String tmp = ticket.getIdCompra()+""+Util.randomNumber();
+				String tmp = compra.getIdCompra()+""+Util.randomNumber();
 				Integer token = new Integer(tmp);
-				int result = itemMapper.actualizarTokenCompra(ticket.getIdCompra(),token);
-				ticket.setToken(token);
+				int result = itemMapper.actualizarTokenCompra(compra.getIdCompra(),token);
+				compra.setToken(token);
 				if(result < 1) {
 					throw new UpdateException();
 				}
+				//ahora obtengo la info que va a ir impresa en el ticket nominativo
+				Ticket ticket = itemMapper.obtenerDatosTicketNominativo(compra.getIdCompra());
+				listaTickets.add(ticket);
 			}
-		}		
+		}	
+		return listaTickets;
 	}
 	
 	public int obtenerTotalSectorVendidas(Integer idEntrada, Integer idPartido) {
 		return itemMapper.obtenerTotalSectorVendidas(idEntrada, idPartido);
 	}
+	
+	
 
 }

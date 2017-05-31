@@ -43,13 +43,12 @@ public class Impresora {
 		
 		private Ticket ticket;
 		@Override
-		  public int print(Graphics graphics, PageFormat pageFormat, 
-			                int pageIndex) throws PrinterException {    
+		  public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {    
 			                int result = NO_SUCH_PAGE;    
 			                if (pageIndex == 0) {                    
 			                Graphics2D g2d = (Graphics2D) graphics;                    
 			                             
-			                 
+			                ticket.print(); 
 			                g2d.translate((int) pageFormat.getImageableX(),(int) pageFormat.getImageableY()); 
 			                Font font = new Font("Arial",Font.BOLD,12);       
 			                Font fontVS = new Font("Arial",Font.BOLD,10); 
@@ -64,17 +63,17 @@ public class Impresora {
 		                         int y=5;                                        
 		                         int imagewidth=50;
 		                         int imageheight=50;
-		                         //BufferedImage read = ImageIO.read(getClass().getResource("/image/logo.gif")); para web
-		                         BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
-		                         g2d.drawImage(read,x,y,imagewidth,imageheight,null); 
+		                         BufferedImage read = ImageIO.read(getClass().getResource("logo_png.png")); 		                        
+		                         //BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
+		                         g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
 		                         drawCenteredString(g2d,"V/S",rec1,70,fontVS);
 		                         drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
-		                         drawCenteredString(g2d,ticket.getFecha(),rec1,98,fontFecha);
+		                         drawCenteredString(g2d,ticket.getFecha(),rec1,98,fontFecha);		                        
 		                         drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   
 		                         drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
-		                         drawCenteredString(g2d,ticket.getCategoria(),rec1,158,fontSocio);
+		                         drawCenteredString(g2d,ticket.getCategoria(),rec1,158,fontSocio);		                        
 		                         g2d.drawLine(20, 170, 185, 170); 
 		                         
 		                         
@@ -124,14 +123,9 @@ public class Impresora {
 	
 	
 	public static void drawCenteredString(Graphics2D g, String text, Rectangle rect, int y, Font font) {
-	    // Get the FontMetrics
-	    FontMetrics metrics = g.getFontMetrics(font);
-	    // Determine the X coordinate for the text
-	    int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-	    // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)	    
-	    // Set the font
+	    FontMetrics metrics = g.getFontMetrics(font);	  
+	    int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;	  
 	    g.setFont(font);
-	    // Draw the String
 	    g.drawString(text, x, y);
 	}
 	
@@ -177,16 +171,16 @@ public class Impresora {
 		return null;
 	}
 	
-	public void imprimirTicket(Ticket ticket) throws ImpresoraNoDisponibleException {
-		
+	public PrintService obtenerImpresoraService() {
 		//verificar si esta disponible la impresora
-		DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
-		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
-		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
-		PrintService service = findPrintService(PRINTER_NAME, printService);
-		if(service == null) {
-			throw new ImpresoraNoDisponibleException();
-		}
+				DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+				PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+				PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
+				PrintService service = findPrintService(PRINTER_NAME, printService);
+				return service;
+	}
+	
+	public  void imprimirTicket(Ticket ticket, PrintService service) throws ImpresoraNoDisponibleException {
 		
 		//imprimir
 		PrinterJob pj = PrinterJob.getPrinterJob();

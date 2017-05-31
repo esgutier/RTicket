@@ -8,6 +8,7 @@ import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
+import cl.rticket.model.Ticket;
 
 public interface ItemMapper {
    
@@ -22,4 +23,6 @@ public interface ItemMapper {
 			                         @Param("token")Integer token);
 	public Integer obtenerTotalSectorVendidas(@Param("idEntrada")Integer idEntrada,
 			                                  @Param("idPartido")Integer idPartido);
+	
+	public Ticket obtenerDatosTicketNominativo(@Param("idCompra")Integer idCompra);
 }
