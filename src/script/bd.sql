@@ -65,11 +65,12 @@ CREATE TABLE hincha (
   hin_email varchar(100) NOT NULL,
   hin_fecha_nac date NOT NULL,
   hin_fecha_ingreso datetime NOT NULL,
-  hin_categoria varchar(2) NOT NULL,
+  hin_categoria varchar(2)  NULL,
   PRIMARY KEY  (hin_rut) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 insert into hincha values (13797397,'9','MELISA','BARRIGA SALAZAR','TEGUALDA 2050-A','F', '994583020','melisa.barriga@gmail.com',STR_TO_DATE('13-06-1980', '%d-%m-%Y'),NOW(),'A');
+insert into hincha values (11111111,'9','ENTRADA','NORMAL','-------','-', '-------','---------',STR_TO_DATE('13-06-1980', '%d-%m-%Y'),NOW(),'A');
 
 
 CREATE TABLE sector (
@@ -119,7 +120,7 @@ CREATE TABLE compra (
   usr_username varchar(20) NOT NULL,  
   com_monto int(6) NOT NULL,
   com_token int NOT NULL,
-  com_nominativa varchar(1) NOT NULL,
+  com_tipo varchar(1) NOT NULL,
   com_anulada varchar(1) NOT NULL,
   com_fecha datetime NOT NULL,
   PRIMARY KEY  (com_id),

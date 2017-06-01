@@ -64,8 +64,8 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- =================================================================================================== -->
 
 <insert id="insertarCompra" parameterType="Compra"  useGeneratedKeys="true" keyProperty="idCompra"  keyColumn="com_id">
- insert into compra (ent_id,hin_rut,usr_username,com_monto,com_token,com_nominativa,com_anulada,com_fecha) 
- values (#{idEntrada},#{rut},#{username},#{monto},#{token},#{nominativa},#{anulada},NOW())
+ insert into compra (ent_id,hin_rut,usr_username,com_monto,com_token,com_tipo,com_anulada,com_fecha) 
+ values (#{idEntrada},#{rut},#{username},#{monto},#{token},#{tipo},#{anulada},NOW())
  <selectKey keyProperty="idCompra" resultType="int" order="AFTER">
             SELECT LAST_INSERT_ID();
  </selectKey>
@@ -89,7 +89,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      date_format(p.par_fecha,' %H:%i') hora,
 	      s.sec_desc sector ,
 	      c.com_token token,
-	      h.hin_categoria categoria
+	      c.com_tipo tipo
 	from compra c, entrada e, partido p,hincha h, sector s
 	where c.com_id = #{idCompra} and
 	      c.ent_id = e.ent_id and
@@ -97,6 +97,28 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      e.sec_id = s.sec_id and
 	      e.par_id = p.par_id
 </select>
+
+<!-- =================================================================================================== -->
+<!-- GENERACION MASIVA ================================================================================= -->
+<!-- =================================================================================================== -->
+
+<select id="obtenerTotalesEntradas" parameterType="int" resultType="TotalesEntrada">
+  select e.ent_id idEntrada,s.sec_desc nombreSector ,  e.ent_maximo maximo, c.com_tipo tipo , count(*) total
+	
+	from entrada e , compra c, sector s
+	where
+	     e.par_id = #{idPartido} and
+	     e.sec_id = s.sec_id and
+	     e.ent_id = c.ent_id
+    group by s.sec_desc, e.ent_id, c.com_tipo 
+
+</select>
+
+
+
+
+
+
 
 
 </mapper>

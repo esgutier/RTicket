@@ -13,7 +13,7 @@ public class Ticket implements Serializable{
 	private String fecha;
 	private String hora;
 	private String sector;
-	private String categoria;
+	private String tipo;
 	private Integer token;
 	private String nombres;
 	private String apellidos;
@@ -41,11 +41,11 @@ public class Ticket implements Serializable{
 	public void setSector(String sector) {
 		this.sector = sector;
 	}
-	public String getCategoria() {
-		return categoria;
+	public String getTipo() {
+		return tipo;
 	}
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
+	public void setCategoria(String tipo) {
+		this.tipo = tipo;
 	}
 	public Integer getToken() {
 		return token;

@@ -17,7 +17,7 @@ public class Compra implements Serializable {
 	private String idHincha;
 	private String nombreHincha;
 	private Integer rut;
-	private String nominativa;
+	private String tipo;
 	private String username;
 	private String rutEscaneado;
 	private String rutDigitado;
@@ -45,11 +45,11 @@ public class Compra implements Serializable {
 	public void setRut(Integer rut) {
 		this.rut = rut;
 	}
-	public String getNominativa() {
-		return nominativa;
+	public String getTipo() {
+		return tipo;
 	}
-	public void setNominativa(String nominativa) {
-		this.nominativa = nominativa;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	public String getUsername() {
 		return username;

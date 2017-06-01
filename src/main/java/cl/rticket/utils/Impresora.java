@@ -73,7 +73,7 @@ public class Impresora {
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   
 		                         drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
-		                         drawCenteredString(g2d,ticket.getCategoria(),rec1,158,fontSocio);		                        
+		                         drawCenteredString(g2d,ticket.getTipo(),rec1,158,fontSocio);		                        
 		                         g2d.drawLine(20, 170, 185, 170); 
 		                         
 		                         

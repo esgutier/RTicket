@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+    /*<![CDATA[*/
+        $(document).ready(function (){	
+        	
+        	$("#selectIdPartido").change(function(){
+        		document.forms[0].action = "carga-entradas-masivo";      		
+        		document.forms[0].submit();
+        	});
+
+        });      
+       /*]]>*/ 
+    </script>
+  
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Generación de Tickets Masivos</h3>
+		     </div>
+			 <div class="widget-content">
+			 <form action="#" th:action="@{/generar-entradas-masivo}"  th:object="${entrada}" method="POST" >
+			   <input type="hidden" th:field="*{rut}" />
+			   <div class="form-horizontal">	
+				     <div  th:if="${error != null}" >
+			      		<div class="alert alert-danger " th:text="${error}">
+							Aqui van los mensajes de error																	
+				  		</div>
+					 </div>	
+					 <div  th:if="${exito != null}" >
+			      		<div class="alert alert-success " th:text="${exito}">
+							Aqui van los mensajes de exito																	
+				  		</div>
+					 </div>	
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Partido</label>
+							<div class="col-md-10">
+								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido">
+								    <option value="0" >Seleccione...</option>	
+								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}" >partido</option>													
+								</select>
+							</div>
+					 </div>
+					 
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Entradas Disponibles</label>
+							<div class="col-md-10">
+								<select th:field="*{idEntrada}"  class="form-control input-sm" id="selectIdEntrada">
+								    <option value="0" >Seleccione...</option>	
+								    <option th:each="entrada : ${entradas}" th:value="${entrada.idEntrada}" th:text="${entrada.descSector}" >partido</option>													
+								</select>
+							</div>
+					 </div>
+					 
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Cantidad</label>
+							<div class="col-md-10">
+							     <input th:field="*{maximo}"  maxlength="4" type="text" class="form-control input-sm"  />		 
+							</div>
+					 </div>
+					 <div align="center">
+					    <button type="submit" class="btn btn-custom-primary">Generar Entradas</button>	
+					 </div>
+					
+					 <div class="row">	
+					     <div class="col-md-1">	</div>
+					     <div class="col-md-10">
+					     		 
+						 <table class="table table-bordered">
+								<thead>
+									<tr>
+									  <th>SECTOR</th>
+									  <th>MAXIMO</th>
+									  <th>TOTAL NOMINATIVAS</th>
+									  <th>TOTAL NORMALES</th>										  					  
+									  <th>TOTAL CORTESIA</th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									<tr th:each="row : ${totales}"> 
+									    <td  th:text="${row.value.nombreSector}"></td> 
+									    <td  ></td> 
+									    <td  ></td> 
+									    <td  ></td> 
+									    <td  ></td> 
+									    
+									</tr> 										
+								</tbody>
+								
+						   </table>
+						   </div>
+						   <div class="col-md-1">	</div>
+					   </div>
+					
+				</div>
+				</form>
+			 </div>
+	   </div>
+	   
+	   
+          
+  </div>
+ </html>
