@@ -17,6 +17,8 @@ public class Ticket implements Serializable{
 	private Integer token;
 	private String nombres;
 	private String apellidos;
+	private String precio;
+	
 	public String getRival() {
 		return rival;
 	}
@@ -68,6 +70,12 @@ public class Ticket implements Serializable{
 	
 	public void print() {
 		System.out.println(" Rival:"+this.rival+" Fecha:"+this.fecha+" Hora:"+this.hora+" Nombre:"+this.nombres+" Apellidos:"+this.apellidos);
+	}
+	public String getPrecio() {
+		return precio;
+	}
+	public void setPrecio(String precio) {
+		this.precio = precio;
 	}
 	
 

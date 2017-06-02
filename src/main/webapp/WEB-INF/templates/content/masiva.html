@@ -8,8 +8,17 @@
         $(document).ready(function (){	
         	
         	$("#selectIdPartido").change(function(){
-        		document.forms[0].action = "carga-entradas-masivo";      		
+        		document.forms[0].action = "carga-entradas-masivo";          		
         		document.forms[0].submit();
+        	});
+        	
+        	$("#generarEntradasButton").click(function(){
+        		 $('#generandoTicketModal').modal('show');       		
+        	});
+        	
+        	$(".imprimir").click(function(){
+        		
+        		 $('#imprimiendoTicketModal').modal('show'); 
         	});
 
         });      
@@ -22,7 +31,7 @@
 		     </div>
 			 <div class="widget-content">
 			 <form action="#" th:action="@{/generar-entradas-masivo}"  th:object="${entrada}" method="POST" >
-			   <input type="hidden" th:field="*{rut}" />
+			   
 			   <div class="form-horizontal">	
 				     <div  th:if="${error != null}" >
 			      		<div class="alert alert-danger " th:text="${error}">
@@ -56,14 +65,17 @@
 					 
 					 <div class="form-group">
 						    <label class="col-md-2 control-label">Cantidad</label>
-							<div class="col-md-10">
+							<div class="col-md-2">
 							     <input th:field="*{maximo}"  maxlength="4" type="text" class="form-control input-sm"  />		 
+							</div>
+							<div class="col-md-8">
+							    	 
 							</div>
 					 </div>
 					 <div align="center">
-					    <button type="submit" class="btn btn-custom-primary">Generar Entradas</button>	
+					    <button type="submit" class="btn btn-custom-primary" id="generarEntradasButton">Generar Entradas</button>	
 					 </div>
-					
+					 <br/>
 					 <div class="row">	
 					     <div class="col-md-1">	</div>
 					     <div class="col-md-10">
@@ -76,16 +88,26 @@
 									  <th>TOTAL NOMINATIVAS</th>
 									  <th>TOTAL NORMALES</th>										  					  
 									  <th>TOTAL CORTESIA</th>
+									  <th>IMPRIMIR</th>
 									</tr>
 								</thead>
 								
 								<tbody>
 									<tr th:each="row : ${totales}"> 
 									    <td  th:text="${row.value.nombreSector}"></td> 
-									    <td  ></td> 
-									    <td  ></td> 
-									    <td  ></td> 
-									    <td  ></td> 
+									    <td  th:text="${row.value.maximo}"></td> 
+									    <td  th:text="${row.value.totalNominativa}"></td> 
+									    <td  th:text="${row.value.totalNormales}"></td> 
+									    <td  th:text="${row.value.totalCortesia}"></td> 
+									    <td  > 
+									     
+									      <div th:if="${row.value.tipo == 'R'}">
+									       <a href="#" th:href="@{/imprimir-entradas-masivo(idEntrada=${row.value.idEntrada},idPartido=${row.value.idPartido})}" class="btn btn-custom-primary imprimir">
+									          <i class="fa fa-print" aria-hidden="true"></i>Imprimir
+									        </a>
+									       </div>
+									     </td> 
+									     
 									    
 									</tr> 										
 								</tbody>
@@ -99,6 +121,37 @@
 				</form>
 			 </div>
 	   </div>
+	   
+	   <div class="modal fade" id="generandoTicketModal">
+						         <div class="modal-dialog">
+								 <div class="modal-content">
+										 <div class="modal-header">											  
+											  <h4 class="modal-title">AVISO</h4>
+										 </div>
+										 <div class="modal-body ">
+												<div class="alert alert-info">
+												   Generando registros en Base de Datos, por favor espere.
+												</div>														        
+										 </div>
+										
+								          </div>
+						            </div>
+		    </div>		    
+		    <div class="modal fade" id="imprimiendoTicketModal">
+						         <div class="modal-dialog">
+								 <div class="modal-content">
+										 <div class="modal-header">											  
+											  <h4 class="modal-title">AVISO</h4>
+										 </div>
+										 <div class="modal-body ">
+												<div class="alert alert-info">
+												   Imprimiendo tickets.....
+												</div>														        
+										 </div>
+										
+								          </div>
+						            </div>
+		    </div>
 	   
 	   
           

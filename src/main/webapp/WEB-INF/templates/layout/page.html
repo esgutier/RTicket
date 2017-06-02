@@ -47,13 +47,15 @@
 										    <span class="name" th:text="${session.usuario.nombre}+' '+${session.usuario.apellidos}">USUARIO</span> 
 										    <span class="caret"></span>
 									</a>
-									<ul class="dropdown-menu" role="menu">										
+									<ul class="dropdown-menu" role="menu">	
+									<!-- 							
 										<li>
 											<a href="#">
 												<i class="fa fa-key"></i>
 												<span class="text">Cambiar clave</span>
 											</a>
 										</li>
+									 -->		
 										<li>
 											<a href="#" th:href="@{/logout}">
 												<i class="fa fa-power-off"></i>
@@ -84,7 +86,7 @@
 								<i class="toggle-icon fa fa-angle-left"></i>
 							</a>
 							<ul class="sub-menu">
-								<li >carga-ticket-masivo
+								<li >
 									<a href="#" th:href="@{/carga-ingreso-compra}">
 									   <span class="text">Venta Nominativo</span></a>
 									

@@ -26,4 +26,6 @@ public interface ItemService {
 	//public Ticket obtenerDatosTicketNominativo(Integer idCompra);
 	
 	public HashMap<Integer,TotalesEntrada> obtenerTotalesEntradas(Integer idPartido) ;
+	
+	public ArrayList<Ticket> obtenerDatosTicketMasivo(Integer idSector, String tipo);
 }

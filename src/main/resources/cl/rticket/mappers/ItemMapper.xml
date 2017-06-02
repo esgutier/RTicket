@@ -89,7 +89,8 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      date_format(p.par_fecha,' %H:%i') hora,
 	      s.sec_desc sector ,
 	      c.com_token token,
-	      c.com_tipo tipo
+	      c.com_tipo tipo, 
+	      c.com_monto precio
 	from compra c, entrada e, partido p,hincha h, sector s
 	where c.com_id = #{idCompra} and
 	      c.ent_id = e.ent_id and
@@ -103,7 +104,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- =================================================================================================== -->
 
 <select id="obtenerTotalesEntradas" parameterType="int" resultType="TotalesEntrada">
-  select e.ent_id idEntrada,s.sec_desc nombreSector ,  e.ent_maximo maximo, c.com_tipo tipo , count(*) total
+  select e.par_id idPartido, e.ent_id idEntrada,CONCAT(s.sec_desc,' ',e.ent_comentario) nombreSector, e.ent_maximo maximo, c.com_tipo tipo , count(*) total
 	
 	from entrada e , compra c, sector s
 	where
@@ -114,6 +115,21 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 
 </select>
 
+<select id="obtenerDatosTicketMasivo" parameterType="map" resultType="Ticket">
+      select  p.par_desc rival ,
+	      date_format(p.par_fecha,'%W %d de %M de %Y') fecha,
+	      date_format(p.par_fecha,' %H:%i') hora,
+	      s.sec_desc sector ,
+	      c.com_token token,
+	      c.com_tipo tipo,
+	      c.com_monto precio
+	from compra c, entrada e, partido p, sector s
+	where c.ent_id = #{idSector} and
+	      c.ent_id = e.ent_id and	     
+	      e.sec_id = s.sec_id and
+	      e.par_id = p.par_id and
+	      c.com_tipo = #{tipo}
+</select>
 
 
 

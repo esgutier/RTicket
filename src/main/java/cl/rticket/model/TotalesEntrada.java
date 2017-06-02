@@ -8,6 +8,7 @@ public class TotalesEntrada implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -1688356943313454866L;
+	private Integer idPartido;
 	private Integer idEntrada;
 	private String nombreSector;
 	private Integer maximo;
@@ -66,6 +67,12 @@ public class TotalesEntrada implements Serializable{
 	}
 	public void setTotal(Integer total) {
 		this.total = total;
+	}
+	public Integer getIdPartido() {
+		return idPartido;
+	}
+	public void setIdPartido(Integer idPartido) {
+		this.idPartido = idPartido;
 	}
 	
 }

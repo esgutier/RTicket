@@ -28,4 +28,7 @@ public interface ItemMapper {
 	public Ticket obtenerDatosTicketNominativo(@Param("idCompra")Integer idCompra);
 	
 	public ArrayList<TotalesEntrada> obtenerTotalesEntradas(@Param("idPartido")Integer idPartido);
+	
+	public ArrayList<Ticket> obtenerDatosTicketMasivo(@Param("idSector")Integer idSector,
+													  @Param("tipo")String tipo);
 }
