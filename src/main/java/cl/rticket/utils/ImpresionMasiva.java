@@ -12,6 +12,7 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 
@@ -62,7 +63,11 @@ public class ImpresionMasiva {
 		                         int y=5;                                        
 		                         int imagewidth=50;
 		                         int imageheight=50;
-		                         BufferedImage read = ImageIO.read(getClass().getResource("logo_png.png")); 		                        
+		                        
+		                         BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 
+		                         System.out.println(read);
+		                         System.out.println("---->"+read.getHeight());
+		                         System.out.println("---->"+read.getWidth());
 		                         //BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
 		                         g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
 		                         drawCenteredString(g2d,"V/S",rec1,70,fontVS);
@@ -98,7 +103,7 @@ public class ImpresionMasiva {
 										}
 									}																		
 									g2d.drawImage(qr,50,175,100,100,null);
-									drawCenteredString(g2d,""+ticket.getToken(),rec1,200,fontSocio);
+									drawCenteredString(g2d,""+ticket.getToken(),rec1,270,fontSocio);
 									
 									
 								} catch (WriterException e) {
@@ -198,7 +203,7 @@ public class ImpresionMasiva {
 	}
 	
 	public static void main(String args[]){
-		Impresora ps=new Impresora();
+		ImpresionNominativa ps=new ImpresionNominativa();
 		 
 		/*       
 		 PrinterJob pj = PrinterJob.getPrinterJob();

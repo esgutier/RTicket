@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS hincha;
 DROP TABLE IF EXISTS sector;
 DROP TABLE IF EXISTS partido;
 
-SET lc_time_names = 'es_CL';
+SET lc_time_names = 'es_MX';
 
 CREATE TABLE usuario (
   usr_username varchar(20) NOT NULL,

@@ -33,7 +33,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import cl.rticket.exception.ImpresoraNoDisponibleException;
 import cl.rticket.model.Ticket;
 
-public class Impresora {
+public class ImpresionNominativa {
 	
 	private static final String PRINTER_NAME = "zebra";
 	
@@ -63,7 +63,7 @@ public class Impresora {
 		                         int y=5;                                        
 		                         int imagewidth=50;
 		                         int imageheight=50;
-		                         BufferedImage read = ImageIO.read(getClass().getResource("logo_png.png")); 		                        
+		                         BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 		                        
 		                         //BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
 		                         g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
 		                         drawCenteredString(g2d,"V/S",rec1,70,fontVS);
@@ -73,15 +73,20 @@ public class Impresora {
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   
 		                         drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
-		                         drawCenteredString(g2d,ticket.getTipo(),rec1,158,fontSocio);		                        
-		                         g2d.drawLine(20, 170, 185, 170); 
+		                         drawCenteredString(g2d,"Nominativa - $"+ticket.getPrecio(),rec1,158,fontSocio);
+		                         
+		                         drawCenteredString(g2d,ticket.getNombres(),rec1,175,fontSocio);
+		                         drawCenteredString(g2d,ticket.getApellidos(),rec1,185,fontSocio);
+		                         
+		                         
+		                         g2d.drawLine(20, 195, 185, 195); 
 		                         
 		                         
 		                 		 try {
 		                 			Hashtable hintMap = new Hashtable();
 			                 		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 			                        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-									BitMatrix byteMatrix = qrCodeWriter.encode(""+ticket.getToken(),BarcodeFormat.QR_CODE, 100, 100, hintMap);
+									BitMatrix byteMatrix = qrCodeWriter.encode(""+ticket.getToken(),BarcodeFormat.QR_CODE, 70, 70, hintMap);
 									int matrixWidth = byteMatrix.getWidth();
 									BufferedImage qr = new BufferedImage(matrixWidth, matrixWidth,BufferedImage.TYPE_INT_RGB);
 									qr.createGraphics();
@@ -98,7 +103,8 @@ public class Impresora {
 											}
 										}
 									}																		
-									g2d.drawImage(qr,50,175,100,100,null); 
+									g2d.drawImage(qr,55,198,100,100,null); 
+									drawCenteredString(g2d,""+ticket.getToken(),rec1,295,fontSocio);
 									
 									
 								} catch (WriterException e) {
@@ -198,7 +204,7 @@ public class Impresora {
 	}
 	
 	public static void main(String args[]){
-		Impresora ps=new Impresora();
+		ImpresionNominativa ps=new ImpresionNominativa();
 		 
 		/*       
 		 PrinterJob pj = PrinterJob.getPrinterJob();

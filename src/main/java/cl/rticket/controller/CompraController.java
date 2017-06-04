@@ -20,7 +20,7 @@ import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Ticket;
 import cl.rticket.services.ItemService;
-import cl.rticket.utils.Impresora;
+import cl.rticket.utils.ImpresionNominativa;
 
 @Controller
 public class CompraController {
@@ -110,7 +110,7 @@ public class CompraController {
 		}
 		
 		//aca se chequea que este disponible la impresora
-		Impresora impresora = new Impresora();
+		ImpresionNominativa impresora = new ImpresionNominativa();
 		PrintService service = impresora.obtenerImpresoraService();
 		System.out.println("service:"+service);
 		if(service == null) {
