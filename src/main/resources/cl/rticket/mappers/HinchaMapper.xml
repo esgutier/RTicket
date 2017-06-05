@@ -31,4 +31,10 @@ values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#
                     hin_categoria = #{categoria}
                  where hin_rut = #{rut}
 </update>
+
+
+<select id="obtenerEntidades" resultType="Hincha">
+     select hin_rut rut, hin_nombres nombres from hincha where hin_categoria = 'E' order by hin_nombres
+</select>
+
 </mapper>

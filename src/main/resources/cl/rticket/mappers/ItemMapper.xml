@@ -85,7 +85,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 
 <select id="obtenerDatosTicketNominativo" parameterType="int" resultType="Ticket">
    select h.hin_nombres nombres, h.hin_apellidos apellidos, p.par_desc rival ,
-	      date_format(p.par_fecha,'%W %d de %M de %Y') fecha,
+	      p.par_fecha fecha,
 	      date_format(p.par_fecha,' %H:%i') hora,
 	      s.sec_desc sector ,
 	      c.com_token token,
@@ -96,7 +96,8 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      c.ent_id = e.ent_id and
 	      c.hin_rut = h.hin_rut and
 	      e.sec_id = s.sec_id and
-	      e.par_id = p.par_id
+	      e.par_id = p.par_id and
+	     c.com_anulada not in ('S')
 </select>
 
 <!-- =================================================================================================== -->
@@ -110,14 +111,15 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	where
 	     e.par_id = #{idPartido} and
 	     e.sec_id = s.sec_id and
-	     e.ent_id = c.ent_id
+	     e.ent_id = c.ent_id and
+	     c.com_anulada not in ('S')
     group by s.sec_desc, e.ent_id, c.com_tipo 
 
 </select>
 
 <select id="obtenerDatosTicketMasivo" parameterType="map" resultType="Ticket">
       select  p.par_desc rival ,
-	      date_format(p.par_fecha,'%W %d de %M de %Y') fecha,
+	      p.par_fecha fecha,
 	      date_format(p.par_fecha,' %H:%i') hora,
 	      s.sec_desc sector ,
 	      c.com_token token,
@@ -128,11 +130,50 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      c.ent_id = e.ent_id and	     
 	      e.sec_id = s.sec_id and
 	      e.par_id = p.par_id and
-	      c.com_tipo = #{tipo}
+	      c.com_tipo = #{tipo} and
+	      c.com_anulada not in ('S')
 </select>
 
 
+<!-- ============================================================================================= -->
+<!-- CORTESIA ==================================================================================== -->
+<!-- ============================================================================================= -->
 
+<select id="obtenerTotalesCortesiaPorEntidad" parameterType="map" resultType="TotalesEntrada">
+    select e.par_id idPartido, e.ent_id idEntrada, s.sec_desc nombreSector, count(*) total 
+	 from compra c, entrada e, hincha h, sector s
+    where
+         e.par_id = #{idPartido} and
+         e.ent_id = c.ent_id and
+         c.hin_rut = #{rut} and       
+         c.com_tipo = 'C' and       
+         e.sec_id = s.sec_id and
+         c.hin_rut = h.hin_rut and
+	      c.com_anulada not in ('S')
+    group by h.hin_rut, s.sec_id 
+</select>
+
+<select id="obtenerDatosTicketRut" parameterType="map" resultType="Ticket">
+   select  
+         h.hin_nombres,
+		   p.par_desc rival ,
+	      p.par_fecha fecha,
+	      date_format(p.par_fecha,' %H:%i') hora,
+	      s.sec_desc sector ,
+	      c.com_token token,
+	      c.com_tipo tipo,
+	      c.com_monto precio
+	from compra c, entrada e, partido p, sector s, hincha h
+	where c.ent_id = #{idEntrada} and
+	      c.hin_rut = #{rut} and
+	      c.hin_rut = h.hin_rut and
+	      c.ent_id = e.ent_id and	     
+	      e.sec_id = s.sec_id and
+	      e.par_id = p.par_id and
+	      c.com_tipo = #{tipo} and
+	      c.com_anulada not in ('S')
+
+</select>
 
 
 

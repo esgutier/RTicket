@@ -14,7 +14,9 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Hashtable;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.print.DocFlavor;
@@ -42,6 +44,9 @@ public class ImpresionNominativa {
 	public static class MyPrintable implements Printable {	
 		
 		private Ticket ticket;
+		
+		private SimpleDateFormat formateador = new SimpleDateFormat("EEEEEEEEE dd 'de' MMMMM 'de' yyyy", new Locale("es","ES"));
+		
 		@Override
 		  public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {    
 			                int result = NO_SUCH_PAGE;    
@@ -68,7 +73,7 @@ public class ImpresionNominativa {
 		                         g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
 		                         drawCenteredString(g2d,"V/S",rec1,70,fontVS);
 		                         drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
-		                         drawCenteredString(g2d,ticket.getFecha(),rec1,98,fontFecha);		                        
+		                         drawCenteredString(g2d,(formateador.format(ticket.getFecha())).toUpperCase(),rec1,98,fontFecha);		                        
 		                         drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   

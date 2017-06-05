@@ -28,4 +28,8 @@ public interface ItemService {
 	public HashMap<Integer,TotalesEntrada> obtenerTotalesEntradas(Integer idPartido) ;
 	
 	public ArrayList<Ticket> obtenerDatosTicketMasivo(Integer idSector, String tipo);
+	
+	public ArrayList<TotalesEntrada> obtenerTotalesCortesiaPorEntidad(Integer idPartido,Integer rut);
+	
+	public ArrayList<Ticket> obtenerDatosTicketRut(Integer idEntrada,Integer rut, String tipo);
 }

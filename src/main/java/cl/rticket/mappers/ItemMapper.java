@@ -31,4 +31,11 @@ public interface ItemMapper {
 	
 	public ArrayList<Ticket> obtenerDatosTicketMasivo(@Param("idSector")Integer idSector,
 													  @Param("tipo")String tipo);
+	
+	public ArrayList<TotalesEntrada> obtenerTotalesCortesiaPorEntidad(@Param("idPartido")Integer idPartido,
+			                                                          @Param("rut")Integer rut);
+	
+	public ArrayList<Ticket> obtenerDatosTicketRut(@Param("idEntrada")Integer idEntrada,
+			                                       @Param("rut")Integer rut,
+			                                       @Param("tipo")String tipo);
 }

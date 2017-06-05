@@ -139,6 +139,7 @@ public class ItemServiceImpl implements ItemService{
 				map.put(tmp.getIdEntrada(), tmp);
 			} else {
 				System.out.println("tmp NO null  total: "+t.getTotal());
+				tmp.setTipo(t.getTipo());
 				if(t.getTipo().equals("N")) {
 					System.out.println("tmp NO null  ->N");
 					tmp.setTotalNominativa(t.getTotal());
@@ -154,6 +155,12 @@ public class ItemServiceImpl implements ItemService{
 		return map;
 	}
 	
+	public ArrayList<TotalesEntrada> obtenerTotalesCortesiaPorEntidad(Integer idPartido,Integer rut) {
+		return itemMapper.obtenerTotalesCortesiaPorEntidad(idPartido, rut);
+	}
 	
+	public ArrayList<Ticket> obtenerDatosTicketRut(Integer idEntrada,Integer rut, String tipo) {
+		return itemMapper.obtenerDatosTicketRut(idEntrada, rut, tipo);
+	}
 
 }

@@ -24,6 +24,19 @@
 		         		ckeckFormValid();
 		         });
 	        	 
+	        	 $("#selectCategoria").change(function(){
+	        		 if(this.val() == 'E') {
+	        			 $("#divApellidos").hide();
+	        			 $("#divFechaNacimiento").hide();
+	        			 $("#divGenero").hide();
+	        		 } else {
+	        			 $("#divApellidos").show();
+	        			 $("#divFechaNacimiento").show();
+	        			 $("#divGenero").show();
+	        		 }
+	        		 
+	        	 });
+	        	 
 	         })
 	         
 	         function ckeckFormValid() {
@@ -70,17 +83,28 @@
 															<div class="col-md-5"></div>
 													     
 													</div>
-										<div th:if="${accion == 'INSERTAR' or accion == 'ACTUALIZAR'}">		
+										<div th:if="${accion == 'INSERTAR' or accion == 'ACTUALIZAR'}">	
+										
+											        <div class="form-group">
+													    <label class="col-md-2 control-label">Categoría</label>
+														<div class="col-md-10">
+															<select th:field="*{categoria}"  class="form-control input-sm" required="required" id="selectCategoria">
+															    <option value="" >Seleccione...</option>	
+															    <option value="P">Persona</option>
+															    <option value="E">Entidad</option>															    												
+															</select>
+														</div>
+												    </div>	
 													<div class="form-group">
-														<label class="col-md-2 control-label">Nombres</label>
+														<label class="col-md-2 control-label">Nombre</label>
 														<div class="col-md-10">
 															<input type="text" th:field="*{nombres}" maxlength="50" required="required" pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
 														</div>
 													</div>
-													<div class="form-group">
+													<div class="form-group" id="divApellidos">
 														<label class="col-md-2 control-label">Apellidos</label>
 														<div class="col-md-10">
-															<input type="text" th:field="*{apellidos}" maxlength="70" required="required" pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
+															<input type="text" th:field="*{apellidos}" maxlength="70"  pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
 														</div>
 													</div>
 													<div class="form-group">
@@ -101,14 +125,14 @@
 															<input type="email" th:field="*{email}" maxlength="100" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" title="Ingrese email valido" class="form-control input-sm" placeholder="" />
 														</div>
 													</div>
-													<div class="form-group">
+													<div class="form-group" id="divFechaNacimiento">
 														<label class="col-md-2 control-label">Fecha Nacimiento (dd/mm/aaaa)</label>
 														<div class="col-md-10">
-															<input type="text" th:field="*{fechaNac}" maxlength="10" required="required" pattern="\d{1,2}/\d{1,2}/\d{4}" title="Ingrese el formato solicitado"  class="form-control input-sm" placeholder="" />
+															<input type="text" th:field="*{fechaNac}" maxlength="10"  pattern="\d{1,2}/\d{1,2}/\d{4}" title="Ingrese el formato solicitado"  class="form-control input-sm" placeholder="" />
 														</div>
 													</div>
 
-													<div class="form-group">
+													<div class="form-group" id="divGenero">
 														<label class="col-md-2 control-label">Género</label>
 														<div class="col-md-10">
 															<div class="radio">
@@ -124,16 +148,7 @@
 															
 														</div>
 													</div>
-													<div class="form-group">
-													    <label class="col-md-2 control-label">Categoría</label>
-														<div class="col-md-10">
-															<select th:field="*{categoria}"  class="form-control input-sm">
-															    <option value="0" >Seleccione...</option>	
-															    <option value="P">Persona</option>
-															    <option value="E">Empresa</option>															    												
-															</select>
-														</div>
-												    </div>
+												
 													<div align="center">
 													<button type="submit" class="btn btn-primary" id="btnInsertarHincha" th:if="${accion == 'INSERTAR'}">Ingresar Hincha</button>
 													<button type="submit" class="btn btn-primary" id="btnActualizarHincha" th:if="${accion == 'ACTUALIZAR'}">Actualizar Hincha</button>

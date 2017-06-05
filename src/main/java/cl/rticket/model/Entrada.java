@@ -11,6 +11,9 @@ public class Entrada implements Serializable{
 	
 	private Integer idEntrada;
 	private Integer idPartido;
+	private String  rutCompleto;
+	private Integer rut;
+	private String  nombre;
 	private String  descPartido;
 	private Integer idSector;
 	private String  descSector;
@@ -66,6 +69,24 @@ public class Entrada implements Serializable{
 	}
 	public void setComentario(String comentario) {
 		this.comentario = comentario;
+	}
+	public String getRutCompleto() {
+		return rutCompleto;
+	}
+	public void setRutCompleto(String rutCompleto) {
+		this.rutCompleto = rutCompleto;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public Integer getRut() {
+		return rut;
+	}
+	public void setRut(Integer rut) {
+		this.rut = rut;
 	}
 	
 

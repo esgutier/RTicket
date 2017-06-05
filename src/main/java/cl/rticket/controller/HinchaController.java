@@ -69,7 +69,7 @@ public class HinchaController {
 	public String actualizarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
 		//validacion de inputs
 		int error = 0;
-	    if(GenericValidator.isBlankOrNull(hincha.getGenero())) {
+	    if(hincha.getCategoria().equals("P") && GenericValidator.isBlankOrNull(hincha.getGenero())) {
 			model.addAttribute("error", "Debe indicar un género");
 			error = 1;
 		} else if(hincha.getCategoria().equals("0")) {
@@ -96,7 +96,7 @@ public class HinchaController {
 	public String insertarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
 		//validar inputs
 		int error = 0;
-	    if(GenericValidator.isBlankOrNull(hincha.getGenero())) {
+	    if(hincha.getCategoria().equals("P") && GenericValidator.isBlankOrNull(hincha.getGenero())) {
 			model.addAttribute("error", "Debe indicar un género");
 			error = 1;
 		} else if(hincha.getCategoria().equals("0")) {

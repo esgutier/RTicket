@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+    /*<![CDATA[*/
+        $(document).ready(function (){	
+        	
+        	$("#selectIdPartido").change(function(){
+        		document.forms[0].action = "carga-entradas-cortesia";          		
+        		document.forms[0].submit();
+        	});
+        	
+        	$("#selectIdEntidad").change(function(){
+        		document.forms[0].action = "obtener-totales-entidad-cortesia";          		
+        		document.forms[0].submit();
+        	});
+        
+        	
+        	$("#generarEntradasButton").click(function(){
+        		 $('#generandoTicketModal').modal('show');       		
+        	});
+        	
+        	$(".imprimir").click(function(){
+        		
+        		 $('#imprimiendoTicketModal').modal('show'); 
+        	});
+
+        });      
+       /*]]>*/ 
+    </script>
+  
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Generación de Tickets de Cortesía</h3>
+		     </div>
+			 <div class="widget-content">
+			 <form action="#" th:action="@{/generar-entradas-cortesia}"  th:object="${entrada}" method="POST" >
+			   
+			   
+			   
+			   <div class="form-horizontal">	
+				     <div  th:if="${error != null}" >
+			      		<div class="alert alert-danger " th:text="${error}">
+							Aqui van los mensajes de error																	
+				  		</div>
+					 </div>	
+					 <div  th:if="${exito != null}" >
+			      		<div class="alert alert-success " th:text="${exito}">
+							Aqui van los mensajes de exito																	
+				  		</div>
+					 </div>	
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Partido</label>
+							<div class="col-md-10">
+								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido" required="required">
+								    <option value="" >Seleccione...</option>	
+								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}" >partido</option>													
+								</select>
+							</div>
+					 </div>
+					 
+					 <div class="form-group">														
+														
+		                    <label class="col-md-2 control-label">Entidad</label>
+							<div class="col-md-10">
+								<select th:field="*{rut}"   class="form-control input-sm" id="selectIdEntidad" required="required">
+								    <option value="" >Seleccione...</option>	
+								    <option th:each="entidad : ${entidades}" th:value="${entidad.rut}" th:text="${entidad.nombres}" >entidad</option>													
+								</select>
+							</div>
+													     
+					</div>
+
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Entradas Disponibles</label>
+							<div class="col-md-10">
+								<select th:field="*{idEntrada}"  class="form-control input-sm" id="selectIdEntrada" required="required">
+								    <option value="" >Seleccione...</option>	
+								    <option th:each="entrada : ${entradas}" th:value="${entrada.idEntrada}" th:text="${entrada.descSector}" >partido</option>													
+								</select>
+							</div>
+					 </div>
+					 
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Cantidad</label>
+							<div class="col-md-2">
+							     <input th:field="*{maximo}" required="required" pattern="[0-9]+"  maxlength="3" type="text" class="form-control input-sm"  />		 
+							</div>
+							<div class="col-md-8">
+							    	 
+							</div>
+					 </div>
+					 <div align="center">
+					    <button type="submit" class="btn btn-custom-primary" id="generarEntradasButton">Generar Entradas</button>	
+					 </div>
+					 <br/>
+					 
+					 <div class="row">	
+					     <div class="col-md-3">	</div>
+					     <div class="col-md-6">
+					     		 
+						 <table class="table table-bordered">
+								<thead>
+									<tr>
+									  <th>SECTOR</th>
+									  <th>TOTAL</th>
+									  <th>IMPRIMIR</th>
+									  
+									</tr>
+								</thead>
+								
+								<tbody>
+									<tr th:each="t : ${totales}"> 
+									    <td  th:text="${t.nombreSector}"></td> 
+									    <td  th:text="${t.total}"></td> 									    									   
+									    <td> 									     
+									      <div th:if="${t.total > 0 }">
+									       <a href="#" th:href="@{/imprimir-entradas-cortesia(idPartido=${t.idPartido},idEntrada=${t.idEntrada},rut=*{rut})}" class="btn btn-custom-primary imprimir">
+									          <i class="fa fa-print" aria-hidden="true"></i>Imprimir
+									        </a>
+									       </div>
+									     </td>  
+									</tr> 										
+								</tbody>
+								
+						   </table>
+						   </div>
+						   <div class="col-md-3">	</div>
+					   </div>
+				
+				</div>
+				</form>
+			 </div>
+	   </div>
+	   
+	   <div class="modal fade" id="generandoTicketModal">
+						         <div class="modal-dialog">
+								 <div class="modal-content">
+										 <div class="modal-header">											  
+											  <h4 class="modal-title">AVISO</h4>
+										 </div>
+										 <div class="modal-body ">
+												<div class="alert alert-info">
+												   Generando registros en Base de Datos, por favor espere.
+												</div>														        
+										 </div>
+										
+								          </div>
+						            </div>
+		    </div>		    
+		    <div class="modal fade" id="imprimiendoTicketModal">
+						         <div class="modal-dialog">
+								 <div class="modal-content">
+										 <div class="modal-header">											  
+											  <h4 class="modal-title">AVISO</h4>
+										 </div>
+										 <div class="modal-body ">
+												<div class="alert alert-info">
+												   Imprimiendo tickets.....
+												</div>														        
+										 </div>
+										
+								          </div>
+						            </div>
+		    </div>
+	   
+	   
+          
+  </div>
+ </html>

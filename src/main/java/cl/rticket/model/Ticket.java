@@ -1,6 +1,7 @@
 package cl.rticket.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Ticket implements Serializable{
 
@@ -10,7 +11,7 @@ public class Ticket implements Serializable{
 	private static final long serialVersionUID = 2267388171945913348L;
 	
 	private String rival;
-	private String fecha;
+	private Date fecha;
 	private String hora;
 	private String sector;
 	private String tipo;
@@ -25,10 +26,10 @@ public class Ticket implements Serializable{
 	public void setRival(String rival) {
 		this.rival = rival;
 	}
-	public String getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(String fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 	public String getHora() {

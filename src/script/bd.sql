@@ -65,7 +65,7 @@ CREATE TABLE hincha (
   hin_email varchar(100) NOT NULL,
   hin_fecha_nac date,
   hin_fecha_ingreso datetime NOT NULL,
-  hin_categoria varchar(2)  NULL,
+  hin_categoria varchar(2)  NOT NULL,
   PRIMARY KEY  (hin_rut) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 

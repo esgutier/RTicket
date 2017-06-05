@@ -1,5 +1,7 @@
 package cl.rticket.services;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +24,9 @@ public class HinchaServiceImpl implements HinchaService{
 	
 	public int actualizarHincha(Hincha hincha) {
 		return hinchaMapper.actualizarHincha(hincha);
+	}
+	
+	public ArrayList<Hincha> obtenerEntidades() {
+		return hinchaMapper.obtenerEntidades();
 	}
 }

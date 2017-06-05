@@ -12,7 +12,6 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
@@ -35,94 +34,95 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import cl.rticket.exception.ImpresoraNoDisponibleException;
 import cl.rticket.model.Ticket;
 
-public class ImpresionMasiva {
+public class ImpresionCortesia {
+
 	
-	private static final String PRINTER_NAME = "zebra";
-	
-	
+private static final String PRINTER_NAME = "zebra";
 	
 	public static class MyPrintable implements Printable {	
 		
 		private Ticket ticket;
 		
 		private SimpleDateFormat formateador = new SimpleDateFormat("EEEEEEEEE dd 'de' MMMMM 'de' yyyy", new Locale("es","ES"));
-		
 		@Override
-		  public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {    
-			                int result = NO_SUCH_PAGE;    
-			                if (pageIndex == 0) {                    
-			                Graphics2D g2d = (Graphics2D) graphics;                    
-			                             
-			                ticket.print(); 
-			                g2d.translate((int) pageFormat.getImageableX(),(int) pageFormat.getImageableY()); 
-			                Font font = new Font("Arial",Font.BOLD,12);       
-			                Font fontVS = new Font("Arial",Font.BOLD,10); 
-			                Font fontFecha = new Font("Monospaced",Font.BOLD,10); 
-			                Font fontSector = new Font("Arial",Font.BOLD,16); 
-			                Font fontSocio = new Font("Monospaced",Font.BOLD,12); 
-			                g2d.setFont(font);
-			                Rectangle rec1 = new Rectangle(5,5,200,300);
-			                g2d.draw(rec1);		                       			               
-			                try {			        	
-		                         int x=80 ;                                       
-		                         int y=5;                                        
-		                         int imagewidth=50;
-		                         int imageheight=50;
-		                        
-		                         BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 
-		                         System.out.println(read);
-		                         System.out.println("---->"+read.getHeight());
-		                         System.out.println("---->"+read.getWidth());
-		                         //BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
-		                         g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
-		                         drawCenteredString(g2d,"V/S",rec1,70,fontVS);
-		                         drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
-		                         drawCenteredString(g2d,(formateador.format(ticket.getFecha())).toUpperCase(),rec1,98,fontFecha);		                        
-		                         drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
-		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
-		                         g2d.drawLine(20, 120, 185, 120);   
-		                         drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
-		                         drawCenteredString(g2d,"Normal - $"+ticket.getPrecio(),rec1,158,fontSocio);		                        
-		                         g2d.drawLine(20, 170, 185, 170); 
-		                         
-		                         
-		                 		 try {
-		                 			Hashtable hintMap = new Hashtable();
-			                 		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-			                        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-									BitMatrix byteMatrix = qrCodeWriter.encode(""+ticket.getToken(),BarcodeFormat.QR_CODE, 100, 100, hintMap);
-									int matrixWidth = byteMatrix.getWidth();
-									BufferedImage qr = new BufferedImage(matrixWidth, matrixWidth,BufferedImage.TYPE_INT_RGB);
-									qr.createGraphics();
-									Graphics2D grap = (Graphics2D) qr.getGraphics();
-									grap.setColor(Color.WHITE);
-									grap.fillRect(0, 0, matrixWidth, matrixWidth);
-									// Paint and save the image using the ByteMatrix
-									grap.setColor(Color.BLACK);
+		 public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {    
+            int result = NO_SUCH_PAGE;    
+            if (pageIndex == 0) {                    
+            Graphics2D g2d = (Graphics2D) graphics;                    
+                         
+            ticket.print(); 
+            g2d.translate((int) pageFormat.getImageableX(),(int) pageFormat.getImageableY()); 
+            Font font = new Font("Arial",Font.BOLD,12);       
+            Font fontVS = new Font("Arial",Font.BOLD,10); 
+            Font fontFecha = new Font("Monospaced",Font.BOLD,10); 
+            Font fontSector = new Font("Arial",Font.BOLD,16); 
+            Font fontSocio = new Font("Monospaced",Font.BOLD,12); 
+            g2d.setFont(font);
+            Rectangle rec1 = new Rectangle(5,5,200,300);
+            g2d.draw(rec1);		                       			               
+            try {			        	
+                 int x=80 ;                                       
+                 int y=5;                                        
+                 int imagewidth=50;
+                 int imageheight=50;
+                 BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 		                        
+                 //BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
+                 g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
+                 drawCenteredString(g2d,"V/S",rec1,70,fontVS);
+                 drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
+                 drawCenteredString(g2d,(formateador.format(ticket.getFecha())).toUpperCase(),rec1,98,fontFecha);		                        
+                 drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
+                 drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
+                 g2d.drawLine(20, 120, 185, 120);   
+                 drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
+                 drawCenteredString(g2d,"Cortesía",rec1,158,fontSocio);
+                 
+                 drawCenteredString(g2d,ticket.getNombres(),rec1,175,fontSocio);
+                 //drawCenteredString(g2d,ticket.getApellidos(),rec1,185,fontSocio);
+                 
+                 
+                 g2d.drawLine(20, 195, 185, 195); 
+                 
+                 
+         		 try {
+         			Hashtable hintMap = new Hashtable();
+             		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+                    QRCodeWriter qrCodeWriter = new QRCodeWriter();
+					BitMatrix byteMatrix = qrCodeWriter.encode(""+ticket.getToken(),BarcodeFormat.QR_CODE, 70, 70, hintMap);
+					int matrixWidth = byteMatrix.getWidth();
+					BufferedImage qr = new BufferedImage(matrixWidth, matrixWidth,BufferedImage.TYPE_INT_RGB);
+					qr.createGraphics();
+					Graphics2D grap = (Graphics2D) qr.getGraphics();
+					grap.setColor(Color.WHITE);
+					grap.fillRect(0, 0, matrixWidth, matrixWidth);
+					// Paint and save the image using the ByteMatrix
+					grap.setColor(Color.BLACK);
 
-									for (int i = 0; i < matrixWidth; i++) {
-										for (int j = 0; j < matrixWidth; j++) {
-											if (byteMatrix.get(i, j)) {
-												grap.fillRect(i, j, 1, 1);
-											}
-										}
-									}																		
-									g2d.drawImage(qr,50,175,100,100,null);
-									drawCenteredString(g2d,""+ticket.getToken(),rec1,270,fontSocio);
-									
-									
-								} catch (WriterException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}                       
-		                      } catch (IOException e) {
-			        			e.printStackTrace();
-			        		}
-			             		      
-			                result = PAGE_EXISTS;    
-			            }    
-			            return result;    
-		      } //fin print
+					for (int i = 0; i < matrixWidth; i++) {
+						for (int j = 0; j < matrixWidth; j++) {
+							if (byteMatrix.get(i, j)) {
+								grap.fillRect(i, j, 1, 1);
+							}
+						}
+					}																		
+					g2d.drawImage(qr,55,198,100,100,null); 
+					drawCenteredString(g2d,""+ticket.getToken(),rec1,295,fontSocio);
+					
+					
+				} catch (WriterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}                       
+              } catch (IOException e) {
+    			e.printStackTrace();
+    		}
+         		      
+            result = PAGE_EXISTS;    
+        }    
+        return result;    
+        } //fin print
+		
+		
 		public Ticket getTicket() {
 			return ticket;
 		}
@@ -210,20 +210,6 @@ public class ImpresionMasiva {
 	public static void main(String args[]){
 		ImpresionNominativa ps=new ImpresionNominativa();
 		 
-		/*       
-		 PrinterJob pj = PrinterJob.getPrinterJob();
-		 
-		 pj.setPrintable(new MyPrintable(),getPageFormat(pj));
-		       try {
-		    	  // for(int i = 0; i < 6 ; i++) {
-		            pj.print();
-		    	  // }
-		            }
-		        catch (PrinterException ex) {
-		                ex.printStackTrace();
-		            }
-		       
-		   */
 		DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
@@ -239,5 +225,4 @@ public class ImpresionMasiva {
 		
 		
 	}
-	
 }
