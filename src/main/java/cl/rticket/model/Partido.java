@@ -12,6 +12,7 @@ public class Partido implements Serializable {
 
 	private Integer idPartido;
 	private String descripcion;
+	
 	private String fecha;
 	private String hora;
 	private String fechaTexto;

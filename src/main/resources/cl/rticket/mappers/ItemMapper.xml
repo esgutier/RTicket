@@ -175,6 +175,48 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 
 </select>
 
+<!-- ============================================================================================ -->
+<!-- MANTENEDOR PARTIDOS -->
+<!-- ============================================================================================ -->
+
+<update id="actualizarPartido" parameterType="Partido" > 
+ update partido set par_desc = UPPER(#{descripcion}),
+                    par_fecha = STR_TO_DATE(#{fechaTexto},'%d-%m-%Y %H:%i')
+                where par_id = #{idPartido}
+</update>
+
+<insert id="insertarPartido" parameterType="Partido">
+  insert into partido values(null,UPPER(#{descripcion}),STR_TO_DATE(#{fechaTexto}, '%d-%m-%Y %H:%i'))
+</insert>
+
+<select id="obtenerPartido" resultType="Partido" parameterType="int">
+  select par_id idPartido, par_desc descripcion, date_format(par_fecha,'%d-%m-%Y') fecha, date_format(par_fecha,'%H:%i') hora from partido where par_id = #{idPartido} 
+</select>
+
+<delete id="eliminarPartido" parameterType="int">
+  delete from partido where par_id = #{idPartido}
+</delete>
+
+<!-- =============================================================================================== -->
+<!-- MANTENEDOR SECTORES =========================================================================== -->
+<!-- =============================================================================================== -->
+
+<update id="actualizarSector" parameterType="Sector">
+ update sector  set sec_desc = UPPER(#{descripcion})
+          where sec_id = #{idSector}
+</update>
+
+<insert id="insertarSector" parameterType="Sector">
+  insert into sector values(null,UPPER(#{descripcion}));
+</insert>
+
+<select id="obtenerSector" parameterType="int" resultType="Sector">
+  select sec_id idSector, sec_desc descripcion from sector where sec_id = #{idSector}
+</select>
+
+<delete id="eliminarSector" parameterType="int" >
+  delete from sector where sec_id= #{idSector}
+</delete>
 
 
 

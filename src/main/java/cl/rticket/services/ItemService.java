@@ -3,6 +3,8 @@ package cl.rticket.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
 import cl.rticket.exception.UpdateException;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
@@ -32,4 +34,16 @@ public interface ItemService {
 	public ArrayList<TotalesEntrada> obtenerTotalesCortesiaPorEntidad(Integer idPartido,Integer rut);
 	
 	public ArrayList<Ticket> obtenerDatosTicketRut(Integer idEntrada,Integer rut, String tipo);
+	
+	//Mantenedor de Partidos
+	public int actualizarPartido(Partido partido);
+	public int insertarPartido(Partido partido);
+	public Partido obtenerPartido(Integer idPartido);
+	public int eliminarPartido(Integer idPartido) throws DataIntegrityViolationException ;
+	
+	//mantenedor de sectores
+	public int actualizarSector(Sector sector);
+	public int insertarSector(Sector sector);
+	public Sector obtenerSector(Integer idSector);
+	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException;
 }

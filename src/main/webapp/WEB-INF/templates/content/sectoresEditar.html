@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+    /*<![CDATA[*/
+        $(document).ready(function (){	
+        });      
+       /*]]>*/ 
+    </script>
+  
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Editar Sector</h3>
+		     </div>
+			 <div class="widget-content">
+			 <form action="#" th:action="@{/actualizar-sector}"  th:object="${sector}" method="POST" >
+			   
+			    <input type="hidden" th:field="*{idSector}" />
+			   
+			   <div class="form-horizontal">	
+				     <div  th:if="${error != null}" >
+			      		<div class="alert alert-danger " th:text="${error}">
+							Aqui van los mensajes de error																	
+				  		</div>
+					 </div>	
+					 <div  th:if="${exito != null}" >
+			      		<div class="alert alert-success " th:text="${exito}">
+							Aqui van los mensajes de exito																	
+				  		</div>
+					 </div>	
+					 <div class="form-group">
+						    <label class="col-md-2 control-label">Sector</label>
+							<div class="col-md-6">
+								 <input th:field="*{descripcion}" required="required" pattern="[\.\sa-zA-ZñÑ]+"  maxlength="30" type="text" class="form-control input-sm"  />	
+							</div>
+					 </div>
+
+					 <div align="center">
+					    <button type="submit" class="btn btn-custom-primary">Actualizar Sector</button>	
+					 </div>
+					 
+					 <br/>
+					 <br/>
+					 <div align="center">
+					      <a href="#" th:href="@{/carga-pagina-sectores}" class="btn btn-primary" ><i class="fa fa-arrow-left" aria-hidden="true"></i>Volver</a>	
+					 </div>
+					 
+				
+				</div>
+				</form>
+			 </div>
+	   </div>
+	      
+  </div>
+ </html>

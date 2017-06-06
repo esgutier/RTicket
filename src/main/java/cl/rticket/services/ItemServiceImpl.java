@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -161,6 +162,34 @@ public class ItemServiceImpl implements ItemService{
 	
 	public ArrayList<Ticket> obtenerDatosTicketRut(Integer idEntrada,Integer rut, String tipo) {
 		return itemMapper.obtenerDatosTicketRut(idEntrada, rut, tipo);
+	}
+	
+	//Mantenedor de Partidos -----------------------------------------------------------------------------
+	public int actualizarPartido(Partido partido) {
+		return itemMapper.actualizarPartido(partido);
+	}
+	public int insertarPartido(Partido partido) {
+		return itemMapper.insertarPartido(partido);
+	}
+	public Partido obtenerPartido(Integer idPartido) {
+		return itemMapper.obtenerPartido(idPartido);
+	}
+	public int eliminarPartido(Integer idPartido) throws DataIntegrityViolationException {
+		return itemMapper.eliminarPartido(idPartido);
+	}
+	
+	//Mantenedor de sectores
+	public int actualizarSector(Sector sector) {
+		return itemMapper.actualizarSector(sector);
+	}
+	public int insertarSector(Sector sector) {
+		return itemMapper.insertarSector(sector);
+	}
+	public Sector obtenerSector(Integer idSector) {
+		return itemMapper.obtenerSector(idSector);
+	}
+	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException {
+		return itemMapper.eliminarSector(idSector);
 	}
 
 }

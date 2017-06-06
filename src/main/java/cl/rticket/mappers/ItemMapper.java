@@ -3,6 +3,7 @@ package cl.rticket.mappers;
 import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
@@ -38,4 +39,17 @@ public interface ItemMapper {
 	public ArrayList<Ticket> obtenerDatosTicketRut(@Param("idEntrada")Integer idEntrada,
 			                                       @Param("rut")Integer rut,
 			                                       @Param("tipo")String tipo);
+	
+	//MANTENEDOR DE PARTIDOS	
+	public int actualizarPartido(Partido partido);
+	public int insertarPartido(Partido partido);
+	public Partido obtenerPartido(Integer idPartido);
+	public int eliminarPartido(Integer idPartido) throws DataIntegrityViolationException ;
+	
+	//MANTENEDOR DE SECTOR
+	public int actualizarSector(Sector sector);
+	public int insertarSector(Sector sector);
+	public Sector obtenerSector(Integer idSector);
+	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException;
+
 }
