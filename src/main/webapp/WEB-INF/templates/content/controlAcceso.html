@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+        $(document).ready(function (){	
+          	
+        })
+    </script>
+  
+  
+    
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Control de Acceso Sector</h3>
+		     </div>
+			 <div class="widget-content">
+			 <form action="#" th:action="@{/cargar-control-acceso}"  th:object="${entrada}" method="POST">
+			   <div class="form-horizontal">
+			   
+			         <div  th:if="${exito != null}" >
+			      		<div class="alert alert-success " th:text="${exito}">
+							Aqui van los mensajes de exito																	
+				  		</div>
+					 </div>		
+				     <div  th:if="${error != null}" >
+			      		<div class="alert alert-danger " th:text="${error}">
+							Aqui van los mensajes de error																	
+				  		</div>
+					 </div>	
+					 <div class="form-group">
+						    <label class="col-md-1 control-label"></label>
+							<div class="col-md-5">
+								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido" required="required">
+								    <option value="" >Seleccione...</option>	
+								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}+' ('+${partido.fecha}+')'" >partido</option>													
+								</select>
+							</div>
+							<div class="col-md-5">
+								<select th:field="*{idSector}"  class="form-control input-sm" required="required">
+								    <option value="" >Seleccione...</option>	
+								    <option th:each="sector : ${sectores}" th:value="${sector.idSector}" th:text="${sector.descripcion}" >partido</option>													
+								</select>
+							</div>
+							<label class="col-md-1 control-label"></label>
+					 </div>
+					
+					 <div align="center">
+							   <button type="submit" class="btn btn-custom-primary">Cargar</button>
+					 </div>
+					<br/>
+					
+					 
+					 
+					 <div class="row">	
+					     <div class="col-md-2">	</div>
+					     <div class="col-md-8">				 
+						 <table class="table table-bordered">
+								<thead>
+									<tr>
+									  <th>TOTAL LISTA NEGRA</th>
+									  <th>TOTAL NOMINATIVAS</th>
+									  <th>TOTAL NORMALES</th>
+									 
+									</tr>
+								</thead>
+								<tbody>
+									<tr >
+										<td >0</td>
+										<td th:text="${totalNominativas}">xxx</td>
+										<td th:text="${totalNormales}">xxx</td>											
+									</tr>											
+								</tbody>
+						   </table>
+						   </div>
+						   <div class="col-md-2">	</div>
+					   </div>
+					   <br/>
+					    <div class="form-group">
+						   <label class="col-md-1 control-label"></label>
+							<div class="col-md-10">							  				
+								 <input name="scan"  type="text" class="form-control input-sm" />							  
+							</div>
+							<label class="col-md-1 control-label"></label>
+					     </div>
+					   
+					   
+					   
+					   
+					  
+				</div>
+				</form>
+			 </div>
+	   </div>
+          
+  </div>
+ </html>

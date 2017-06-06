@@ -1,6 +1,7 @@
 package cl.rticket.mappers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,8 +18,13 @@ public interface ItemMapper {
 	public ArrayList<Partido>   obtenerPartidos();
 	public ArrayList<Sector>    obtenerSectores();
 	public ArrayList<Sector>    obtenerEntradas(@Param("idPartido")Integer idPartido);
+	
+	
 	public void insertarEntrada(Entrada entrada);
-	public void eliminarEntrada( @Param("idEntrada")Integer idEntrada);
+	public int eliminarEntrada( @Param("idEntrada")Integer idEntrada)throws DataIntegrityViolationException;
+	public int actualizarEntrada(Entrada entrada);
+	
+	
 	public Entrada obtenerEntrada(Integer idEntrada);
 	public void insertarCompra(Compra compra);
 	public int actualizarTokenCompra(@Param("idCompra")Integer idCompra,
@@ -51,5 +57,9 @@ public interface ItemMapper {
 	public int insertarSector(Sector sector);
 	public Sector obtenerSector(Integer idSector);
 	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException;
+	
+	//Control de acceso
+	public ArrayList<Integer> obtenerEntradasNormalesPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector );
+	public ArrayList<Integer> obtenerEntradasNominativasPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector);
 
 }

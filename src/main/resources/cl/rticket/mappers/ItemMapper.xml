@@ -37,8 +37,15 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
   delete from entrada where ent_id = #{idEntrada}
 </delete>
 
+<update id="actualizarEntrada" parameterType="Entrada">
+  update entrada set ent_precio = #{precio},
+                     ent_maximo = #{maximo},
+                     ent_comentario = #{comentario}
+               where ent_id = #{idEntrada} 
+</update>
+
 <select id="obtenerEntrada" resultType="Entrada" parameterType="int">
-      select  a.ent_id idEntrada, a.par_id idPartido , a.ent_precio precio ,
+      select  a.ent_id idEntrada, a.sec_id idSector, a.par_id idPartido , a.ent_precio precio ,
            p.par_desc descPartido, s.sec_desc descSector, a.ent_comentario comentario, a.ent_maximo maximo
           
    from entrada a, partido p, sector s
@@ -49,7 +56,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 </select>
 
 <select id="obtenerEntradas" resultType="Entrada" parameterType="map">
-   select  a.ent_id idEntrada, a.par_id idPartido , a.ent_precio precio ,
+   select  a.ent_id idEntrada, a.sec_id idSector, a.par_id idPartido , a.ent_precio precio ,
            p.par_desc descPartido, s.sec_desc descSector, ent_comentario comentario, ent_maximo maximo
           
    from entrada a, partido p, sector s
@@ -217,6 +224,32 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <delete id="eliminarSector" parameterType="int" >
   delete from sector where sec_id= #{idSector}
 </delete>
+
+
+<!-- ================================================================================================ -->
+<!-- CONTROL DE ACCESO ============================================================================== -->
+<!-- ================================================================================================ -->
+
+<select id="obtenerEntradasNormalesPorSector" parameterType="map" resultType="int"> 
+     select c.com_token id from entrada e, compra c 
+	       where 
+	            e.par_id = #{idPartido} and
+	            e.sec_id = #{idSector} and
+	            e.ent_id = c.ent_id and
+	            c.com_tipo = 'R'
+</select>
+
+<select id="obtenerEntradasNominativasPorSector" parameterType="map" resultType="int"> 
+     select c.hin_rut id from entrada e, compra c 
+	       where 
+	            e.par_id = #{idPartido} and
+	            e.sec_id = #{idSector} and
+	            e.ent_id = c.ent_id and
+	            c.com_tipo = 'N'
+</select>
+
+
+
 
 
 

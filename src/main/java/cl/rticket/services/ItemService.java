@@ -18,9 +18,13 @@ public interface ItemService {
 	public ArrayList<Partido>   obtenerPartidos();
 	public ArrayList<Sector>    obtenerSectores();
 	public ArrayList<Sector>    obtenerEntradas(Integer idPartido);
+	
 	public void insertarEntrada(Entrada entrada);
-	public void eliminarEntrada(Integer idEntrada);
+	public int eliminarEntrada(Integer idEntrada)throws DataIntegrityViolationException;
+	public int actualizarEntrada(Entrada entrada);	
 	public Entrada obtenerEntrada(Integer idEntrada);
+	
+	
 	public ArrayList<Ticket> insertarCompra(ArrayList<Compra> list) throws UpdateException;
 	public void insertarCompra(Compra compra) throws UpdateException;
 	
@@ -46,4 +50,9 @@ public interface ItemService {
 	public int insertarSector(Sector sector);
 	public Sector obtenerSector(Integer idSector);
 	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException;
+	
+	//control de acceso
+	public HashMap<Integer, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector );
+	public HashMap<Integer, Integer> obtenerEntradasNominativasPorSector(Integer idPartido,Integer idSector);
+	
 }

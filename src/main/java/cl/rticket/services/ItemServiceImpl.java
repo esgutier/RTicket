@@ -39,8 +39,12 @@ public class ItemServiceImpl implements ItemService{
 		itemMapper.insertarEntrada(entrada);
 	}
 	
-	public void eliminarEntrada( Integer idEntrada) {
-		itemMapper.eliminarEntrada( idEntrada);
+	public int eliminarEntrada( Integer idEntrada) throws DataIntegrityViolationException {
+		return itemMapper.eliminarEntrada( idEntrada);
+	}
+	
+	public int actualizarEntrada(Entrada entrada) {
+		return itemMapper.actualizarEntrada(entrada);
 	}
 	
 	public Entrada obtenerEntrada(Integer idEntrada) {
@@ -190,6 +194,24 @@ public class ItemServiceImpl implements ItemService{
 	}
 	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException {
 		return itemMapper.eliminarSector(idSector);
+	}
+	
+	//control de acceso
+	public HashMap<Integer, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector ) {
+		ArrayList<Integer> list = itemMapper.obtenerEntradasNormalesPorSector(idPartido, idSector);
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for(Integer i: list) {
+			map.put(i, 0);
+		}
+		return map;
+	}
+	public HashMap<Integer, Integer> obtenerEntradasNominativasPorSector(Integer idPartido,Integer idSector) {
+		ArrayList<Integer> list = itemMapper.obtenerEntradasNominativasPorSector(idPartido, idSector);
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for(Integer i: list) {
+			map.put(i, 0);
+		}
+		return map;
 	}
 
 }
