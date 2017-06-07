@@ -38,6 +38,38 @@ public class CompraController {
 		
 		return "content/compra";
 	}
+	
+	@RequestMapping(value="/carga-anular-ticket", method=RequestMethod.GET)
+	public String cargaAnularTicket(Model model) {
+		
+		model.addAttribute("ticket", new Ticket());
+		return "content/anularTicket";
+	}
+	
+	@RequestMapping(value="/anular-ticket", method=RequestMethod.POST)
+	public String anularTicket(Model model, Ticket ticket, RedirectAttributes flash) {
+		
+		String token = "";
+		if(ticket.getTokenEscaneado() != null || ticket.getTokenEscaneado().equals("")){
+			token = ticket.getTokenEscaneado();
+		} else if(ticket.getTokenDigitado() != null || ticket.getTokenDigitado().equals("")) {
+			token = ticket.getTokenDigitado();
+		}
+		
+		if(!token.equals("")) {
+			int res = itemService.anularTicket(token);
+			if(res < 1) {
+				flash.addFlashAttribute("error", "El código del ticket no existe");
+			} else {
+				flash.addFlashAttribute("exito", "Ticket anulado correctamente");
+			}
+		} else {
+			flash.addFlashAttribute("error", "El código del ticket es vacío");
+		}		
+		return "redirect:/carga-anular-ticket";
+	}
+	
+	
 
 	@RequestMapping(value="/carga-entradas-disponibles", method=RequestMethod.POST)
 	public String cargaEntradasDisponibles(Model model, Compra compra) {

@@ -119,7 +119,7 @@ CREATE TABLE compra (
   hin_rut int(10) NOT NULL,
   usr_username varchar(20) NOT NULL,  
   com_monto int(6) NOT NULL,
-  com_token bigint NOT NULL,
+  com_token varchar(20) NOT NULL,
   com_tipo varchar(1) NOT NULL,
   com_anulada varchar(1) NOT NULL,
   com_fecha datetime NOT NULL,
@@ -129,5 +129,5 @@ CREATE TABLE compra (
   FOREIGN KEY (usr_username) REFERENCES usuario(usr_username)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
+ALTER TABLE compra ADD UNIQUE (com_token);
 

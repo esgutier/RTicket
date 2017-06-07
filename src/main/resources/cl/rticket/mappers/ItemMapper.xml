@@ -78,9 +78,14 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
  </selectKey>
 </insert>
 
-<update id="actualizarTokenCompra" parameterType="int">
+<update id="actualizarTokenCompra" parameterType="map">
  update compra set com_token = #{token}
       where com_id = #{idCompra}
+</update>
+
+<update id="anularTicket" parameterType="String">
+ update compra set com_anulada = 'S' 
+        where com_token = #{token}
 </update>
 
 <select id="obtenerTotalSectorVendidas"  parameterType="map" resultType="int">
@@ -236,7 +241,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	            e.par_id = #{idPartido} and
 	            e.sec_id = #{idSector} and
 	            e.ent_id = c.ent_id and
-	            c.com_tipo = 'R'
+	            c.com_tipo = 'R' and c.com_anulada = 'N'
 </select>
 
 <select id="obtenerEntradasNominativasPorSector" parameterType="map" resultType="int"> 
@@ -245,7 +250,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	            e.par_id = #{idPartido} and
 	            e.sec_id = #{idSector} and
 	            e.ent_id = c.ent_id and
-	            c.com_tipo = 'N'
+	            c.com_tipo = 'N' and c.com_anulada = 'N'
 </select>
 
 

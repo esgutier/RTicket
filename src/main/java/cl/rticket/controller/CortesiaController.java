@@ -99,7 +99,7 @@ public class CortesiaController {
 			compra.setRut(entrada.getRut());			
 			compra.setUsername(usuario.getUsername());
 			compra.setMonto(0);
-			compra.setToken(0); 
+			compra.setToken("0"); 
 			compra.setTipo("C");
 			compra.setAnulada("N");					
 

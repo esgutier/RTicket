@@ -164,7 +164,7 @@ public class HinchaController {
 					ticket.setRutCompleto(rutBusqueda);
 					ticket.setUsername(usuario.getUsername());
 					ticket.setMonto(entrada.getPrecio());
-					ticket.setToken(0); //debe ser string
+					ticket.setToken("0"); //debe ser string
 					ticket.setTipo("N");
 					ticket.setAnulada("N");					
 					ticket.setDescPartido(entrada.getDescPartido());
@@ -247,7 +247,7 @@ public class HinchaController {
 			ticket.setRutCompleto(tmp.getRut()+"-"+tmp.getDv());
 			ticket.setUsername(usuario.getUsername());
 			ticket.setMonto(entrada.getPrecio());
-			ticket.setToken(0); 
+			ticket.setToken("0"); 
 			ticket.setTipo("N");
 			ticket.setAnulada("N");
 			ticket.setDescPartido(entrada.getDescPartido());

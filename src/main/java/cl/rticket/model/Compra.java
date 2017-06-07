@@ -23,7 +23,7 @@ public class Compra implements Serializable {
 	private String rutDigitado;
 	private String rutCompleto;
 	private Integer monto;
-	private Integer token;
+	private String token;
 	private String anulada;
 	
 	
@@ -87,10 +87,10 @@ public class Compra implements Serializable {
 	public void setMonto(Integer monto) {
 		this.monto = monto;
 	}
-	public Integer getToken() {
+	public String getToken() {
 		return token;
 	}
-	public void setToken(Integer token) {
+	public void setToken(String token) {
 		this.token = token;
 	}
 	public String getDescPartido() {
