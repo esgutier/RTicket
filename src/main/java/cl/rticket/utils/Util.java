@@ -69,15 +69,15 @@ public class Util {
 	  
 	}
 	
-	public static Integer randomNumber() {
+	public static String randomNumber() {
 		 Random randomGenerator = new Random();
 		    int a = randomGenerator.nextInt(9);
 		    int b = randomGenerator.nextInt(9);
 		    int c = randomGenerator.nextInt(9);
 		    int d = randomGenerator.nextInt(9);
-		    int e = randomGenerator.nextInt(9);
+		    //int e = randomGenerator.nextInt(9);
 		    
-		 return new Integer(a+""+b+""+c+""+d+""+e);
+		 return a+""+b+""+c+""+d;
 	}
 	
 	

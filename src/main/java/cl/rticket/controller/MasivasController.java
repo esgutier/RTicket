@@ -79,7 +79,7 @@ public class MasivasController {
 			compra.setRut(11111111);			
 			compra.setUsername(usuario.getUsername());
 			compra.setMonto(ent.getPrecio());
-			compra.setToken(0); 
+			compra.setToken("0"); 
 			compra.setTipo("R");
 			compra.setAnulada("N");					
 
@@ -89,6 +89,7 @@ public class MasivasController {
 				model.addAttribute("error", "Ocurrio un error al generar los tickets en Base de datos - UpdateException");
 				return "content/masiva";
 			} catch(Exception e) {
+				System.out.println("--->"+e.getMessage());
 				model.addAttribute("error", "Ocurrio un error al generar los tickets en Base de datos - Exception");
 				return "content/masiva";
 			}

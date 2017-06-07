@@ -15,10 +15,12 @@ public class Ticket implements Serializable{
 	private String hora;
 	private String sector;
 	private String tipo;
-	private Integer token;
+	private String token;
 	private String nombres;
 	private String apellidos;
 	private String precio;
+	private String tokenEscaneado;
+	private String tokenDigitado;
 	
 	public String getRival() {
 		return rival;
@@ -50,10 +52,10 @@ public class Ticket implements Serializable{
 	public void setCategoria(String tipo) {
 		this.tipo = tipo;
 	}
-	public Integer getToken() {
+	public String getToken() {
 		return token;
 	}
-	public void setToken(Integer token) {
+	public void setToken(String token) {
 		this.token = token;
 	}
 	public String getNombres() {
@@ -77,6 +79,18 @@ public class Ticket implements Serializable{
 	}
 	public void setPrecio(String precio) {
 		this.precio = precio;
+	}
+	public String getTokenEscaneado() {
+		return tokenEscaneado;
+	}
+	public void setTokenEscaneado(String tokenEscaneado) {
+		this.tokenEscaneado = tokenEscaneado;
+	}
+	public String getTokenDigitado() {
+		return tokenDigitado;
+	}
+	public void setTokenDigitado(String tokenDigitado) {
+		this.tokenDigitado = tokenDigitado;
 	}
 	
 

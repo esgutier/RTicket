@@ -63,8 +63,8 @@ public class ItemServiceImpl implements ItemService{
 			} else {
 				//la compra inserto bien, ahora creo el token con el id de secuencia retornado mas 
 				//un numero random y actualizo la tabla compra con el id correspondiente
-				String tmp = compra.getIdCompra()+""+Util.randomNumber();
-				Integer token = new Integer(tmp);
+				String token = "E"+compra.getIdCompra()+Util.randomNumber();
+				
 				int result = itemMapper.actualizarTokenCompra(compra.getIdCompra(),token);
 				compra.setToken(token);
 				if(result < 1) {
@@ -81,16 +81,15 @@ public class ItemServiceImpl implements ItemService{
 	@Transactional(rollbackFor={UpdateException.class, Exception.class})
 	public void insertarCompra(Compra compra) throws UpdateException {
 		
-			//inserto compra con token 0
+			//inserto compra con token 0		
 			itemMapper.insertarCompra(compra);			
 			if(compra.getIdCompra() < 1) {
 				throw new UpdateException();
-			} else {
+			} else {				
 				//la compra inserto bien, ahora creo el token con el id de secuencia retornado mas 
 				//un numero random y actualizo la tabla compra con el id correspondiente
-				String tmp = compra.getIdCompra()+""+Util.randomNumber();
-				Integer token = new Integer(tmp);
-				int result = itemMapper.actualizarTokenCompra(compra.getIdCompra(),token);				
+				String token = "E"+compra.getIdCompra()+Util.randomNumber();			
+				int result = itemMapper.actualizarTokenCompra(compra.getIdCompra(),token);					
 				if(result < 1) {
 					throw new UpdateException();
 				}
@@ -104,7 +103,9 @@ public class ItemServiceImpl implements ItemService{
 	}
 	
 	
-	
+	public int anularTicket(String token) {
+		return itemMapper.anularTicket(token);
+	}
 	
 	
 	

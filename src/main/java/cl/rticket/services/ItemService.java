@@ -27,6 +27,7 @@ public interface ItemService {
 	
 	public ArrayList<Ticket> insertarCompra(ArrayList<Compra> list) throws UpdateException;
 	public void insertarCompra(Compra compra) throws UpdateException;
+	public int anularTicket(String token);
 	
 	public int obtenerTotalSectorVendidas(Integer idEntrada, Integer idPartido);
 	//public Ticket obtenerDatosTicketNominativo(Integer idCompra);
