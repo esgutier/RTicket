@@ -50,9 +50,11 @@ public class CompraController {
 	public String anularTicket(Model model, Ticket ticket, RedirectAttributes flash) {
 		
 		String token = "";
-		if(ticket.getTokenEscaneado() != null || ticket.getTokenEscaneado().equals("")){
+		System.out.println("token digitado:"+ticket.getTokenDigitado());
+		System.out.println("token escaneado:"+ticket.getTokenEscaneado());
+		if(ticket.getTokenEscaneado() != null || !ticket.getTokenEscaneado().isEmpty()){
 			token = ticket.getTokenEscaneado();
-		} else if(ticket.getTokenDigitado() != null || ticket.getTokenDigitado().equals("")) {
+		} if(ticket.getTokenDigitado() != null || !ticket.getTokenDigitado().isEmpty()) {
 			token = ticket.getTokenDigitado();
 		}
 		
