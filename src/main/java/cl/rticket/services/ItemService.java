@@ -53,7 +53,7 @@ public interface ItemService {
 	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException;
 	
 	//control de acceso
-	public HashMap<Integer, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector );
+	public HashMap<String, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector );
 	public HashMap<Integer, Integer> obtenerEntradasNominativasPorSector(Integer idPartido,Integer idSector);
 	
 }

@@ -235,7 +235,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- CONTROL DE ACCESO ============================================================================== -->
 <!-- ================================================================================================ -->
 
-<select id="obtenerEntradasNormalesPorSector" parameterType="map" resultType="int"> 
+<select id="obtenerEntradasNormalesPorSector" parameterType="map" resultType="String"> 
      select c.com_token id from entrada e, compra c 
 	       where 
 	            e.par_id = #{idPartido} and

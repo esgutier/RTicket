@@ -20,6 +20,7 @@ public class Entrada implements Serializable{
 	private Integer precio;
 	private Integer maximo;
 	private String comentario;
+	private String scan;
 	
 	
 	public Integer getIdEntrada() {
@@ -87,6 +88,12 @@ public class Entrada implements Serializable{
 	}
 	public void setRut(Integer rut) {
 		this.rut = rut;
+	}
+	public String getScan() {
+		return scan;
+	}
+	public void setScan(String scan) {
+		this.scan = scan;
 	}
 	
 

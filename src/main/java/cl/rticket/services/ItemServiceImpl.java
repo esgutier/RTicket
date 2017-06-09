@@ -198,10 +198,10 @@ public class ItemServiceImpl implements ItemService{
 	}
 	
 	//control de acceso
-	public HashMap<Integer, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector ) {
-		ArrayList<Integer> list = itemMapper.obtenerEntradasNormalesPorSector(idPartido, idSector);
-		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-		for(Integer i: list) {
+	public HashMap<String, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector ) {
+		ArrayList<String> list = itemMapper.obtenerEntradasNormalesPorSector(idPartido, idSector);
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		for(String i: list) {
 			map.put(i, 0);
 		}
 		return map;

@@ -5,6 +5,15 @@
   <div th:fragment="content"> 
     <script type="text/javascript">
         $(document).ready(function (){	
+        	
+        	$("#scan").val('');
+        	
+        	$("#cargar").click(function(){
+        		document.forms[0].action = "cargar-control-acceso";             	
+        		document.forms[0].submit();
+        	})
+        	
+        	
           	
         })
     </script>
@@ -16,7 +25,7 @@
 				<h3><i class="fa fa-edit"></i> Control de Acceso Sector</h3>
 		     </div>
 			 <div class="widget-content">
-			 <form action="#" th:action="@{/cargar-control-acceso}"  th:object="${entrada}" method="POST">
+			 <form action="#" th:action="@{/validar-acceso}"  th:object="${entrada}" method="POST" id="formulario">
 			   <div class="form-horizontal">
 			   
 			         <div  th:if="${exito != null}" >
@@ -32,13 +41,13 @@
 					 <div class="form-group">
 						    <label class="col-md-1 control-label"></label>
 							<div class="col-md-5">
-								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido" required="required">
+								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido" >
 								    <option value="" >Seleccione...</option>	
 								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}+' ('+${partido.fecha}+')'" >partido</option>													
 								</select>
 							</div>
 							<div class="col-md-5">
-								<select th:field="*{idSector}"  class="form-control input-sm" required="required">
+								<select th:field="*{idSector}"  class="form-control input-sm" >
 								    <option value="" >Seleccione...</option>	
 								    <option th:each="sector : ${sectores}" th:value="${sector.idSector}" th:text="${sector.descripcion}" >partido</option>													
 								</select>
@@ -47,7 +56,7 @@
 					 </div>
 					
 					 <div align="center">
-							   <button type="submit" class="btn btn-custom-primary">Cargar</button>
+							   <button type="button" class="btn btn-custom-primary" id="cargar">Cargar</button>
 					 </div>
 					<br/>
 					
@@ -80,9 +89,16 @@
 					    <div class="form-group">
 						   <label class="col-md-1 control-label"></label>
 							<div class="col-md-10">							  				
-								 <input name="scan"  type="text" class="form-control input-sm" />							  
+								 <input th:field="*{scan}" id="scan" type="text" class="form-control input-sm" />							  
 							</div>
 							<label class="col-md-1 control-label"></label>
+					     </div>
+					     <br/>
+					     <br/>
+					     <div align="center">
+					         <span style="font-size:40px" th:utext="${respuesta}"> </span>
+					        
+					        
 					     </div>
 					   
 					   
