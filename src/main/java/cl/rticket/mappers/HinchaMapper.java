@@ -9,7 +9,9 @@ public interface HinchaMapper {
 	
 	public Hincha obtenerHincha(Integer rut);
 	public int insertarHincha(Hincha hincha);
+	public int insertarHinchaEntidad(Hincha hincha);
 	public int actualizarHincha(Hincha hincha);
+	public int actualizarHinchaEntidad(Hincha hincha);
 	public ArrayList<Hincha> obtenerEntidades();
 	
 }

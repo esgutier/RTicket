@@ -7,6 +7,7 @@
         $(document).ready(function (){	
         	
         	$("#scan").val('');
+        	$("#scan").focus();
         	
         	$("#cargar").click(function(){
         		document.forms[0].action = "cargar-control-acceso";             	
@@ -63,27 +64,25 @@
 					 
 					 
 					 <div class="row">	
-					     <div class="col-md-2">	</div>
-					     <div class="col-md-8">				 
+					     <div class="col-md-3">	</div>
+					     <div class="col-md-6">				 
 						 <table class="table table-bordered">
 								<thead>
 									<tr>
-									  <th>TOTAL LISTA NEGRA</th>
-									  <th>TOTAL NOMINATIVAS</th>
-									  <th>TOTAL NORMALES</th>
+																	  
+									  <th>TOTAL SECTOR (Nominativas, Cortesía y Normales)</th>
 									 
 									</tr>
 								</thead>
 								<tbody>
 									<tr >
-										<td >0</td>
-										<td th:text="${totalNominativas}">xxx</td>
-										<td th:text="${totalNormales}">xxx</td>											
+																			
+										<td th:text="${totalNormales}" align="center">xxx</td>											
 									</tr>											
 								</tbody>
 						   </table>
 						   </div>
-						   <div class="col-md-2">	</div>
+						   <div class="col-md-3">	</div>
 					   </div>
 					   <br/>
 					    <div class="form-group">

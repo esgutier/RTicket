@@ -57,7 +57,7 @@ public class ImpresionNominativa {
 			                g2d.translate((int) pageFormat.getImageableX(),(int) pageFormat.getImageableY()); 
 			                Font font = new Font("Arial",Font.BOLD,12);       
 			                Font fontVS = new Font("Arial",Font.BOLD,10); 
-			                Font fontFecha = new Font("Monospaced",Font.BOLD,10); 
+			                Font fontFecha = new Font("Monospaced",Font.BOLD,9); 
 			                Font fontSector = new Font("Arial",Font.BOLD,16); 
 			                Font fontSocio = new Font("Monospaced",Font.BOLD,12); 
 			                g2d.setFont(font);
@@ -229,7 +229,7 @@ public class ImpresionNominativa {
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
 		PrintService service = findPrintService("Zewwbra", printService);
-		System.out.println(service);
+		//System.out.println(service);
 		PrinterJob pj = PrinterJob.getPrinterJob();
 		try {
 			pj.setPrintService(service);

@@ -19,11 +19,19 @@ public class HinchaServiceImpl implements HinchaService{
 	}
 	
 	public int insertarHincha(Hincha hincha) {
-		return hinchaMapper.insertarHincha(hincha);
+		if(hincha.getCategoria().equals("P")) {
+		    return hinchaMapper.insertarHincha(hincha);
+		} else {
+			return hinchaMapper.insertarHinchaEntidad(hincha);
+		}
 	}
 	
 	public int actualizarHincha(Hincha hincha) {
-		return hinchaMapper.actualizarHincha(hincha);
+		if(hincha.getCategoria().equals("P")) {
+		   return hinchaMapper.actualizarHincha(hincha);
+		} else {
+			return hinchaMapper.actualizarHinchaEntidad(hincha);
+		}
 	}
 	
 	public ArrayList<Hincha> obtenerEntidades() {

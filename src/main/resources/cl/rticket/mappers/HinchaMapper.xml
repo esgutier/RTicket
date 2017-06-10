@@ -19,6 +19,11 @@ insert into hincha (hin_rut, hin_dv,hin_nombres, hin_apellidos, hin_direccion,hi
 values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#{genero},#{telefono},#{email},STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),NOW(),#{categoria})
 </insert>
 
+<insert id="insertarHinchaEntidad"  parameterType="Hincha">
+insert into hincha (hin_rut, hin_dv,hin_nombres, hin_direccion, hin_telefono,hin_email ,hin_fecha_ingreso,hin_categoria) 
+values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),#{direccion},#{telefono},#{email},NOW(),#{categoria})
+</insert>
+
 <update id="actualizarHincha" parameterType="Hincha">
 
   update hincha set hin_nombres = #{nombres},
@@ -28,6 +33,16 @@ values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#
                     hin_telefono = #{telefono},
                     hin_email = #{email},
                     hin_fecha_nac =STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),
+                    hin_categoria = #{categoria}
+                 where hin_rut = #{rut}
+</update>
+
+<update id="actualizarHinchaEntidad" parameterType="Hincha">
+
+  update hincha set hin_nombres = #{nombres},                   
+                    hin_direccion = #{direccion},                   
+                    hin_telefono = #{telefono},
+                    hin_email = #{email},                   
                     hin_categoria = #{categoria}
                  where hin_rut = #{rut}
 </update>

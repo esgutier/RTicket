@@ -102,8 +102,10 @@
 									    <td  > 
 									     
 									      <div th:if="${row.value.tipo == 'R'}">
-									       <a href="#" th:href="@{/imprimir-entradas-masivo(idEntrada=${row.value.idEntrada},idPartido=${row.value.idPartido})}" class="btn btn-custom-primary imprimir">
-									          <i class="fa fa-print" aria-hidden="true"></i>Imprimir
+									       <a href="#" th:href="@{/imprimir-entradas-masivo(idEntrada=${row.value.idEntrada},idPartido=${row.value.idPartido})}" >
+									       <span class="badge element-bg-color-blue">
+									          <i class="fa fa-print" aria-hidden="true"></i>  Imprimir
+									          </span>
 									        </a>
 									       </div>
 									     </td> 

@@ -54,7 +54,7 @@ private static final String PRINTER_NAME = "zebra";
             g2d.translate((int) pageFormat.getImageableX(),(int) pageFormat.getImageableY()); 
             Font font = new Font("Arial",Font.BOLD,12);       
             Font fontVS = new Font("Arial",Font.BOLD,10); 
-            Font fontFecha = new Font("Monospaced",Font.BOLD,10); 
+            Font fontFecha = new Font("Monospaced",Font.BOLD,9); 
             Font fontSector = new Font("Arial",Font.BOLD,16); 
             Font fontSocio = new Font("Monospaced",Font.BOLD,12); 
             g2d.setFont(font);
@@ -65,21 +65,26 @@ private static final String PRINTER_NAME = "zebra";
                  int y=5;                                        
                  int imagewidth=50;
                  int imageheight=50;
-                 BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 		                        
+                 BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 	
+                 
                  //BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
                  g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
                  drawCenteredString(g2d,"V/S",rec1,70,fontVS);
                  drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
-                 drawCenteredString(g2d,(formateador.format(ticket.getFecha())).toUpperCase(),rec1,98,fontFecha);		                        
+                
+                 drawCenteredString(g2d,(formateador.format(ticket.getFecha())).toUpperCase(),rec1,98,fontFecha);	
+                
                  drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
+                 
                  drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
                  g2d.drawLine(20, 120, 185, 120);   
                  drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
+                 
                  drawCenteredString(g2d,"Cortesía",rec1,158,fontSocio);
                  
                  drawCenteredString(g2d,ticket.getNombres(),rec1,175,fontSocio);
                  //drawCenteredString(g2d,ticket.getApellidos(),rec1,185,fontSocio);
-                 
+                
                  
                  g2d.drawLine(20, 195, 185, 195); 
                  

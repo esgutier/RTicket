@@ -117,8 +117,10 @@
 									    <td  th:text="${t.total}"></td> 									    									   
 									    <td> 									     
 									      <div th:if="${t.total > 0 }">
-									       <a href="#" th:href="@{/imprimir-entradas-cortesia(idPartido=${t.idPartido},idEntrada=${t.idEntrada},rut=*{rut})}" class="btn btn-custom-primary imprimir">
-									          <i class="fa fa-print" aria-hidden="true"></i>Imprimir
+									       <a href="#" th:href="@{/imprimir-entradas-cortesia(idPartido=${t.idPartido},idEntrada=${t.idEntrada},rut=*{rut})}" >
+									         <span class="badge element-bg-color-blue">
+									          <i class="fa fa-print" aria-hidden="true"></i>  Imprimir
+									         </span>
 									        </a>
 									       </div>
 									     </td>  

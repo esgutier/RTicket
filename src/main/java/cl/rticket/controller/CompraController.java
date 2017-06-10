@@ -52,9 +52,9 @@ public class CompraController {
 		String token = "";
 		System.out.println("token digitado:"+ticket.getTokenDigitado());
 		System.out.println("token escaneado:"+ticket.getTokenEscaneado());
-		if(ticket.getTokenEscaneado() != null || !ticket.getTokenEscaneado().isEmpty()){
+		if(ticket.getTokenEscaneado() != null && !ticket.getTokenEscaneado().isEmpty()){
 			token = ticket.getTokenEscaneado();
-		} if(ticket.getTokenDigitado() != null || !ticket.getTokenDigitado().isEmpty()) {
+		} if(ticket.getTokenDigitado() != null && !ticket.getTokenDigitado().isEmpty()) {
 			token = ticket.getTokenDigitado();
 		}
 		
@@ -157,10 +157,10 @@ public class CompraController {
 		
 		try {
 			ArrayList<Ticket> listaTicket = itemService.insertarCompra(compraList);	
-			System.out.println("---->size:"+listaTicket.size());
+			//System.out.println("---->size:"+listaTicket.size());
 			for(Ticket ticket: listaTicket) {				
 				try {
-					System.out.println("id compra="+ticket.getToken());
+					//System.out.println("id compra="+ticket.getToken());
 					impresora.imprimirTicket(ticket,service);
 				} catch (ImpresoraNoDisponibleException e) {
 					model.addAttribute("partidos", itemService.obtenerPartidos());

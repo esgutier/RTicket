@@ -31,8 +31,8 @@ public class ControlAccesoController {
 	
 	@PostConstruct
 	public void init() {
-		this.setPartidos(itemService.obtenerPartidos());
-		this.setSectores(itemService.obtenerSectores());
+		//this.setPartidos(itemService.obtenerPartidos());
+		//this.setSectores(itemService.obtenerSectores());
 	}
 	
 	
@@ -41,6 +41,8 @@ public class ControlAccesoController {
 	@RequestMapping(value="/carga-pagina-control", method=RequestMethod.GET)
 	public String cargaPaginaSectores(Model model) {
 		model.addAttribute("entrada", new Entrada());
+		this.setPartidos(itemService.obtenerPartidos());
+		this.setSectores(itemService.obtenerSectores());
 		model.addAttribute("partidos", this.getPartidos());
 		model.addAttribute("sectores", this.getSectores());
 		
@@ -55,7 +57,7 @@ public class ControlAccesoController {
 		this.setNormales(itemService.obtenerEntradasNormalesPorSector(entrada.getIdPartido(), entrada.getIdSector()));
 		this.setNominativas(itemService.obtenerEntradasNominativasPorSector(entrada.getIdPartido(), entrada.getIdSector()));
 		
-		model.addAttribute("totalNominativas", this.getNominativas() == null ? 0 : this.getNominativas().size());
+		//model.addAttribute("totalNominativas", this.getNominativas() == null ? 0 : this.getNominativas().size());
 		model.addAttribute("totalNormales", this.getNormales() == null ? 0 : this.getNormales().size());
 		
 		return "content/controlAcceso";
