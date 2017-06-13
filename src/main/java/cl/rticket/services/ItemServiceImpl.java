@@ -206,6 +206,12 @@ public class ItemServiceImpl implements ItemService{
 		}
 		return map;
 	}
+	
+	public ArrayList<String> listaEntradasNormalesPorSector(Integer idPartido,Integer idSector) {
+		ArrayList<String> list = itemMapper.obtenerEntradasNormalesPorSector(idPartido, idSector);
+		return list;
+	}
+	
 	public HashMap<Integer, Integer> obtenerEntradasNominativasPorSector(Integer idPartido,Integer idSector) {
 		ArrayList<Integer> list = itemMapper.obtenerEntradasNominativasPorSector(idPartido, idSector);
 		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -213,6 +219,11 @@ public class ItemServiceImpl implements ItemService{
 			map.put(i, 0);
 		}
 		return map;
+	}
+	
+	public ArrayList<Integer> listaEntradasNominativasPorSector(Integer idPartido,Integer idSector) {
+		ArrayList<Integer> list = itemMapper.obtenerEntradasNominativasPorSector(idPartido, idSector);
+		return list;
 	}
 
 }
