@@ -12,6 +12,7 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
@@ -67,7 +68,7 @@ private static final String PRINTER_NAME = "zebra";
                  int imageheight=50;
                  BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 	
                  
-                 //BufferedImage read = ImageIO.read(new File("C:\\desarrollo\\logo_png.png"));
+                 //BufferedImage read = ImageIO.read(new File("C:\\apache-tomcat-7.0.78\\logo_png.png"));
                  g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
                  drawCenteredString(g2d,"V/S",rec1,70,fontVS);
                  drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
