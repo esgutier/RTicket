@@ -172,5 +172,9 @@
 <!--  FIN SHIRO CONFIGURACION ================================================================================ --> 
  <bean id="applicationContextProvder"
                         class="cl.rticket.utils.ApplicationContextProvider"/>
+                        
+ <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+       <property name="maxUploadSize" value="-1"/>
+ </bean>                     
 	
 </beans>

@@ -1,7 +1,12 @@
 package cl.rticket.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.rticket.model.Compra;
@@ -275,6 +281,39 @@ public class HinchaController {
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
 		
 		return "content/compra";	
+	}
+	
+	// -----------------------------------------------------------------------------------
+	// LISTA NEGRA
+	//------------------------------------------------------------------------------------
+	
+	@RequestMapping(value="/carga-pagina-lista-negra", method=RequestMethod.GET)
+	public String cargarPaginaListaNegra(Model model) {			
+			return "content/ingresoListaNegra";
+	}
+	
+	@RequestMapping(value="/ingresar-lista-negra", method=RequestMethod.POST)
+	public String ingresarListaNegra(Model model, MultipartFile fileData) {
+		try {
+			File convFile = new File(fileData.getOriginalFilename());
+		    convFile.createNewFile(); 
+		    FileOutputStream fos = new FileOutputStream(convFile); 
+		    fos.write(fileData.getBytes());
+		    fos.close(); 
+		    List<String> lines = FileUtils.readLines(convFile, "UTF-8");
+		    lines.remove(0); //quitar la cabecera
+		    for (String line : lines) {
+		    	String[] columnas = line.split(";"); 
+                //System.out.println(""+columnas[1]+" "+columnas[2]+" "+columnas[3]+" "+columnas[4]);
+                String rut = columnas[4].substring(0, columnas[4].length() - 1);              
+                String dv  = columnas[4].substring(columnas[4].length() - 1);
+                System.out.println(rut+" - "+dv);
+            }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "redirect:/carga-pagina-lista-negra";
 	}
 	
 	
