@@ -289,12 +289,16 @@ public class HinchaController {
 	
 	@RequestMapping(value="/carga-pagina-lista-negra", method=RequestMethod.GET)
 	public String cargarPaginaListaNegra(Model model) {			
+		    model.addAttribute("total",hinchaService.totalListaNegra());
 			return "content/ingresoListaNegra";
 	}
 	
 	@RequestMapping(value="/ingresar-lista-negra", method=RequestMethod.POST)
-	public String ingresarListaNegra(Model model, MultipartFile fileData) {
+	public String ingresarListaNegra(Model model, MultipartFile fileData,final RedirectAttributes flash) {
 		try {
+			//validar formato csv
+			
+			
 			File convFile = new File(fileData.getOriginalFilename());
 		    convFile.createNewFile(); 
 		    FileOutputStream fos = new FileOutputStream(convFile); 
@@ -302,13 +306,41 @@ public class HinchaController {
 		    fos.close(); 
 		    List<String> lines = FileUtils.readLines(convFile, "UTF-8");
 		    lines.remove(0); //quitar la cabecera
+		    ArrayList<Hincha> impedidos = new ArrayList<Hincha>();
+		    ArrayList<String> errores = new ArrayList<String>();
 		    for (String line : lines) {
-		    	String[] columnas = line.split(";"); 
-                //System.out.println(""+columnas[1]+" "+columnas[2]+" "+columnas[3]+" "+columnas[4]);
+		    	String[] columnas = line.split(";");                 
                 String rut = columnas[4].substring(0, columnas[4].length() - 1);              
                 String dv  = columnas[4].substring(columnas[4].length() - 1);
-                System.out.println(rut+" - "+dv);
+                String nombre = columnas[2]+" "+columnas[3]+" "+columnas[1];
+                System.out.println(" "+rut+"-"+dv+"   "+nombre);
+                Hincha impedido = new Hincha();
+                try {
+                	if(Util.verificaRUT(rut+"-"+dv)) {
+                       impedido.setRut(new Integer(rut));
+                       impedido.setDv(dv);
+                       impedido.setNombres(nombre);  
+                       impedidos.add(impedido);
+                	} else {
+                		errores.add("N° "+columnas[0]+" El RUT "+rut+" no es válido");
+                	}
+                } catch(NumberFormatException e) {
+                	errores.add("N° "+columnas[0]+" El RUT "+rut+" no es válido");
+                }
+                  
+                
+                
             }
+		    
+		    Integer[] resumen = hinchaService.ingresarListaNegra(impedidos);
+		    flash.addFlashAttribute("totalIngresados", resumen[0]);
+		    flash.addFlashAttribute("totalDuplicados", resumen[1]);
+		    //flash.addFlashAttribute("totalProcesados", resumen[2]);
+		    
+		    flash.addFlashAttribute("errores", errores);
+		    
+		    
+		    
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

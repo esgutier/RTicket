@@ -52,4 +52,22 @@ values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),#{direccion},#{telefono},#{email},
      select hin_rut rut, hin_nombres nombres from hincha where hin_categoria = 'E' order by hin_nombres
 </select>
 
+<delete id="borrarListaNegra" >
+delete from lista_negra
+</delete>
+
+<insert id="insertarImpedido" parameterType="Hincha">
+insert into lista_negra (lne_rut, lne_dv, lne_nombre) values (#{rut},UPPER(#{dv}), UPPER(#{nombres}))
+</insert>
+
+<select id="totalListaNegra" resultType="int">
+select count(*) from lista_negra
+</select>
+
+<select id="estaEnListaNegra" resultType="int" parameterType="int">
+select 1 from lista_negra where lne_rut = #{rut}
+</select>
+
+
+
 </mapper>

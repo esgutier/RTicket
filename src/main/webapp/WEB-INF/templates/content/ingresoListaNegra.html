@@ -8,8 +8,8 @@
     </script>
   
   <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8">
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
       <div class="widget">
 			 <div class="widget-header">
 				<h3><i class="fa fa-edit"></i> Ingreso Lista Negra</h3>
@@ -33,6 +33,20 @@
 													<div align="center">
 													<button type="submit" class="btn btn-primary" >Cargar Archivo</button>
 													</div>
+													<br/>
+													<br/>
+													<p> Total Lista Negra: <span th:text="${total}"></span></p>
+													<br/>
+													<div th:if="${totalIngresados != null}">
+														<p>Total registros ingresados: <span th:text="${totalIngresados}"> 0 </span></p>
+														<p>Total registros duplicados: <span th:text="${totalDuplicados}"> 0 </span></p>
+													</div>
+													<div th:if="${not #lists.isEmpty(errores)}">
+													  <p>Registros con errores (No fueron cargados):</p>
+													  <ul th:each="error: ${errores}">
+													     <li th:text="${error}"></li>
+													  </ul>
+													</div>
 													
 												
 				</form>	
@@ -40,7 +54,7 @@
 			 </div>
 	   </div>
 	   </div>
-	   <div class="col-md-2"></div>
+	   <div class="col-md-1"></div>
 	   </div>
 	   
 	   

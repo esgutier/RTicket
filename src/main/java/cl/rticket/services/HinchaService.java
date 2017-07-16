@@ -10,4 +10,8 @@ public interface HinchaService {
 	public int insertarHincha(Hincha hincha);
 	public int actualizarHincha(Hincha hincha);
 	public ArrayList<Hincha> obtenerEntidades();
+	public Integer[] ingresarListaNegra(ArrayList<Hincha> impedidos);
+	public Integer totalListaNegra();
+	public boolean estaEnListaNegra(Integer rut);
+	
 }

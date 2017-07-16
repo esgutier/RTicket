@@ -2,6 +2,9 @@ package cl.rticket.mappers;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Param;
+import org.springframework.dao.DuplicateKeyException;
+
 import cl.rticket.model.Hincha;
 
 public interface HinchaMapper {
@@ -13,5 +16,9 @@ public interface HinchaMapper {
 	public int actualizarHincha(Hincha hincha);
 	public int actualizarHinchaEntidad(Hincha hincha);
 	public ArrayList<Hincha> obtenerEntidades();
+	public int borrarListaNegra();
+	public int insertarImpedido(Hincha hincha) throws DuplicateKeyException;
+	public int totalListaNegra();
+	public int estaEnListaNegra( @Param("rut")Integer rut);
 	
 }

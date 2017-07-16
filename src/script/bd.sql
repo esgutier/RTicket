@@ -131,3 +131,12 @@ CREATE TABLE compra (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 ALTER TABLE compra ADD UNIQUE (com_token);
 
+
+CREATE TABLE lista_negra (
+  
+  lne_rut int(10) NOT NULL,
+  lne_dv  varchar(1) NOT NULL,
+  lne_nombre varchar(100) NOT NULL , 
+  PRIMARY KEY  (lne_rut) 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
