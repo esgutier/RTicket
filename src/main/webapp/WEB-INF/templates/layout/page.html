@@ -20,8 +20,12 @@
 <script src="assets/js/plugins/bootstrap-tour/bootstrap-tour.custom.js"></script>		
 <script src="assets/js/king-common.js"></script>	
 <script src="assets/js/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script type="text/javascript">
+    window.history.forward();
+    function noBack() { window.history.forward(); }
+</script>
 
- <body class="sidebar-fixed topnav-fixed  ">
+ <body class="sidebar-fixed topnav-fixed  " onload="noBack();">
 	
 	<div id="wrapper" class="wrapper">
 	

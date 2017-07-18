@@ -148,6 +148,15 @@ public class HinchaController {
 				String[] parts = rutBusqueda.split("-");
 				String nro = parts[0]; 				
 				Integer rut = Integer.parseInt(nro);
+				
+				//verificar en lista negra
+				if(hinchaService.estaEnListaNegra(rut)) {
+					model.addAttribute("error", "El Hincha se encuentra en Lista Negra");
+					model.addAttribute("partidos", itemService.obtenerPartidos());
+					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+					return "content/compra";
+				}
+				
 				//validar rut
 				
 				Hincha hincha = hinchaService.obtenerHincha(rut);
@@ -178,12 +187,21 @@ public class HinchaController {
 					ticket.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
 					
 					ArrayList<Compra> ticketList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
-					if(ticketList != null) {
-					    ticketList.add(ticket);
+					//verificar que el rut no este en el carro 
+					if(estaEnCarro(ticketList, ticket)) {
+						if(ticketList != null) {
+						    ticketList.add(ticket);
+						} else {
+							ticketList = new ArrayList<Compra>();
+							 ticketList.add(ticket);
+						}
 					} else {
-						ticketList = new ArrayList<Compra>();
-						 ticketList.add(ticket);
+						model.addAttribute("error", "El Hincha ya se encuentra agregado al carro de compras");
+						model.addAttribute("partidos", itemService.obtenerPartidos());
+						model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+						return "content/compra";
 					}
+					
 					SecurityUtils.getSubject().getSession().setAttribute("carro",ticketList);
 					int total = 0;
 					for(Compra c: ticketList) {
@@ -297,7 +315,10 @@ public class HinchaController {
 	public String ingresarListaNegra(Model model, MultipartFile fileData,final RedirectAttributes flash) {
 		try {
 			//validar formato csv
-			
+			if(!fileData.getOriginalFilename().toUpperCase().endsWith("CSV")) {			
+				flash.addFlashAttribute("error",  "El formato del archivo no es correcto, debe ser csv delimitado por comas.");  
+				return "redirect:/carga-pagina-lista-negra";
+			}
 			
 			File convFile = new File(fileData.getOriginalFilename());
 		    convFile.createNewFile(); 
@@ -313,7 +334,7 @@ public class HinchaController {
                 String rut = columnas[4].substring(0, columnas[4].length() - 1);              
                 String dv  = columnas[4].substring(columnas[4].length() - 1);
                 String nombre = columnas[2]+" "+columnas[3]+" "+columnas[1];
-                System.out.println(" "+rut+"-"+dv+"   "+nombre);
+                //System.out.println(" "+rut+"-"+dv+"   "+nombre);
                 Hincha impedido = new Hincha();
                 try {
                 	if(Util.verificaRUT(rut+"-"+dv)) {
@@ -326,10 +347,7 @@ public class HinchaController {
                 	}
                 } catch(NumberFormatException e) {
                 	errores.add("N° "+columnas[0]+" El RUT "+rut+" no es válido");
-                }
-                  
-                
-                
+                }  
             }
 		    
 		    Integer[] resumen = hinchaService.ingresarListaNegra(impedidos);
@@ -337,10 +355,7 @@ public class HinchaController {
 		    flash.addFlashAttribute("totalDuplicados", resumen[1]);
 		    //flash.addFlashAttribute("totalProcesados", resumen[2]);
 		    
-		    flash.addFlashAttribute("errores", errores);
-		    
-		    
-		    
+		    flash.addFlashAttribute("errores", errores);   
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -349,5 +364,20 @@ public class HinchaController {
 	}
 	
 	
+	
+	//----------------------------------------------------------------------
+	// Metodo para verificar si un rut ya se encuentra en el carro de compra
+	//----------------------------------------------------------------------
+	
+	private boolean estaEnCarro(ArrayList<Compra> ticketList, Compra ticket) {
+		boolean esta = false;
+		for(Compra c: ticketList) {
+			if(c.getRut() == ticket.getRut()) {
+				esta = true;
+				break;
+			}
+		}
+		return esta;
+	}
 	
 }

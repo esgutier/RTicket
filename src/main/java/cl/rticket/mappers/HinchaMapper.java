@@ -19,6 +19,6 @@ public interface HinchaMapper {
 	public int borrarListaNegra();
 	public int insertarImpedido(Hincha hincha) throws DuplicateKeyException;
 	public int totalListaNegra();
-	public int estaEnListaNegra( @Param("rut")Integer rut);
+	public Integer estaEnListaNegra( @Param("rut")Integer rut);
 	
 }

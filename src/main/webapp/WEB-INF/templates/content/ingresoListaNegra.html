@@ -4,7 +4,15 @@
  
   <div th:fragment="content"> 
     <script type="text/javascript">
-       
+     /*<![CDATA[*/
+		    $(document).ready(function (){	
+		    	$('#btnLoad').hide();
+		    	$('#btnSubmit').click(function(){
+		    		$('#btnLoad').show();
+		    		$('#btnSubmit').hide();
+		    	});
+		    });      
+     /*]]>*/ 
     </script>
   
   <div class="row">
@@ -31,7 +39,8 @@
 													</div>
 
 													<div align="center">
-													<button type="submit" class="btn btn-primary" >Cargar Archivo</button>
+													<button type="submit" class="btn btn-primary" id="btnSubmit" >Cargar Archivo</button>
+													<button type="button" class="btn btn-primary" disabled="disabled" id="btnLoad"><i class="fa fa-spinner fa-spin"></i> Cargando...</button>
 													</div>
 													<br/>
 													<br/>
@@ -43,9 +52,14 @@
 													</div>
 													<div th:if="${not #lists.isEmpty(errores)}">
 													  <p>Registros con errores (No fueron cargados):</p>
-													  <ul th:each="error: ${errores}">
-													     <li th:text="${error}"></li>
-													  </ul>
+													  
+													  <table class="table">
+													   <tbody>
+													     <tr th:each="error: ${errores}">
+													        <td th:text="${error}"></td>
+													     </tr>
+													   </tbody>
+													  </table>													  													
 													</div>
 													
 												
