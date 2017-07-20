@@ -63,5 +63,6 @@ public interface ItemMapper {
 	//Control de acceso
 	public ArrayList<String> obtenerEntradasNormalesPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector );
 	public ArrayList<Integer> obtenerEntradasNominativasPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector);
+	public ArrayList<Integer> obtenerTotalListaNegra();
 
 }

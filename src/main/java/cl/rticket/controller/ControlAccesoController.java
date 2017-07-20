@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
+import cl.rticket.services.HinchaService;
 import cl.rticket.services.ItemService;
 
 @Controller
@@ -22,12 +23,21 @@ public class ControlAccesoController {
 	@Autowired
 	ItemService itemService;
 	
-	private HashMap<Integer,String> listaNegra;
-	private HashMap<Integer,Integer> nominativas;
-	private HashMap<String,Integer> normales;
+	@Autowired
+	HinchaService hinchaService;
+	
+	private HashMap<Integer,Integer> listaNegra = new HashMap<Integer,Integer>();
+	private HashMap<Integer,HashMap<Integer,Integer>> nominativas = new HashMap<Integer,HashMap<Integer,Integer>>();
+	private HashMap<Integer,HashMap<String,Integer>> normales = new HashMap<Integer,HashMap<String,Integer>>();
 	
 	private ArrayList<Partido> partidos;
 	private ArrayList<Sector> sectores;
+	
+	private Integer idPartido;
+	private Integer totalNormales = 0;
+	private Integer totalNominativas = 0;
+	private Integer totalListaNegra = 0;
+	
 	
 	@PostConstruct
 	public void init() {
@@ -40,30 +50,53 @@ public class ControlAccesoController {
 	
 	@RequestMapping(value="/carga-pagina-control", method=RequestMethod.GET)
 	public String cargaPaginaSectores(Model model) {
-		model.addAttribute("entrada", new Entrada());
+		Partido partido = new Partido();
+		partido.setIdPartido(this.idPartido);
+		model.addAttribute("partido", partido);
 		this.setPartidos(itemService.obtenerPartidos());
 		this.setSectores(itemService.obtenerSectores());
 		model.addAttribute("partidos", this.getPartidos());
 		model.addAttribute("sectores", this.getSectores());
 		
+		model.addAttribute("totalNormales", this.totalNormales);
+		model.addAttribute("totalNominativas", this.totalNominativas);
+		model.addAttribute("totalListaNegra", this.totalListaNegra);
+		
+
 		return "content/controlAcceso";
 	}
 	
 	@RequestMapping(value="/cargar-control-acceso", method=RequestMethod.POST)
-	public String cargarAccesoSector(Model model, Entrada entrada) {
+	public String cargarAccesoSector(Model model, Partido partido) {
 		
 		model.addAttribute("partidos", this.getPartidos());
-		model.addAttribute("sectores", this.getSectores());
-		this.setNormales(itemService.obtenerEntradasNormalesPorSector(entrada.getIdPartido(), entrada.getIdSector()));
-		this.setNominativas(itemService.obtenerEntradasNominativasPorSector(entrada.getIdPartido(), entrada.getIdSector()));
+		this.setIdPartido(partido.getIdPartido());
 		
-		//model.addAttribute("totalNominativas", this.getNominativas() == null ? 0 : this.getNominativas().size());
-		model.addAttribute("totalNormales", this.getNormales() == null ? 0 : this.getNormales().size());
+		//cargar todas los tickets por sector
+		
+		for(Sector sec: this.getSectores()) {
+			HashMap<String,Integer> normalesPorSector = itemService.obtenerEntradasNormalesPorSector(partido.getIdPartido(), sec.getIdSector());
+			this.getNormales().put(sec.getIdSector(), normalesPorSector);
+			this.totalNormales = this.totalNormales + normalesPorSector.size();
+			
+			HashMap<Integer,Integer> nominativasPorSector = itemService.obtenerEntradasNominativasPorSector(partido.getIdPartido(), sec.getIdSector());
+			this.getNominativas().put(sec.getIdSector(), nominativasPorSector);
+			this.totalNominativas = this.totalNominativas + nominativasPorSector.size();
+		}
+		
+		//obtener lista negra
+		
+		this.setListaNegra(itemService.obtenerTotalListaNegra());
+        this.totalListaNegra = this.getListaNegra().size();
+		
+		model.addAttribute("totalNormales", totalNormales);
+		model.addAttribute("totalNominativas", totalNominativas);
+		model.addAttribute("totalListaNegra", this.totalListaNegra);
 		
 		return "content/controlAcceso";
 	}
 	
-	
+	/*
 	@RequestMapping(value="/validar-acceso", method=RequestMethod.POST)
 	public String validarAcceso(Model model, Entrada entrada) {
 		
@@ -100,12 +133,17 @@ public class ControlAccesoController {
 			aux = RUN.split("-");
 			System.out.println("RUN sin dv ="+aux[0]);
 			//buscar en lista negra
-			
-			//buscar en nominativas
-			Integer value = this.getNominativas().get(new Integer(aux[0]));
-			if(value != null) {
-				model.addAttribute("respuesta", "NOMINATIVA OK");
+			if(!hinchaService.estaEnListaNegra(new Integer(aux[0]))) {
+				//buscar en nominativas
+				Integer value = this.getNominativas().get(new Integer(aux[0]));
+				if(value != null) {
+					model.addAttribute("respuesta", "NOMINATIVA OK");
+				}
+			} else {
+				model.addAttribute("respuesta", "ACCESO NO PERMITIDO - EN LISTA NEGRA");
 			}
+			
+			
 		} else {
 			//es cedula antigua pdf417
 			String RUN = "0";
@@ -119,12 +157,16 @@ public class ControlAccesoController {
 				System.out.println("PDF417 RUN(7) sin dv:"+RUN);
 			}
 			//buscar en lista negra
-			
-			//buscar en nominativas
-			Integer value = this.getNominativas().get(new Integer(RUN));
-			if(value != null) {
-				model.addAttribute("respuesta", "NOMINATIVA OK");
+			if(!hinchaService.estaEnListaNegra(new Integer(new Integer(RUN)))) {
+				//buscar en nominativas
+				Integer value = this.getNominativas().get(new Integer(RUN));
+				if(value != null) {
+					model.addAttribute("respuesta", "NOMINATIVA OK");
+				}
+			} else {
+				model.addAttribute("respuesta", "ACCESO NO PERMITIDO - EN LISTA NEGRA");
 			}
+			
 			
 		}
 		
@@ -135,30 +177,14 @@ public class ControlAccesoController {
 		
 		return "content/controlAcceso";
 	}
+	*/
 	
 	
 	
 	
 	
-	public HashMap<Integer,String> getListaNegra() {
-		return listaNegra;
-	}
-	public void setListaNegra(HashMap<Integer,String> listaNegra) {
-		this.listaNegra = listaNegra;
-	}
-	public HashMap<Integer,Integer> getNominativas() {
-		return nominativas;
-	}
-	public void setNominativas(HashMap<Integer,Integer> nominativas) {
-		this.nominativas = nominativas;
-	}
-	public HashMap<String,Integer> getNormales() {
-		return normales;
-	}
-	public void setNormales(HashMap<String,Integer> normales) {
-		this.normales = normales;
-	}
-
+	
+	
 	public ArrayList<Partido> getPartidos() {
 		return partidos;
 	}
@@ -173,5 +199,61 @@ public class ControlAccesoController {
 
 	public void setSectores(ArrayList<Sector> sectores) {
 		this.sectores = sectores;
+	}
+
+
+
+
+	public HashMap<Integer,HashMap<String,Integer>> getNormales() {
+		return normales;
+	}
+
+
+
+
+	public void setNormales(HashMap<Integer,HashMap<String,Integer>> normales) {
+		this.normales = normales;
+	}
+
+
+
+
+	public HashMap<Integer,HashMap<Integer,Integer>> getNominativas() {
+		return nominativas;
+	}
+
+
+
+
+	public void setNominativas(HashMap<Integer,HashMap<Integer,Integer>> nominativas) {
+		this.nominativas = nominativas;
+	}
+
+
+
+
+	public HashMap<Integer,Integer> getListaNegra() {
+		return listaNegra;
+	}
+
+
+
+
+	public void setListaNegra(HashMap<Integer,Integer> listaNegra) {
+		this.listaNegra = listaNegra;
+	}
+
+
+
+
+	public Integer getIdPartido() {
+		return idPartido;
+	}
+
+
+
+
+	public void setIdPartido(Integer idPartido) {
+		this.idPartido = idPartido;
 	}
 }

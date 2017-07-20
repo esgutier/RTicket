@@ -242,7 +242,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	            e.par_id = #{idPartido} and
 	            e.sec_id = #{idSector} and
 	            e.ent_id = c.ent_id and
-	            c.com_tipo in ('R','C','N') and c.com_anulada = 'N'
+	            c.com_tipo in ('R','C') and c.com_anulada = 'N'
 </select>
 
 <select id="obtenerEntradasNominativasPorSector" parameterType="map" resultType="int"> 
@@ -252,6 +252,9 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	            e.sec_id = #{idSector} and
 	            e.ent_id = c.ent_id and
 	            c.com_tipo = 'N' and c.com_anulada = 'N'
+</select>
+<select id="obtenerTotalListaNegra" resultType="int">
+ select lne_rut from lista_negra
 </select>
 
 

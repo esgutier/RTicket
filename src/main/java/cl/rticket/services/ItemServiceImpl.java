@@ -225,5 +225,14 @@ public class ItemServiceImpl implements ItemService{
 		ArrayList<Integer> list = itemMapper.obtenerEntradasNominativasPorSector(idPartido, idSector);
 		return list;
 	}
+	
+	public HashMap<Integer,Integer> obtenerTotalListaNegra() {
+		ArrayList<Integer> list = itemMapper.obtenerTotalListaNegra();
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for(Integer i: list) {
+			map.put(i, 0);
+		}
+		return map;
+	}
 
 }

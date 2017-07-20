@@ -57,5 +57,6 @@ public interface ItemService {
 	public HashMap<Integer, Integer> obtenerEntradasNominativasPorSector(Integer idPartido,Integer idSector);
 	public ArrayList<String> listaEntradasNormalesPorSector(Integer idPartido,Integer idSector );
 	public ArrayList<Integer> listaEntradasNominativasPorSector(Integer idPartido,Integer idSector);
+	public HashMap<Integer,Integer> obtenerTotalListaNegra();
 	
 }
