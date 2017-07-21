@@ -46,6 +46,14 @@ public class ControlAccesoController {
 	}
 	
 	
+	@RequestMapping(value="/control", method=RequestMethod.GET)
+	public String cargaControlPuerta(Model model) {
+		Entrada entrada = new Entrada();		
+		model.addAttribute("entrada", entrada);
+		model.addAttribute("sectores", this.getSectores());
+		return "content/control";
+	}
+	
 	
 	
 	@RequestMapping(value="/carga-pagina-control", method=RequestMethod.GET)
@@ -96,23 +104,32 @@ public class ControlAccesoController {
 		return "content/controlAcceso";
 	}
 	
-	/*
+	
 	@RequestMapping(value="/validar-acceso", method=RequestMethod.POST)
 	public String validarAcceso(Model model, Entrada entrada) {
 		
 		String scan = entrada.getScan().trim();
 		String first = scan.substring(0, 1);
 		model.addAttribute("respuesta", " ACCESO NO PERMITIDO");
-		System.out.println("------>"+first);
+		//System.out.println("------>"+first);
 		if(first.equals("E")) {
-			System.out.println("scan:"+scan);
-			Integer value = this.getNormales().get(scan);
-			System.out.println("value:"+value);
-			if(value == null) {
-				model.addAttribute("respuesta", " TICKET INVÁLIDO");
+			//System.out.println("scan:"+scan+" sector:"+entrada.getIdSector());
+			HashMap<String,Integer> entradasSector  = this.getNormales().get(entrada.getIdSector());
+			
+			if(entradasSector != null) {
+				Integer value = entradasSector.get(scan);
+				if(value == null) {
+					model.addAttribute("respuesta", "ACCESO NO PERMITIDO - TICKET INVÁLIDO");
+				} else if(value == 1){
+					model.addAttribute("respuesta", "<button type=\"button\" class=\"btn btn-danger btn-lg\">ACCESO NO PERMITIDO - TICKET YA UTILIZADO</button>");
+				} else {
+					model.addAttribute("respuesta", "<button type=\"button\" class=\"btn btn-success btn-lg\">TICKET OK!</button>");
+					entradasSector.put(scan, 1);
+				}
 			} else {
-				model.addAttribute("respuesta", "TICKET OK");
+				model.addAttribute("respuesta", "DATOS NO CARGADOS");
 			}
+			
 		} else if(first.equals("h")) {
 			//es una cedula nueva
 			String RUN = "0";
@@ -135,10 +152,22 @@ public class ControlAccesoController {
 			//buscar en lista negra
 			if(!hinchaService.estaEnListaNegra(new Integer(aux[0]))) {
 				//buscar en nominativas
-				Integer value = this.getNominativas().get(new Integer(aux[0]));
-				if(value != null) {
-					model.addAttribute("respuesta", "NOMINATIVA OK");
+				HashMap<Integer,Integer> nominativasSector = this.getNominativas().get(entrada.getIdSector());
+				if(nominativasSector != null) {
+					Integer value = nominativasSector.get(new Integer(aux[0]));
+					if(value == null) {
+						model.addAttribute("respuesta", "ACCESO NO PERMITIDO - CÉDULA SIN REGISTRO");
+					} else if(value == 1) {
+						model.addAttribute("respuesta", "ACCESO NO PERMITIDO - CEDULA YA UTILIZADA");
+					} else {
+						model.addAttribute("respuesta", "CÉDULA OK!");
+						nominativasSector.put(new Integer(aux[0]), 1);
+					}
+				} else {
+					model.addAttribute("respuesta", "DATOS NO CARGADOS");
 				}
+				
+				
 			} else {
 				model.addAttribute("respuesta", "ACCESO NO PERMITIDO - EN LISTA NEGRA");
 			}
@@ -157,34 +186,31 @@ public class ControlAccesoController {
 				System.out.println("PDF417 RUN(7) sin dv:"+RUN);
 			}
 			//buscar en lista negra
-			if(!hinchaService.estaEnListaNegra(new Integer(new Integer(RUN)))) {
+			if(!hinchaService.estaEnListaNegra(new Integer(RUN))) {
 				//buscar en nominativas
-				Integer value = this.getNominativas().get(new Integer(RUN));
-				if(value != null) {
-					model.addAttribute("respuesta", "NOMINATIVA OK");
+				HashMap<Integer,Integer> nominativasSector = this.getNominativas().get(entrada.getIdSector());
+				if(nominativasSector != null) {
+					Integer value = nominativasSector.get(new Integer(RUN));
+					if(value == null) {
+						model.addAttribute("respuesta", "ACCESO NO PERMITIDO - CÉDULA SIN REGISTRO");
+					} else if(value == 1) {
+						model.addAttribute("respuesta", "ACCESO NO PERMITIDO - CEDULA YA UTILIZADA");
+					} else {
+						model.addAttribute("respuesta", "CÉDULA OK!");
+						nominativasSector.put(new Integer(RUN), 1);
+					}
+				} else {
+					model.addAttribute("respuesta", "DATOS NO CARGADOS");
 				}
+				
+				
 			} else {
 				model.addAttribute("respuesta", "ACCESO NO PERMITIDO - EN LISTA NEGRA");
-			}
-			
-			
-		}
-		
-		model.addAttribute("totalNominativas", this.getNominativas() == null ? 0 : this.getNominativas().size());
-		model.addAttribute("totalNormales", this.getNormales() == null ? 0 : this.getNormales().size());
-		model.addAttribute("partidos", this.getPartidos());
+			}						
+		}		
 		model.addAttribute("sectores", this.getSectores());
-		
-		return "content/controlAcceso";
+		return "content/control";
 	}
-	*/
-	
-	
-	
-	
-	
-	
-	
 	public ArrayList<Partido> getPartidos() {
 		return partidos;
 	}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="page" lang="es" >
+ 
+<head>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<script src="assets/js/jquery/jquery-2.1.0.min.js"></script>	
+<script src="assets/js/bootstrap/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function (){	
+        	
+        	$("#scan").val('');
+        	$("#scan").focus();
+        	$("#sector").change(function() {
+        		$("#scan").val('');
+            	$("#scan").focus();
+        	});
+        	
+        })
+    </script>
+ </head> 
+  <div id="main-content-wrapper" class="content-wrapper expanded-full">
+			<!-- main -->
+			<div class="content">
+				<div class="main-content">
+                 <div class="row">
+				   <div class="col-md-2"></div>
+				   <div class="col-md-8">
+						      
+									 <div align="center">
+										<h3><i class="fa fa-edit"></i> Control de Acceso </h3>
+								     </div>
+									
+									 <form action="#" th:action="@{/validar-acceso}"  th:object="${entrada}" method="POST" id="formulario">
+									   <div class="form-horizontal">
+									   
+									         <div  th:if="${exito != null}" >
+									      		<div class="alert alert-success " th:text="${exito}">
+													Aqui van los mensajes de exito																	
+										  		</div>
+											 </div>		
+										     <div  th:if="${error != null}" >
+									      		<div class="alert alert-danger " th:text="${error}">
+													Aqui van los mensajes de error																	
+										  		</div>
+											 </div>	
+											 <div class="form-group">
+												    <label class="col-md-1 control-label"></label> 
+													<div class="col-md-10">
+														<select th:field="*{idSector}"  class="form-control input-sm" id="sector" >
+														    <option value="" >Seleccione...</option>	
+														    <option th:each="sector : ${sectores}" th:value="${sector.idSector}" th:text="${sector.descripcion}" >partido</option>													
+														</select>
+													</div> 
+													<label class="col-md-1 control-label"></label>
+											 </div>
+											<br/>
+											   <br/>
+											    <div class="form-group">
+												   <label class="col-md-1 control-label"></label>
+													<div class="col-md-10">							  				
+														 <input th:field="*{scan}" id="scan" type="text" class="form-control input-sm" />							  
+													</div>
+													<label class="col-md-1 control-label"></label>
+											     </div>
+											     <br/>
+											     <br/>
+											     <div align="center">
+											         <span style="font-size:40px" th:utext="${respuesta}"> </span>
+											     </div>  
+										</div>
+										</form>
+									
+							   
+							  </div>
+						<div class="col-md-2"></div>
+				   </div>
+	</div>
+</div>
+</div>       
+ </html>

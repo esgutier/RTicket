@@ -146,6 +146,8 @@
             <value>
                   /assets/** = anon
                   /acceso = anon 
+                  /control = anon
+                  /validar-acceso = anon
                   /rest/**   = anon                 
                     /** = authc       
             </value>
