@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
 
+import cl.rticket.model.RUT;
+
 public class Util {
 	
 	
@@ -80,6 +82,24 @@ public class Util {
 		 return a+""+b+""+c+""+d;
 	}
 	
+	public static RUT obtieneRUT(String rutIngresado) {
+		RUT rut = new RUT();	
+		
+			if(rutIngresado.contains("-")) {
+				//es cedula nueva
+				String [] tmp = rutIngresado.trim().split("-");
+				rut.setNumero(new Integer(tmp[0]));
+				rut.setDv(tmp[1]);
+			} else {
+				//es cedula antigua
+				rut.setNumero(new Integer(rutIngresado.trim().substring(0, rutIngresado.trim().length() - 1)));
+				rut.setDv(rutIngresado.substring(rutIngresado.trim().length() - 1, rutIngresado.trim().length()).toUpperCase());
+		    }
+		
+				
+		return rut;
+	}
+	
 	
 	public static Map<String, String> getQueryMap(String query)  
 	{  
@@ -97,10 +117,15 @@ public class Util {
 	public static void main(String args[]) {
 		//for(int i = 0 ; i < 10000 ; i++)
 		  // System.out.println("---->13859176|"+ random());
-		Map<String, String> map = getQueryMap("https://portal.sidiv.registrocivil.cl/docstatus?RUN=23235193-4&type=CEDULA&serial=110719966&mrz=110719966810012882201281");
+		//Map<String, String> map = getQueryMap("https://portal.sidiv.registrocivil.cl/docstatus?RUN=23235193-4&type=CEDULA&serial=110719966&mrz=110719966810012882201281");
 		//map.get("RUN");
-		System.out.println("--->"+map.get("RUN"));
+		//System.out.println("--->"+map.get("RUN"));
+		System.out.println("--->"+obtieneRUT("13859176-K    ").rutCompleto());
+		System.out.println("--->"+obtieneRUT("13859176K    ").rutCompleto());
+		System.out.println("--->"+obtieneRUT("13859176    ").rutCompleto());
 		
+		//System.out.println("--->"+obtieneRUT("AQWWWWQW").rutCompleto());
+		//System.out.println("--->"+obtieneRUT("13.859.176-K    ").rutCompleto());
 			
 	}
 }

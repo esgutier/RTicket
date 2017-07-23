@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
+import cl.rticket.model.RUT;
 import cl.rticket.model.Sector;
 import cl.rticket.services.HinchaService;
 import cl.rticket.services.ItemService;
+import cl.rticket.utils.Util;
 
 @Controller
 public class ControlAccesoController {
@@ -41,11 +43,9 @@ public class ControlAccesoController {
 	
 	@PostConstruct
 	public void init() {
-		//this.setPartidos(itemService.obtenerPartidos());
-		//this.setSectores(itemService.obtenerSectores());
+		
 	}
-	
-	
+
 	@RequestMapping(value="/control", method=RequestMethod.GET)
 	public String cargaControlPuerta(Model model) {
 		Entrada entrada = new Entrada();		
@@ -53,9 +53,7 @@ public class ControlAccesoController {
 		model.addAttribute("sectores", this.getSectores());
 		return "content/control";
 	}
-	
-	
-	
+
 	@RequestMapping(value="/carga-pagina-control", method=RequestMethod.GET)
 	public String cargaPaginaSectores(Model model) {
 		Partido partido = new Partido();
@@ -119,49 +117,34 @@ public class ControlAccesoController {
 			if(entradasSector != null) {
 				Integer value = entradasSector.get(scan);
 				if(value == null) {
-					model.addAttribute("respuesta", "ACCESO NO PERMITIDO - TICKET INVÁLIDO");
+					model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET INVÁLIDO</font>");
 				} else if(value == 1){
-					model.addAttribute("respuesta", "<button type=\"button\" class=\"btn btn-danger btn-lg\">ACCESO NO PERMITIDO - TICKET YA UTILIZADO</button>");
+					model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET YA UTILIZADO</font>");
 				} else {
-					model.addAttribute("respuesta", "<button type=\"button\" class=\"btn btn-success btn-lg\">TICKET OK!</button>");
+					model.addAttribute("respuesta", "<font color=\"green\">"+scan+"<br/>TICKET OK!</font>");
 					entradasSector.put(scan, 1);
 				}
 			} else {
 				model.addAttribute("respuesta", "DATOS NO CARGADOS");
 			}
 			
-		} else if(first.equals("h")) {
+		} else if(scan.length() < 11) {
 			//es una cedula nueva
-			String RUN = "0";
-			String aux[] = scan.split("\\?");
-			String queryParam = aux[1];
-			System.out.println("query param:"+queryParam);
-			String params[] = queryParam.split("&");
-			for(int i=0; i < params.length; i++) {
-				String valores[] = params[i].split("=");
-				if(valores[0].equals("RUN")) {
-					RUN = valores[1];
-					break;
-				}
-				//System.out.println("nombre ="+valores[0]+" valor="+valores[1]);			
-			}
+			RUT rut = Util.obtieneRUT(scan);
 			
-			System.out.println("RUN ="+RUN);
-			aux = RUN.split("-");
-			System.out.println("RUN sin dv ="+aux[0]);
 			//buscar en lista negra
-			if(!hinchaService.estaEnListaNegra(new Integer(aux[0]))) {
+			if(!hinchaService.estaEnListaNegra(rut.getNumero())) {
 				//buscar en nominativas
 				HashMap<Integer,Integer> nominativasSector = this.getNominativas().get(entrada.getIdSector());
 				if(nominativasSector != null) {
-					Integer value = nominativasSector.get(new Integer(aux[0]));
+					Integer value = nominativasSector.get(rut.getNumero());
 					if(value == null) {
-						model.addAttribute("respuesta", "ACCESO NO PERMITIDO - CÉDULA SIN REGISTRO");
+						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CÉDULA SIN REGISTRO</font>");
 					} else if(value == 1) {
-						model.addAttribute("respuesta", "ACCESO NO PERMITIDO - CEDULA YA UTILIZADA");
+						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA</font>");
 					} else {
-						model.addAttribute("respuesta", "CÉDULA OK!");
-						nominativasSector.put(new Integer(aux[0]), 1);
+						model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK!</font>");
+						nominativasSector.put(rut.getNumero(), 1);
 					}
 				} else {
 					model.addAttribute("respuesta", "DATOS NO CARGADOS");
@@ -169,44 +152,12 @@ public class ControlAccesoController {
 				
 				
 			} else {
-				model.addAttribute("respuesta", "ACCESO NO PERMITIDO - EN LISTA NEGRA");
+				model.addAttribute("respuesta", "ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>EN LISTA NEGRA");
 			}
 			
 			
 		} else {
-			//es cedula antigua pdf417
-			String RUN = "0";
-			if(first.equals("1")) {
-				//es un rut con 8 digitos
-				RUN =  scan.substring(0, 8);
-				System.out.println("PDF417 RUN(8) sin dv:"+RUN);
-			} else{
-				//es un rut con 7 digitos
-				RUN =  scan.substring(0, 7);
-				System.out.println("PDF417 RUN(7) sin dv:"+RUN);
-			}
-			//buscar en lista negra
-			if(!hinchaService.estaEnListaNegra(new Integer(RUN))) {
-				//buscar en nominativas
-				HashMap<Integer,Integer> nominativasSector = this.getNominativas().get(entrada.getIdSector());
-				if(nominativasSector != null) {
-					Integer value = nominativasSector.get(new Integer(RUN));
-					if(value == null) {
-						model.addAttribute("respuesta", "ACCESO NO PERMITIDO - CÉDULA SIN REGISTRO");
-					} else if(value == 1) {
-						model.addAttribute("respuesta", "ACCESO NO PERMITIDO - CEDULA YA UTILIZADA");
-					} else {
-						model.addAttribute("respuesta", "CÉDULA OK!");
-						nominativasSector.put(new Integer(RUN), 1);
-					}
-				} else {
-					model.addAttribute("respuesta", "DATOS NO CARGADOS");
-				}
-				
-				
-			} else {
-				model.addAttribute("respuesta", "ACCESO NO PERMITIDO - EN LISTA NEGRA");
-			}						
+			model.addAttribute("respuesta", "TEXTO ESCANEADO NO RECONOCIDO");					
 		}		
 		model.addAttribute("sectores", this.getSectores());
 		return "content/control";

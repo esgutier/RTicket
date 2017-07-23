@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Hincha;
+import cl.rticket.model.RUT;
 import cl.rticket.model.Usuario;
 import cl.rticket.services.HinchaService;
 import cl.rticket.services.ItemService;
@@ -130,12 +131,11 @@ public class HinchaController {
 	@RequestMapping(value="/buscar-hincha-compra", method=RequestMethod.POST)
 	public String buscarHinchaCompra(Model model, Compra compra) {
 		
-		System.out.println("rut escaneado ="+compra.getRutEscaneado()+" compra.getIdEntrada():"+compra.getIdEntrada());
-		String rutBusqueda = "";
-		if(compra.getRutDigitado() != null && !compra.getRutDigitado().isEmpty()) {
-			rutBusqueda = compra.getRutDigitado();
-		} else if(compra.getRutEscaneado() != null && !compra.getRutEscaneado().isEmpty()) {
-			rutBusqueda = compra.getRutEscaneado();
+		System.out.println("rut escaneado ="+compra.getRutEscaneado());
+		RUT rut = null;
+		
+		if(compra.getRutEscaneado() != null && !compra.getRutEscaneado().isEmpty()) {
+			rut = Util.obtieneRUT(compra.getRutEscaneado());
 		} else {
 			model.addAttribute("error", "Debe ingresar el RUT del Hincha");
 			model.addAttribute("partidos", itemService.obtenerPartidos());
@@ -144,13 +144,11 @@ public class HinchaController {
 		}
 		
 			//validar formato de rut
-			if(Util.verificaRUT(rutBusqueda)) {
-				String[] parts = rutBusqueda.split("-");
-				String nro = parts[0]; 				
-				Integer rut = Integer.parseInt(nro);
+			if(Util.verificaRUT(rut.rutCompleto())) {
+				
 				
 				//verificar en lista negra
-				if(hinchaService.estaEnListaNegra(rut)) {
+				if(hinchaService.estaEnListaNegra(rut.getNumero())) {
 					model.addAttribute("error", "El Hincha se encuentra en Lista Negra");
 					model.addAttribute("partidos", itemService.obtenerPartidos());
 					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
@@ -159,12 +157,12 @@ public class HinchaController {
 				
 				//validar rut
 				
-				Hincha hincha = hinchaService.obtenerHincha(rut);
+				Hincha hincha = hinchaService.obtenerHincha(rut.getNumero());
 				if(hincha == null) {
 					//hincha no está redireccionar a formulario de ingreso de hincha				
 					model.addAttribute("compra", compra);
 					hincha = new Hincha();
-					hincha.setRutCompleto(rutBusqueda);					
+					hincha.setRutCompleto(rut.rutCompleto());					
 					model.addAttribute("hincha", hincha);
 					return "content/ingresoHinchaCompra";
 				} else {
@@ -175,8 +173,8 @@ public class HinchaController {
 					Compra ticket = new Compra();
 					ticket.setIdPartido(entrada.getIdPartido());
 					ticket.setIdEntrada(compra.getIdEntrada());
-					ticket.setRut(rut);
-					ticket.setRutCompleto(rutBusqueda);
+					ticket.setRut(rut.getNumero());
+					ticket.setRutCompleto(rut.rutCompleto());
 					ticket.setUsername(usuario.getUsername());
 					ticket.setMonto(entrada.getPrecio());
 					ticket.setToken("0"); //debe ser string
@@ -188,7 +186,7 @@ public class HinchaController {
 					
 					ArrayList<Compra> ticketList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
 					//verificar que el rut no este en el carro 
-					if(estaEnCarro(ticketList, ticket)) {
+					if(!estaEnCarro(ticketList, ticket)) {
 						if(ticketList != null) {
 						    ticketList.add(ticket);
 						} else {
@@ -371,10 +369,14 @@ public class HinchaController {
 	
 	private boolean estaEnCarro(ArrayList<Compra> ticketList, Compra ticket) {
 		boolean esta = false;
-		for(Compra c: ticketList) {
-			if(c.getRut() == ticket.getRut()) {
-				esta = true;
-				break;
+		if(ticketList != null) {
+			for(Compra c: ticketList) {
+				//System.out.println("->"+c.getRut() +" -->"+ticket.getRut());
+				if(c.getRut().intValue() == ticket.getRut().intValue()) {
+					//System.out.println("esta en carro");
+					esta = true;
+					break;
+				}
 			}
 		}
 		return esta;

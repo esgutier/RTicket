@@ -13,7 +13,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
           par_desc descripcion ,
           date_format(par_fecha,'%d-%m-%Y %H:%i') fecha   
     from partido 
-    where  par_fecha > NOW()
+  <!--    where  par_fecha > NOW()-->
 </select>
 
 <select id="obtenerSectores" resultType="Sector" >

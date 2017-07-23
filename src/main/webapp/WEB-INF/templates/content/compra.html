@@ -7,26 +7,19 @@
     /*<![CDATA[*/
         $(document).ready(function (){	
         	
-        	//deshabilita el enter key del form
-        	/*$('#formCompra').submit(function(e)) {
-        		return fase;
-        	}*/
+       
         	
         	$('#inputRutEscaneado').val('');
         	$("#inputRutEscaneado").focus();
         	
-            $('#inputRutEscaneado').on('change paste',function(e){  
+           /* $('#inputRutEscaneado').on('change paste',function(e){  
             	
             	var rutEscaneado = "";
-            	if(isUrlValid($('#inputRutEscaneado').val())) {
-            		rutEscaneado = getRUNQRScan($('#inputRutEscaneado').val(),'RUN');            	
-            	}
-            	
             	document.forms[0].action = "buscar-hincha-compra";  
             	$('#inputRutEscaneado').val(rutEscaneado);
         		document.forms[0].submit();
         		
-        	});
+        	});*/
         	$("#selectIdEntrada").change(function(){
         		$("#inputRutEscaneado").focus();
         	});
@@ -37,32 +30,13 @@
         		document.forms[0].submit();
         	});
         	
-        	$("#btnBuscarHincha").click(function(){
+        	$("#btnConfirmarCompra").click(function(){
         		
-        		document.forms[0].action = "buscar-hincha-compra";      		
-        		document.forms[0].submit();
+        		document.forms[0].action = "confirmar-compra";      		
+        		document.forms[0].submit();       		
         	});
         })
-        
-        function getRUNQRScan(url, param) {
-        	tmp1 = url.split('?');
-        	console.log(tmp1[0]);
-        	console.log(tmp1[1]);
-        	var queryParam = tmp1[1];
-        	tmp2 = queryParam.split('&');
-        	for(i=0; i < tmp2.length; i++) {
-        		var parametro = tmp2[i].split('=');
-        		if(parametro[0] == param) {
-        			return parametro[1];
-        		}
-        	}       	
-        }
-        
-        function isUrlValid(url) {
-            return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
-        }
-     
-        
+            
        /*]]>*/ 
     </script>
   
@@ -71,7 +45,7 @@
 				<h3><i class="fa fa-edit"></i> Compra de Tickets Nominativos</h3>
 		     </div>
 			 <div class="widget-content">
-			 <form action="#" th:action="@{/confirmar-compra}"  th:object="${compra}" method="POST" id="formCompra">
+			 <form action="#" th:action="@{/buscar-hincha-compra}"  th:object="${compra}" method="POST" id="formCompra">
 			   <input type="hidden" th:field="*{rut}" />
 			   <div class="form-horizontal">	
 				     <div  th:if="${error != null}" >
@@ -107,25 +81,16 @@
 					 <div class="form-group">
 						    <label class="col-md-2 control-label">RUT</label>
 							<div class="col-md-10">
-								  <ul class="nav nav-tabs" role="tablist">
-												<li class="active"><a href="#scanear" role="tab" data-toggle="tab"><i class="fa fa-barcode" aria-hidden="true"></i>Escanear Cédula</a></li>
-												<li><a href="#digitar" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Digitar RUT</a></li>						
-								 </ul>
-								 <div class="tab-content">
-								    <div class="tab-pane fade in active" id="scanear">
-										    <input th:field="*{rutEscaneado}"  id="inputRutEscaneado" type="text" class="form-control input-sm" maxlength="500" />
-									</div>
-									<div class="tab-pane fade" id="digitar">
+								 
+								
 									     <div class="row">
 									        <div class="col-md-2">
-											    <input th:field="*{rutDigitado}" id="inputRutDigitado" maxlength="20" type="text" class="form-control input-sm"  placeholder="12345678-K"/>											    
+											    <input th:field="*{rutEscaneado}" id="inputRutEscaneado" maxlength="20" type="text" class="form-control input-sm"  placeholder="12345678-K"/>											    
 											</div>  
-											<div class="col-md-2"><button type="button"  class="btn btn-primary" id="btnBuscarHincha">Buscar Hincha</button></div>
+											<div class="col-md-2"><button type="submit"  class="btn btn-primary" id="btnBuscarHincha">Buscar Hincha</button></div>
 											<div class="col-md-8"></div>
 									     </div>	
-									</div>
-								 </div>
-								 
+ 
 							</div>
 					 </div>
 					 
@@ -141,7 +106,7 @@
 					     <div class="col-md-1">	</div>
 					     <div class="col-md-10">
 					      <div class="form-group" th:if="!${#lists.isEmpty(session.carro)}">						    							
-							   <button type="submit" class="btn btn-custom-primary"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Confirmar Compra</button>							
+							   <button type="button" id="btnConfirmarCompra" class="btn btn-custom-primary"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Confirmar Compra</button>							
 					    </div>				 
 						 <table class="table table-bordered">
 								<thead>
