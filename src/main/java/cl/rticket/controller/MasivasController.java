@@ -131,5 +131,58 @@ public class MasivasController {
 		flash.addFlashAttribute("entrada", entrada);
 		return "redirect:/carga-entradas-masivo";
 	}
+	
+	@RequestMapping(value="/imprimir-entradas-rango", method=RequestMethod.POST)
+	public String imprimirEntradasRango(Model model, 
+			                             Entrada entrada,
+			                             RedirectAttributes flash) {
+		System.out.println("--->inicio:"+entrada.getInicio()+"  fin:"+entrada.getFin());
+		int error = 0;
+		if(entrada.getInicio() == null || entrada.getFin() == null) {
+			flash.addFlashAttribute("error", "Debe especificar un inicio y fin");
+			error = 1;
+		} else if(entrada.getInicio().intValue() > entrada.getFin().intValue()) {
+			flash.addFlashAttribute("error", "El inicio debe ser menor que el fin");
+			error = 1;
+		}
+		
+		if(error == 1) {			
+			entrada.setIdPartido(entrada.getIdPartido());
+			flash.addFlashAttribute("entrada", entrada);
+			return "redirect:/carga-entradas-masivo";
+		}
+		
+		//obtener datos de los tickets
+		ArrayList<Ticket> tickets = itemService.obtenerDatosTicketMasivo(entrada.getIdEntrada(), "R");
+		System.out.println("tickets size="+tickets.size());
+		try {
+			tickets = new ArrayList<Ticket>( tickets.subList(entrada.getInicio().intValue() - 1, entrada.getFin().intValue() - 1));
+			System.out.println("tickets sublist size="+tickets.size());
+		} catch(IndexOutOfBoundsException e) {
+			flash.addFlashAttribute("error", "El rango de impresión indicado no es correcto, favor verifique");			
+			entrada.setIdPartido(entrada.getIdPartido());
+			flash.addFlashAttribute("entrada", entrada);
+			return "redirect:/carga-entradas-masivo";
+		}
+		ImpresionMasiva impresionMasiva = new ImpresionMasiva();
+		PrintService service = impresionMasiva.obtenerImpresoraService();
+		int secuencia = entrada.getInicio().intValue();
+		for(Ticket t : tickets) {
+
+            t.setSecuencia(secuencia);
+			try {
+				impresionMasiva.imprimirTicket(t,service);
+			} catch (ImpresoraNoDisponibleException e) {
+				flash.addFlashAttribute("error", "ERROR: La impresora no esta disponible");
+				break;
+			}
+			secuencia++;
+		}
+		
+		entrada.setIdPartido(entrada.getIdPartido());
+		entrada.setIdEntrada(0);
+		flash.addFlashAttribute("entrada", entrada);
+		return "redirect:/carga-entradas-masivo";
+	}
 
 }

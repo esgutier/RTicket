@@ -145,6 +145,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      e.par_id = p.par_id and
 	      c.com_tipo = #{tipo} and
 	      c.com_anulada not in ('S')
+	order by c.com_id
 </select>
 
 

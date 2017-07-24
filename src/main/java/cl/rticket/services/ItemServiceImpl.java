@@ -119,21 +119,21 @@ public class ItemServiceImpl implements ItemService{
 		HashMap<Integer,TotalesEntrada> map = new HashMap<Integer,TotalesEntrada>();
 		
 		ArrayList<TotalesEntrada> list = itemMapper.obtenerTotalesEntradas(idPartido);
-		System.out.println("-->"+list.size());
+		//System.out.println("-->"+list.size());
 		for(TotalesEntrada t: list) {
 			TotalesEntrada tmp = (TotalesEntrada)map.get(t.getIdEntrada());
-			System.out.println("-->"+tmp);
+			//System.out.println("-->"+tmp);
 			if(tmp == null) {
 				tmp = new TotalesEntrada();
-				System.out.println("tmp  null  total: "+t.getTotal());
+				//System.out.println("tmp  null  total: "+t.getTotal());
 				if(t.getTipo().equals("N")) {
-					System.out.println("tmp null  ->N");
+					//System.out.println("tmp null  ->N");
 					tmp.setTotalNominativa(t.getTotal());
 				} else if(t.getTipo().equals("R")) {
-					System.out.println("tmp null  ->R");
+					//System.out.println("tmp null  ->R");
 					tmp.setTotalNormales(t.getTotal());
 				} else if(t.getTipo().equals("C")) {
-					System.out.println("tmp null  ->C");
+					//System.out.println("tmp null  ->C");
 					tmp.setTotalCortesia(t.getTotal());
 				}
 				
@@ -144,16 +144,16 @@ public class ItemServiceImpl implements ItemService{
 				tmp.setTipo(t.getTipo());
 				map.put(tmp.getIdEntrada(), tmp);
 			} else {
-				System.out.println("tmp NO null  total: "+t.getTotal());
+				//System.out.println("tmp NO null  total: "+t.getTotal());
 				tmp.setTipo(t.getTipo());
 				if(t.getTipo().equals("N")) {
-					System.out.println("tmp NO null  ->N");
+					//System.out.println("tmp NO null  ->N");
 					tmp.setTotalNominativa(t.getTotal());
 				} else if(t.getTipo().equals("R")) {
-					System.out.println("tmp NO null  ->R");
+					//System.out.println("tmp NO null  ->R");
 					tmp.setTotalNormales(t.getTotal());
 				} else if(t.getTipo().equals("C")) {
-					System.out.println("tmp NO null  ->C");
+					//System.out.println("tmp NO null  ->C");
 					tmp.setTotalCortesia(t.getTotal());
 				}			
 			}

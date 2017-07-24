@@ -78,7 +78,7 @@ public class ImpresionNominativa {
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   
 		                         drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
-		                         drawCenteredString(g2d,"Nominativa - $"+ticket.getPrecio(),rec1,158,fontSocio);
+		                         drawCenteredString(g2d,"Nominativa - $"+String.format("%,d", Integer.parseInt(ticket.getPrecio())),rec1,158,fontSocio);
 		                         
 		                         drawCenteredString(g2d,ticket.getNombres(),rec1,175,fontSocio);
 		                         drawCenteredString(g2d,ticket.getApellidos(),rec1,185,fontSocio);

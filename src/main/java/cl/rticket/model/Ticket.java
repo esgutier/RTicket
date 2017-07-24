@@ -21,6 +21,7 @@ public class Ticket implements Serializable{
 	private String precio;
 	private String tokenEscaneado;
 	private String tokenDigitado;
+	private Integer secuencia;
 	
 	public String getRival() {
 		return rival;
@@ -91,6 +92,12 @@ public class Ticket implements Serializable{
 	}
 	public void setTokenDigitado(String tokenDigitado) {
 		this.tokenDigitado = tokenDigitado;
+	}
+	public Integer getSecuencia() {
+		return secuencia;
+	}
+	public void setSecuencia(Integer secuencia) {
+		this.secuencia = secuencia;
 	}
 	
 

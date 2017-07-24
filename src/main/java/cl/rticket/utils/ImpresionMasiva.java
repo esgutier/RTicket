@@ -83,7 +83,7 @@ public class ImpresionMasiva {
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   
 		                         drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
-		                         drawCenteredString(g2d,"Normal - $"+ticket.getPrecio(),rec1,158,fontSocio);		                        
+		                         drawCenteredString(g2d,"Normal - $"+String.format("%,d", Integer.parseInt(ticket.getPrecio())),rec1,158,fontSocio);		                        
 		                         g2d.drawLine(20, 170, 185, 170); 
 		                         
 		                         
@@ -110,8 +110,8 @@ public class ImpresionMasiva {
 									}																		
 									g2d.drawImage(qr,50,175,100,100,null);
 									drawCenteredString(g2d,""+ticket.getToken(),rec1,270,fontSocio);
-									
-									
+									drawCenteredString(g2d,""+ticket.getSecuencia(),rec1,275,fontFecha);
+		
 								} catch (WriterException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();

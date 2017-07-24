@@ -21,6 +21,8 @@ public class Entrada implements Serializable{
 	private Integer maximo;
 	private String comentario;
 	private String scan;
+	private Integer inicio; //rango inicial
+	private Integer fin;    //rango final
 	
 	
 	public Integer getIdEntrada() {
@@ -94,6 +96,18 @@ public class Entrada implements Serializable{
 	}
 	public void setScan(String scan) {
 		this.scan = scan;
+	}
+	public Integer getInicio() {
+		return inicio;
+	}
+	public void setInicio(Integer inicio) {
+		this.inicio = inicio;
+	}
+	public Integer getFin() {
+		return fin;
+	}
+	public void setFin(Integer fin) {
+		this.fin = fin;
 	}
 	
 

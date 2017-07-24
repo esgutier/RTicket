@@ -20,8 +20,18 @@
         		
         		 $('#imprimiendoTicketModal').modal('show'); 
         	});
+        	
 
-        });      
+        }); 
+        function imprimirRango(idEntrada) {
+        	
+        	$("#inicio").val($("#"+idEntrada+'inicio_p').val());
+        	$("#fin").val($("#"+idEntrada+'fin_p').val());
+        	$("#selectIdEntrada").val(idEntrada);
+        	document.forms[0].action = "imprimir-entradas-rango";      		
+    		document.forms[0].submit();     
+        }
+     
        /*]]>*/ 
     </script>
   
@@ -79,6 +89,9 @@
 					 <div class="row">	
 					     <div class="col-md-1">	</div>
 					     <div class="col-md-10">
+					     
+					     <input type="hidden" th:field="*{inicio}" id="inicio" />
+					     <input type="hidden" th:field="*{fin}" id="fin" />
 					     		 
 						 <table class="table table-bordered">
 								<thead>
@@ -88,7 +101,8 @@
 									  <th>TOTAL NOMINATIVAS</th>
 									  <th>TOTAL NORMALES</th>										  					  
 									  <th>TOTAL CORTESIA</th>
-									  <th>IMPRIMIR</th>
+									<!--  <th>IMPRIMIR </th>  --> 
+									  <th>IMPRIMIR RANGO </th>
 									</tr>
 								</thead>
 								
@@ -99,8 +113,9 @@
 									    <td  th:text="${row.value.totalNominativa}"></td> 
 									    <td  th:text="${row.value.totalNormales}"></td> 
 									    <td  th:text="${row.value.totalCortesia}"></td> 
-									    <td  > 
-									     
+									    
+									    <!-- 
+									    <td  > 									     
 									      <div th:if="${row.value.tipo == 'R'}">
 									       <a href="#" th:href="@{/imprimir-entradas-masivo(idEntrada=${row.value.idEntrada},idPartido=${row.value.idPartido})}" >
 									       <span class="badge element-bg-color-blue">
@@ -108,7 +123,21 @@
 									          </span>
 									        </a>
 									       </div>
-									     </td> 
+									    </td> 
+									     -->
+									     
+									    <td > 									     
+									      <div th:if="${row.value.tipo == 'R'}">
+									        Inicio:<input name="inicio_p" required="required" pattern="[0-9]+"  maxlength="4" size="4" type="text"   th:id="${row.value.idEntrada+'inicio_p'}"/>&nbsp;&nbsp;&nbsp;
+									        Fin:<input name="fin_p" required="required" pattern="[0-9]+"  maxlength="4" size="4" type="text"   th:id="${row.value.idEntrada+'fin_p'}" />	
+									        
+									       <a th:href="@{'javascript:imprimirRango(\''+${row.value.idEntrada}+'\')'}" >
+									       <span class="badge element-bg-color-blue">
+									          <i class="fa fa-print" aria-hidden="true"></i>  Imprimir Rango
+									          </span>
+									        </a>
+									       </div>
+									    </td> 
 									     
 									    
 									</tr> 										
