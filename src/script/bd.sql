@@ -23,9 +23,7 @@ CREATE TABLE usuario (
   PRIMARY KEY  (usr_username)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-insert into usuario values('esteban','202cb962ac59075b964b07152d234b70',13859176,'K','ESTEBAN','GUTIERREZ ABARZUA');
-insert into usuario values('gabriel','202cb962ac59075b964b07152d234b70',24972726,'1','GABRIEL','GUTIERREZ BARRIGA');
-insert into usuario values('antonia','202cb962ac59075b964b07152d234b70',23235193,'4','ANTONIA','GUTIERREZ BARRIGA');
+insert into usuario values('ticket','202cb962ac59075b964b07152d234b70',13859176,'K','TICKET','.');
 
 
 CREATE TABLE rol (
@@ -46,12 +44,8 @@ CREATE TABLE usuarios_roles (
   FOREIGN KEY (rol_id) REFERENCES rol(rol_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-insert into usuarios_roles values('esteban',1);
-insert into usuarios_roles values('esteban',2);
-insert into usuarios_roles values('gabriel',1);
-insert into usuarios_roles values('antonia',1);
 
-
+insert into usuarios_roles values('ticket',2);
 
 CREATE TABLE hincha (
   
@@ -69,7 +63,7 @@ CREATE TABLE hincha (
   PRIMARY KEY  (hin_rut) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-insert into hincha values (13797397,'9','MELISA','BARRIGA SALAZAR','TEGUALDA 2050-A','F', '994583020','melisa.barriga@gmail.com',STR_TO_DATE('13-06-1980', '%d-%m-%Y'),NOW(),'A');
+
 insert into hincha values (11111111,'9','ENTRADA','NORMAL','-------','-', '-------','---------',STR_TO_DATE('13-06-1980', '%d-%m-%Y'),NOW(),'A');
 
 
@@ -80,11 +74,6 @@ CREATE TABLE sector (
   PRIMARY KEY  (sec_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-insert into sector values(null,'ANDES');
-insert into sector values(null,'PACIFICO');
-insert into sector values(null,'NORTE');
-insert into sector values(null,'SUR');
-
 
 CREATE TABLE partido (
   
@@ -93,10 +82,6 @@ CREATE TABLE partido (
   par_fecha datetime NOT NULL,
   PRIMARY KEY  (par_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
-insert into partido values(null,'BARCELONA F.C',STR_TO_DATE('13-06-2017 23:30', '%d-%m-%Y %H:%i'));
-insert into partido values(null,'JUVENTUS',STR_TO_DATE('13-06-2017 23:30', '%d-%m-%Y %H:%i'));
-insert into partido values(null,'ARSENAL',STR_TO_DATE('13-06-2017 23:30', '%d-%m-%Y %H:%i'));
 
 
 CREATE TABLE entrada (  

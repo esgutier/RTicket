@@ -46,8 +46,8 @@ public class HinchaController {
 	
 	@RequestMapping(value="/buscar-hincha-mantenedor", method=RequestMethod.POST)
 	public String buscarHinchaMantenedor(Model model, Hincha hincha) {
-		if(Util.verificaRUT(hincha.getRutCompleto())) {
-			String[] parts = hincha.getRutCompleto().split("-");
+		if(Util.verificaRUT(hincha.getRutCompleto().trim())) {
+			String[] parts = hincha.getRutCompleto().trim().split("-");
 			String nro = parts[0]; 	
 			String dv = parts[1];
 			Integer rut = Integer.parseInt(nro);

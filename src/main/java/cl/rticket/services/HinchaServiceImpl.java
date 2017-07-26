@@ -20,7 +20,7 @@ public class HinchaServiceImpl implements HinchaService{
 	}
 	
 	public int insertarHincha(Hincha hincha) {
-		if(hincha.getCategoria().equals("P")) {
+		if(hincha.getCategoria().equals("P") || hincha.getCategoria().equals("A")) {
 		    return hinchaMapper.insertarHincha(hincha);
 		} else {
 			return hinchaMapper.insertarHinchaEntidad(hincha);
@@ -28,9 +28,10 @@ public class HinchaServiceImpl implements HinchaService{
 	}
 	
 	public int actualizarHincha(Hincha hincha) {
-		if(hincha.getCategoria().equals("P")) {
+		if(hincha.getCategoria().equals("P") || hincha.getCategoria().equals("A")) {
 		   return hinchaMapper.actualizarHincha(hincha);
 		} else {
+			
 			return hinchaMapper.actualizarHinchaEntidad(hincha);
 		}
 	}
