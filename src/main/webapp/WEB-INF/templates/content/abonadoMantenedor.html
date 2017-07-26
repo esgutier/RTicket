@@ -8,61 +8,23 @@
 	         $(document).ready(function (){	
 	        	 
 	        	 $("#btnBuscarHincha").click(function(){	         		
-	         		document.forms[0].action = "buscar-hincha-mantenedor";      		
+	         		document.forms[0].action = "buscar-abonado-mantenedor";      		
 	         		document.forms[0].submit();
 	         	 });
 	        	 
 	        	 $("#btnActualizarHincha").click(function(){	         		
-		         		document.forms[0].action = "actualizar-hincha-mantenedor";      		
+		         		document.forms[0].action = "actualizar-abonado-mantenedor";      		
 		         		//document.forms[0].submit();
 		         		ckeckFormValid();
 		         });
 	        	 
 	        	 $("#btnInsertarHincha").click(function(){	         		
-		         		document.forms[0].action = "insertar-hincha-mantenedor";      		
+		         		document.forms[0].action = "insertar-abonado-mantenedor";      		
 		         		//document.forms[0].submit();
-		         		ckeckFormValid();
+		         		//ckeckFormValid();
 		         });
-	        	 
-	        	 if($('select[name=categoria]').val() == 'E') {
-	        			// alert("val E");
-	        			 $("#divApellidos").hide();
-	        			 $("#divFechaNacimiento").hide();
-	        			 $("#divGenero").hide();
-	        		 } else {
-	        			// alert("val P");
-	        			 $("#divApellidos").show();
-	        			 $("#divFechaNacimiento").show();
-	        			 $("#divGenero").show();
-	             }
-	        	 
-	        	 $("#selectCategoria").change(function(){
-	        		// alert($('select[name=categoria]').val());
-	        		 if($('select[name=categoria]').val() == 'E') {
-	        			// alert("val E");
-	        			 $("#divApellidos").hide();
-	        			 $("#divFechaNacimiento").hide();
-	        			 $("#divGenero").hide();
-	        		 } else {
-	        			// alert("val P");
-	        			 $("#divApellidos").show();
-	        			 $("#divFechaNacimiento").show();
-	        			 $("#divGenero").show();
-	        		 }
-	        		 
-	        	 });
-	        	 
 	         })
-	         
-	         function ckeckFormValid() {
-			  var f = document.forms[0];
-			  if(f.checkValidity()) {
-			    f.submit();
-			  } else {
-			    alert('Algunos datos en el formulario no están correctos, favor verifique');
-			  }
-			}
-	     
+
     </script>
   
   <div class="row">
@@ -70,7 +32,7 @@
       <div class="col-md-10">
       <div class="widget">
 			 <div class="widget-header">
-				<h3><i class="fa fa-edit"></i> Actualización e Ingreso de Hincha</h3>
+				<h3><i class="fa fa-edit"></i> Actualización e Ingreso de Abonados</h3>
 		     </div>
 			 <div class="widget-content">
 			     <div class="form-horizontal">
@@ -87,6 +49,7 @@
 						  </div>
 			              <input type="hidden" th:name="rut" th:value="*{rut}" />
 			              <input type="hidden" th:name="dv" th:value="*{dv}" />
+			              <input type="hidden" th:name="categoria" th:value="A" />
 			            
 													<div class="form-group">														
 														
@@ -95,22 +58,13 @@
 															    <input th:field="*{rutCompleto}"  maxlength="12" type="text" class="form-control input-sm"  placeholder="12345678-K"/>
 															</div>											    
 															
-															<div class="col-md-2"><button type="button"  class="btn btn-primary" id="btnBuscarHincha">Buscar Hincha</button></div>
+															<div class="col-md-2"><button type="button"  class="btn btn-primary" id="btnBuscarHincha">Buscar Abonado</button></div>
 															<div class="col-md-5"></div>
 													     
 													</div>
 										<div th:if="${accion == 'INSERTAR' or accion == 'ACTUALIZAR'}">	
 										
-											        <div class="form-group">
-													    <label class="col-md-2 control-label">Categoría</label>
-														<div class="col-md-10">
-															<select th:field="*{categoria}"  class="form-control input-sm" required="required" id="selectCategoria">
-															    <option value="" >Seleccione...</option>	
-															    <option value="P">Persona</option>
-															    <option value="E">Entidad</option>															    													    												
-															</select>
-														</div>
-												    </div>	
+											       
 													<div class="form-group">
 														<label class="col-md-2 control-label">Nombre</label>
 														<div class="col-md-10">
@@ -120,7 +74,7 @@
 													<div class="form-group" id="divApellidos" >
 														<label class="col-md-2 control-label">Apellidos</label>
 														<div class="col-md-10">
-															<input type="text" th:field="*{apellidos}" maxlength="70"  pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
+															<input type="text" th:field="*{apellidos}" maxlength="70"  required="required" pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
 														</div>
 													</div>
 													<div class="form-group">
@@ -144,7 +98,7 @@
 													<div class="form-group" id="divFechaNacimiento" >
 														<label class="col-md-2 control-label">Fecha Nacimiento (dd/mm/aaaa)</label>
 														<div class="col-md-10">
-															<input type="text" th:field="*{fechaNac}" maxlength="10"  pattern="\d{1,2}/\d{1,2}/\d{4}" title="Ingrese el formato solicitado"  class="form-control input-sm" placeholder="" />
+															<input type="text" th:field="*{fechaNac}" maxlength="10"  pattern="\d{1,2}/\d{1,2}/\d{4}" title="Ingrese el formato solicitado"  required="required" class="form-control input-sm" placeholder="" />
 														</div>
 													</div>
 
@@ -153,21 +107,61 @@
 														<div class="col-md-10">
 															<div class="radio">
 																<label>
-																	<input type="radio" th:field="*{genero}" value="M" /> Masculino
+																	<input type="radio" th:field="*{genero}" value="M" required="required"/> Masculino
 																</label>
 															</div>
 															<div class="radio">
 																<label>
-																	<input type="radio" th:field="*{genero}" value="F" /> Femenino
+																	<input type="radio" th:field="*{genero}" value="F" required="required"/> Femenino
 																</label>
 															</div>
 															
 														</div>
 													</div>
+													<div class="form-group">
+														    <label class="col-md-2 control-label">Sector</label>
+															<div class="col-md-10">
+																<select th:field="*{idSector}"  class="form-control input-sm" required="required">
+																    <option value="" >Seleccione...</option>	
+																    <option th:each="sector : ${sectores}" th:value="${sector.idSector}" th:text="${sector.descripcion}" >partido</option>													
+																</select>
+															</div>
+													</div>
+													<div class="form-group"  >
+														<label class="col-md-2 control-label">Valido Hasta</label>
+														<div class="col-md-10">
+															  <div class="row">
+															    <div class="col-md-3">
+																    <select th:field="*{mesVigencia}"  class="form-control input-sm" required="required">
+																		    <option value="" >Seleccione...</option>
+																		    <option value="01" >ENERO</option>
+																		    <option value="02" >FEBRERO</option>
+																		    <option value="03" >MARZO</option>
+																		    <option value="04" >ABRIL</option>
+																		    <option value="05" >MAYO</option>
+																		    <option value="06" >JUNIO</option>
+																		    <option value="07" >JULIO</option>
+																		    <option value="08" >AGOSTO</option>
+																		    <option value="09" >SEPTIEMBRE</option>
+																		    <option value="10" >OCTUBRE</option>
+																		    <option value="11" >NOVIEMBRE</option>
+																		    <option value="12" >DICIEMBRE</option>	
+																		    													
+																    </select>
+															    </div>
+															    <div class="col-md-2">
+																  <input type="text" th:field="*{anioVigencia}" maxlength="4"  pattern="\d{4}" title="Ingrese número de 4 digitos"  class="form-control input-sm" placeholder="Año(4 digitos)" required="required"/>
+																</div>
+																<div class="col-md-7"></div>
+															</div>
+														</div>
+													</div>
+													
+													
 												
 													<div align="center">
-													<button type="submit" class="btn btn-primary" id="btnInsertarHincha" th:if="${accion == 'INSERTAR'}">Ingresar Hincha</button>
-													<button type="submit" class="btn btn-primary" id="btnActualizarHincha" th:if="${accion == 'ACTUALIZAR'}">Actualizar Hincha</button>
+													<button type="submit" class="btn btn-primary" id="btnInsertarHincha" th:if="${accion == 'INSERTAR'}">Ingresar Abonado</button>
+													<button type="submit" class="btn btn-primary" id="btnActualizarHincha" th:if="${accion == 'ACTUALIZAR'}">Actualizar Abonado</button>
 													</div>
 													
 									</div>				

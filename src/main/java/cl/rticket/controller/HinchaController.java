@@ -3,7 +3,11 @@ package cl.rticket.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import cl.rticket.exception.UpdateException;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Hincha;
@@ -125,6 +130,121 @@ public class HinchaController {
 		
 		return "content/hinchaMantenedor";
 	}
+	
+	//================================================================================================
+	// Mantenedor de Abonados
+	//================================================================================================
+	
+	@RequestMapping(value="/cargar-abonado-mantenedor", method=RequestMethod.GET)
+	public String cargarAbonadoMantenedor(Model model) {
+		model.addAttribute("hincha", new Hincha());
+		model.addAttribute("sectores", itemService.obtenerSectores());
+		return "content/abonadoMantenedor";
+	}
+	
+	@RequestMapping(value="/buscar-abonado-mantenedor", method=RequestMethod.POST)
+	public String buscarAbonadoMantenedor(Model model, Hincha hincha) {
+		if(Util.verificaRUT(hincha.getRutCompleto().trim())) {
+			String[] parts = hincha.getRutCompleto().trim().split("-");
+			String nro = parts[0]; 	
+			String dv = parts[1];
+			Integer rut = Integer.parseInt(nro);
+					
+			Hincha hin = hinchaService.obtenerHinchaAbonado(rut);
+			if(hin == null) {
+				model.addAttribute("accion", "INSERTAR");
+				hin = new Hincha();
+				hin.setRutCompleto(hincha.getRutCompleto());
+				hin.setRut(rut);
+				hin.setDv(dv);
+				model.addAttribute("hincha", hin);
+				model.addAttribute("info", "Abonado no se encuentra registrado");
+			} else {
+				hin.setRutCompleto(hincha.getRutCompleto());
+				model.addAttribute("accion", "ACTUALIZAR");
+				model.addAttribute("hincha", hin);
+			}
+		} else {
+			model.addAttribute("error", "El Rut ingresado no es válido");
+		}
+		model.addAttribute("sectores", itemService.obtenerSectores());
+		return "content/abonadoMantenedor";
+	}
+	
+	@RequestMapping(value="/insertar-abonado-mantenedor", method=RequestMethod.POST)
+	public String insertarAbonadoMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
+
+		//construir la fecha
+		String date ="01/"+hincha.getMesVigencia()+"/"+hincha.getAnioVigencia();
+		System.out.println("date:"+date);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date convertedDate;
+		try {
+			convertedDate = dateFormat.parse(date);
+			Calendar c = Calendar.getInstance();
+			c.setTime(convertedDate);
+			c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			System.out.println("Dia:"+c.get(Calendar.DAY_OF_MONTH));
+			System.out.println("Mes:"+c.get(Calendar.MONTH));
+			System.out.println("Año:"+c.get(Calendar.YEAR));
+			date = c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH) + 1)+"/"+c.get(Calendar.YEAR);
+			hincha.setVigencia(date);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			model.addAttribute("error", "Error: La fecha de vigencia no es válida");
+			model.addAttribute("sectores", itemService.obtenerSectores());
+			return "content/abonadoMantenedor";
+		}
+		
+		try {
+			hinchaService.insertarAbonado(hincha);
+			flash.addFlashAttribute("info", "El registro fue agregado correctamente");
+			return "redirect:/cargar-abonado-mantenedor";
+		} catch(UpdateException e) {
+			model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
+		}		
+		model.addAttribute("sectores", itemService.obtenerSectores());
+		return "content/abonadoMantenedor";
+	}
+	
+	@RequestMapping(value="/actualizar-abonado-mantenedor", method=RequestMethod.POST)
+	public String actualizarAbonadoMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
+
+		//construir la fecha
+		String date ="01/"+hincha.getMesVigencia()+"/"+hincha.getAnioVigencia();
+		System.out.println("date:"+date);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date convertedDate;
+		try {
+			convertedDate = dateFormat.parse(date);
+			Calendar c = Calendar.getInstance();
+			c.setTime(convertedDate);
+			c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			System.out.println("Dia:"+c.get(Calendar.DAY_OF_MONTH));
+			System.out.println("Mes:"+c.get(Calendar.MONTH));
+			System.out.println("Año:"+c.get(Calendar.YEAR));
+			date = c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH) + 1)+"/"+c.get(Calendar.YEAR);
+			hincha.setVigencia(date);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			model.addAttribute("error", "Error: La fecha de vigencia no es válida");
+			model.addAttribute("sectores", itemService.obtenerSectores());
+			return "content/abonadoMantenedor";
+		}
+		
+		try {
+			hinchaService.actualizarAbonado(hincha);
+			flash.addFlashAttribute("info", "El registro fue actualizado correctamente");
+			return "redirect:/cargar-abonado-mantenedor";
+		} catch(UpdateException e) {
+			model.addAttribute("error", "Error: No se puedo realizar la actualización del registro");
+		}		
+		model.addAttribute("sectores", itemService.obtenerSectores());
+		return "content/abonadoMantenedor";
+	}
+	
 	
 	
 	

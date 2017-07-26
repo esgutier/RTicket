@@ -137,11 +137,26 @@
 								</li>								
 							</ul>
 							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/cargar-hincha-mantenedor}">
+								<li>
+									<a href="#" class="js-sub-menu-toggle" >
 									   <span class="text">Hinchas</span>
-									 </a>									
-								</li>								
+									   <i class="toggle-icon fa fa-angle-left"></i>
+									 </a>	
+									 
+									 <ul class="sub-menu">
+								         <li>
+											<a href="#" th:href="@{/cargar-hincha-mantenedor}">
+												<span class="text">Normal y Entidades</span>												
+											</a>
+								         </li>
+								         <li>
+											<a href="#" th:href="@{/cargar-abonado-mantenedor}">
+												<span class="text">Abonados</span>												
+											</a>
+								         </li>
+								     </ul> 
+								
+								</li>																	
 							</ul>
 							<ul class="sub-menu">
 								<li >

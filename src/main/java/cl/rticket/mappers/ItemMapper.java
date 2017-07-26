@@ -64,5 +64,6 @@ public interface ItemMapper {
 	public ArrayList<String> obtenerEntradasNormalesPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector );
 	public ArrayList<Integer> obtenerEntradasNominativasPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector);
 	public ArrayList<Integer> obtenerTotalListaNegra();
+	public ArrayList<Integer> obtenerAbonadosPorSector(@Param("idSector")Integer idSector);
 
 }

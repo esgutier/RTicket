@@ -31,6 +31,7 @@ public class ControlAccesoController {
 	private HashMap<Integer,Integer> listaNegra = new HashMap<Integer,Integer>();
 	private HashMap<Integer,HashMap<Integer,Integer>> nominativas = new HashMap<Integer,HashMap<Integer,Integer>>();
 	private HashMap<Integer,HashMap<String,Integer>> normales = new HashMap<Integer,HashMap<String,Integer>>();
+	private HashMap<Integer,HashMap<Integer,Integer>> abonados = new HashMap<Integer,HashMap<Integer,Integer>>();
 	
 	private ArrayList<Partido> partidos;
 	private ArrayList<Sector> sectores;
@@ -38,6 +39,7 @@ public class ControlAccesoController {
 	private Integer idPartido;
 	private Integer totalNormales = 0;
 	private Integer totalNominativas = 0;
+	private Integer totalAbonados = 0;
 	private Integer totalListaNegra = 0;
 	
 	
@@ -67,6 +69,7 @@ public class ControlAccesoController {
 		model.addAttribute("totalNormales", this.totalNormales);
 		model.addAttribute("totalNominativas", this.totalNominativas);
 		model.addAttribute("totalListaNegra", this.totalListaNegra);
+		model.addAttribute("totalAbonados", this.totalAbonados);
 		
 
 		return "content/controlAcceso";
@@ -85,9 +88,13 @@ public class ControlAccesoController {
 			this.getNormales().put(sec.getIdSector(), normalesPorSector);
 			this.totalNormales = this.totalNormales + normalesPorSector.size();
 			
-			HashMap<Integer,Integer> nominativasPorSector = itemService.obtenerEntradasNominativasPorSector(partido.getIdPartido(), sec.getIdSector());
+			HashMap<Integer,Integer> nominativasPorSector = itemService.obtenerEntradasNominativasPorSector(partido.getIdPartido(), sec.getIdSector()); 
 			this.getNominativas().put(sec.getIdSector(), nominativasPorSector);
 			this.totalNominativas = this.totalNominativas + nominativasPorSector.size();
+			
+			HashMap<Integer,Integer> abonadosPorSector = itemService.obtenerAbonadosPorSector(sec.getIdSector()); 
+			this.getAbonados().put(sec.getIdSector(), abonadosPorSector);
+			this.totalAbonados = this.totalAbonados + abonadosPorSector.size();
 		}
 		
 		//obtener lista negra
@@ -98,6 +105,7 @@ public class ControlAccesoController {
 		model.addAttribute("totalNormales", totalNormales);
 		model.addAttribute("totalNominativas", totalNominativas);
 		model.addAttribute("totalListaNegra", this.totalListaNegra);
+		model.addAttribute("totalAbonados", this.totalAbonados);
 		
 		return "content/controlAcceso";
 	}
@@ -146,11 +154,23 @@ public class ControlAccesoController {
 						model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK!</font>");
 						nominativasSector.put(rut.getNumero(), 1);
 					}
-				} else {
-					model.addAttribute("respuesta", "DATOS NO CARGADOS");
+				} else { //buscar en abonados
+					HashMap<Integer,Integer> abonadosSector = this.getAbonados().get(entrada.getIdSector());
+					if(abonadosSector != null) {
+						Integer value = abonadosSector.get(rut.getNumero());
+						if(value == null) {
+							model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CÉDULA SIN REGISTRO</font>");
+						} else if(value == 1) {
+							model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA</font>");
+						} else {
+							model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ABONADO)</font>");
+							abonadosSector.put(rut.getNumero(), 1);
+						}
+					} else {
+						model.addAttribute("respuesta", "DATOS NO CARGADOS");	
+					}
 				}
-				
-				
+
 			} else {
 				model.addAttribute("respuesta", "ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>EN LISTA NEGRA");
 			}
@@ -232,5 +252,21 @@ public class ControlAccesoController {
 
 	public void setIdPartido(Integer idPartido) {
 		this.idPartido = idPartido;
+	}
+
+	public Integer getTotalAbonados() {
+		return totalAbonados;
+	}
+
+	public void setTotalAbonados(Integer totalAbonados) {
+		this.totalAbonados = totalAbonados;
+	}
+
+	public HashMap<Integer,HashMap<Integer,Integer>> getAbonados() {
+		return abonados;
+	}
+
+	public void setAbonados(HashMap<Integer,HashMap<Integer,Integer>> abonados) {
+		this.abonados = abonados;
 	}
 }

@@ -221,6 +221,15 @@ public class ItemServiceImpl implements ItemService{
 		return map;
 	}
 	
+	public HashMap<Integer, Integer> obtenerAbonadosPorSector(Integer idSector) {
+		ArrayList<Integer> list = itemMapper.obtenerAbonadosPorSector(idSector);
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for(Integer i: list) {
+			map.put(i, 0);
+		}
+		return map;
+	}
+	
 	public ArrayList<Integer> listaEntradasNominativasPorSector(Integer idPartido,Integer idSector) {
 		ArrayList<Integer> list = itemMapper.obtenerEntradasNominativasPorSector(idPartido, idSector);
 		return list;

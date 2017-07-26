@@ -19,8 +19,11 @@ public class Hincha implements Serializable{
 	private String email;
 	private String fechaNac;
 	private String categoria;
+	private String mesVigencia;
+	private String anioVigencia;
+	private String vigencia;
+	private Integer idSector;
 	
-
 	public Integer getRut() {
 		return rut;
 	}
@@ -86,6 +89,30 @@ public class Hincha implements Serializable{
 	}
 	public void setRutCompleto(String rutCompleto) {
 		this.rutCompleto = rutCompleto;
+	}
+	public String getMesVigencia() {
+		return mesVigencia;
+	}
+	public void setMesVigencia(String mesVigencia) {
+		this.mesVigencia = mesVigencia;
+	}
+	public String getAnioVigencia() {
+		return anioVigencia;
+	}
+	public void setAnioVigencia(String anioVigencia) {
+		this.anioVigencia = anioVigencia;
+	}
+	public Integer getIdSector() {
+		return idSector;
+	}
+	public void setIdSector(Integer idSector) {
+		this.idSector = idSector;
+	}
+	public String getVigencia() {
+		return vigencia;
+	}
+	public void setVigencia(String vigencia) {
+		this.vigencia = vigencia;
 	}
 
 }

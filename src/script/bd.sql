@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS rol;
 DROP TABLE IF EXISTS hincha;
 DROP TABLE IF EXISTS sector;
 DROP TABLE IF EXISTS partido;
+DROP TABLE IF EXISTS lista_negra;
+DROP TABLE IF EXISTS abonados_sector;
 
 SET lc_time_names = 'es_MX';
 
@@ -123,5 +125,16 @@ CREATE TABLE lista_negra (
   lne_dv  varchar(1) NOT NULL,
   lne_nombre varchar(100) NOT NULL , 
   PRIMARY KEY  (lne_rut) 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+
+CREATE TABLE abonados_sector (
+  
+  hin_rut int(10) NOT NULL,
+  sec_id int(3) NOT NULL , 
+  abs_vigencia date NOT NULL,
+  PRIMARY KEY  (hin_rut),
+  FOREIGN KEY (sec_id) REFERENCES sector(sec_id),
+  FOREIGN KEY (hin_rut) REFERENCES hincha(hin_rut)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
