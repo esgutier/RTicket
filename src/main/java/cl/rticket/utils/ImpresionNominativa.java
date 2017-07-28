@@ -37,7 +37,7 @@ import cl.rticket.model.Ticket;
 
 public class ImpresionNominativa {
 	
-	private static final String PRINTER_NAME = "zebra";
+	private static final String PRINTER_NAME = "ticket";
 	
 	
 	
@@ -53,12 +53,12 @@ public class ImpresionNominativa {
 			                if (pageIndex == 0) {                    
 			                Graphics2D g2d = (Graphics2D) graphics;                    
 			                             
-			                ticket.print(); 
+			                //ticket.print(); 
 			                g2d.translate((int) pageFormat.getImageableX(),(int) pageFormat.getImageableY()); 
 			                Font font = new Font("Arial",Font.BOLD,12);       
 			                Font fontVS = new Font("Arial",Font.BOLD,10); 
 			                Font fontFecha = new Font("Monospaced",Font.BOLD,9); 
-			                Font fontSector = new Font("Arial",Font.BOLD,16); 
+			                Font fontSector = new Font("Arial",Font.BOLD,15); 
 			                Font fontSocio = new Font("Monospaced",Font.BOLD,12); 
 			                g2d.setFont(font);
 			                Rectangle rec1 = new Rectangle(5,5,200,300);
@@ -68,8 +68,9 @@ public class ImpresionNominativa {
 		                         int y=5;                                        
 		                         int imagewidth=50;
 		                         int imageheight=50;
-		                         BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 		                        
-		                         //BufferedImage read = ImageIO.read(new File("C:\\apache-tomcat-7.0.78\\logo_png.png"));
+		                         //BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 
+		                         //BufferedImage read = ImageIO.read(getClass().getResource("logo_png.png")); 	
+		                         BufferedImage read = ImageIO.read(new File("C:\\logo_png.png"));
 		                         g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
 		                         drawCenteredString(g2d,"V/S",rec1,70,fontVS);
 		                         drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
@@ -77,7 +78,7 @@ public class ImpresionNominativa {
 		                         drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   
-		                         drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
+		                         drawCenteredString(g2d,ticket.getSector()+" "+ticket.getComentario(),rec1,148,fontSector);
 		                         drawCenteredString(g2d,"Nominativa - $"+String.format("%,d", Integer.parseInt(ticket.getPrecio())),rec1,158,fontSocio);
 		                         
 		                         drawCenteredString(g2d,ticket.getNombres(),rec1,175,fontSocio);

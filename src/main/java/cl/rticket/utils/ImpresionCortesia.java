@@ -38,7 +38,7 @@ import cl.rticket.model.Ticket;
 public class ImpresionCortesia {
 
 	
-private static final String PRINTER_NAME = "zebra";
+private static final String PRINTER_NAME = "ticket";
 	
 	public static class MyPrintable implements Printable {	
 		
@@ -66,8 +66,8 @@ private static final String PRINTER_NAME = "zebra";
                  int y=5;                                        
                  int imagewidth=50;
                  int imageheight=50;
-                 BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 	
-                 
+                 //BufferedImage read = ImageIO.read(getClass().getResource("../../../logo_png.png")); 	
+                 BufferedImage read = ImageIO.read(new File("C:\\logo_png.png"));
                  //BufferedImage read = ImageIO.read(new File("C:\\apache-tomcat-7.0.78\\logo_png.png"));
                  g2d.drawImage(read,x,y,imagewidth,imageheight,null); 		                         
                  drawCenteredString(g2d,"V/S",rec1,70,fontVS);
@@ -79,7 +79,7 @@ private static final String PRINTER_NAME = "zebra";
                  
                  drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
                  g2d.drawLine(20, 120, 185, 120);   
-                 drawCenteredString(g2d,ticket.getSector(),rec1,148,fontSector);
+                 drawCenteredString(g2d,ticket.getSector()+" "+ticket.getComentario(),rec1,148,fontSector);
                  
                  drawCenteredString(g2d,"Cortesía",rec1,158,fontSocio);
                  

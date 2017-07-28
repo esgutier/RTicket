@@ -156,7 +156,7 @@ public class MasivasController {
 		ArrayList<Ticket> tickets = itemService.obtenerDatosTicketMasivo(entrada.getIdEntrada(), "R");
 		System.out.println("tickets size="+tickets.size());
 		try {
-			tickets = new ArrayList<Ticket>( tickets.subList(entrada.getInicio().intValue() - 1, entrada.getFin().intValue() - 1));
+			tickets = new ArrayList<Ticket>( tickets.subList(entrada.getInicio().intValue() - 1, entrada.getFin().intValue() ));
 			System.out.println("tickets sublist size="+tickets.size());
 		} catch(IndexOutOfBoundsException e) {
 			flash.addFlashAttribute("error", "El rango de impresión indicado no es correcto, favor verifique");			

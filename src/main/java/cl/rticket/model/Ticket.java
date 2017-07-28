@@ -14,6 +14,7 @@ public class Ticket implements Serializable{
 	private Date fecha;
 	private String hora;
 	private String sector;
+	private String comentario;
 	private String tipo;
 	private String token;
 	private String nombres;
@@ -98,6 +99,12 @@ public class Ticket implements Serializable{
 	}
 	public void setSecuencia(Integer secuencia) {
 		this.secuencia = secuencia;
+	}
+	public String getComentario() {
+		return comentario;
+	}
+	public void setComentario(String comentario) {
+		this.comentario = comentario;
 	}
 	
 

@@ -101,6 +101,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      p.par_fecha fecha,
 	      date_format(p.par_fecha,' %H:%i') hora,
 	      s.sec_desc sector ,
+	      e.ent_comentario comentario,
 	      c.com_token token,
 	      c.com_tipo tipo, 
 	      c.com_monto precio
@@ -135,6 +136,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      p.par_fecha fecha,
 	      date_format(p.par_fecha,' %H:%i') hora,
 	      s.sec_desc sector ,
+	      e.ent_comentario comentario,
 	      c.com_token token,
 	      c.com_tipo tipo,
 	      c.com_monto precio
@@ -174,6 +176,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      p.par_fecha fecha,
 	      date_format(p.par_fecha,' %H:%i') hora,
 	      s.sec_desc sector ,
+	      e.ent_comentario comentario,
 	      c.com_token token,
 	      c.com_tipo tipo,
 	      c.com_monto precio
