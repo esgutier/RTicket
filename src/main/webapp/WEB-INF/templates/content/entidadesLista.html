@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+    /*<![CDATA[*/
+        $(document).ready(function (){	
+        	
+        	
+
+        }); 
+
+       /*]]>*/ 
+    </script>
+  
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Lista de Entidades</h3>
+		     </div>
+			 <div class="widget-content">
+			 
+			   
+			   <div class="form-horizontal">	
+				     <div  th:if="${error != null}" >
+			      		<div class="alert alert-danger " th:text="${error}">
+							Aqui van los mensajes de error																	
+				  		</div>
+					 </div>	
+					 <div  th:if="${exito != null}" >
+			      		<div class="alert alert-success " th:text="${exito}">
+							Aqui van los mensajes de exito																	
+				  		</div>
+					 </div>	
+					
+					 <div align="left">
+					    <a th:href="@{/cargar-entidad-ingresar}" class="btn btn-custom-primary" id="generarEntradasButton">Ingresar Entidad</a>	
+					 </div>
+					 <br/>
+					 <div class="row">	
+					     <div class="col-md-2">	</div>
+					     <div class="col-md-8">
+   		 
+						 <table class="table table-bordered">
+								<thead>
+									<tr>
+									  <th>RUT</th>
+									  <th>NOMBRE</th>
+									  <th>EDITAR</th>
+									 
+									</tr>
+								</thead>
+								
+								<tbody>
+									<tr th:each="entidad : ${entidades}"> 
+									    <td  th:text="${entidad.rut+'-'+entidad.dv}"></td> 
+									    <td  th:text="${entidad.nombres}"></td> 
+									    <td  >
+									       <a th:href="@{/buscar-entidad(rut=${entidad.rut})}" >
+									          <span class="badge element-bg-color-blue">
+									          	<i class="fa fa-pencil" aria-hidden="true"></i>  Editar
+									          </span>
+									       </a>
+									    </td> 
+									</tr> 										
+								</tbody>
+								
+						   </table>
+						   </div>
+						   <div class="col-md-2">	</div>
+					   </div>
+					
+				</div>
+				
+			 </div>
+	   </div>
+	   
+  </div>
+ </html>

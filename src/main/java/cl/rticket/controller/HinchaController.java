@@ -245,7 +245,73 @@ public class HinchaController {
 		return "content/abonadoMantenedor";
 	}
 	
+//===================================================================================================
+// MANTENEDOR DE ENTIDADES
+//===================================================================================================
 	
+	@RequestMapping(value="/cargar-entidad-lista", method=RequestMethod.GET)
+	public String cargarEntidadLista(Model model) {		
+		model.addAttribute("entidades", hinchaService.obtenerEntidades());
+		return "content/entidadesLista";
+	}
+	
+	@RequestMapping(value="/buscar-entidad", method=RequestMethod.GET)
+	public String buscarEntidad(Model model, Hincha hincha,
+			                    @RequestParam(value="rut")Integer rut) {
+		
+			Hincha hin = hinchaService.obtenerHincha(rut);
+			hin.setRutCompleto(hin.getRut()+"-"+hin.getDv());
+			model.addAttribute("hincha", hin);
+			
+		return "content/entidadesBuscar";
+	}
+	
+	@RequestMapping(value="/actualizar-entidad", method=RequestMethod.POST)
+	public String actualizarEntidad(Model model, Hincha hincha, RedirectAttributes flash) {
+		//validacion de inputs
+
+		int result = hinchaService.actualizarHincha(hincha);
+		if(result > 0) {
+			flash.addFlashAttribute("exito", "La actualización se realizó correctamente");
+			return "redirect:/cargar-entidad-lista";
+		} else {
+			model.addAttribute("error", "Error: No se puedo realizar la actualización");
+		}
+		return "content/entidadesBuscar";
+	}
+	
+	@RequestMapping(value="/cargar-entidad-ingresar", method=RequestMethod.GET)
+	public String cargarEntidadIngresar(Model model) {	
+		model.addAttribute("hincha", new Hincha());
+		return "content/entidadesIngresar";
+	}
+	
+	@RequestMapping(value="/ingresar-entidad", method=RequestMethod.POST)
+	public String insertarEntidad(Model model, Hincha hincha, RedirectAttributes flash) {
+		//validar inputs
+		if(Util.verificaRUT(hincha.getRutCompleto().trim())) {
+			String[] parts = hincha.getRutCompleto().trim().split("-");
+			String nro = parts[0]; 	
+			String dv = parts[1];
+			hincha.setRut(Integer.parseInt(nro));
+			hincha.setDv(dv);					
+			int result = hinchaService.insertarHincha(hincha);
+			if(result > 0) {
+				flash.addFlashAttribute("exito", "El registro fue agregado correctamente");
+				return "redirect:/cargar-entidad-lista";
+			} else {
+				model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
+			}
+		} else {
+			model.addAttribute("error", "El Rut ingresado no es válido");
+		}
+		
+		
+		return "content/entidadesIngresar";
+	}
+	
+	
+// ===================================================================================================	
 	
 	
 	@RequestMapping(value="/buscar-hincha-compra", method=RequestMethod.POST)

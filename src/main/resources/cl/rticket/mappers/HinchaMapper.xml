@@ -79,7 +79,7 @@ values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),#{direccion},#{telefono},#{email},
 
 
 <select id="obtenerEntidades" resultType="Hincha">
-     select hin_rut rut, hin_nombres nombres from hincha where hin_categoria = 'E' order by hin_nombres
+     select hin_rut rut, hin_dv dv, hin_nombres nombres from hincha where hin_categoria = 'E' order by hin_nombres
 </select>
 
 <delete id="borrarListaNegra" >

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content"> 
+    <script type="text/javascript">
+	   
+	         $(document).ready(function (){	
+ 
+	         });	                
+    </script>
+  
+  <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
+      <div class="widget">
+			 <div class="widget-header">
+				<h3><i class="fa fa-edit"></i> Ingreso de Entidad</h3>
+		     </div>
+			 <div class="widget-content">
+			     <div class="form-horizontal">
+			     <form action="#" th:action="@{/ingresar-entidad }"  th:object="${hincha}" method="POST">
+			              <div  th:if="${error != null}" >
+				      		<div class="alert alert-danger " th:text="${error}">
+								Aqui van los mensajes de error																	
+					  		</div>
+						  </div>	
+						   <div  th:if="${exito != null}" >
+				      		<div class="alert alert-info " th:text="${exito}">
+								Aqui van los mensajes de info																
+					  		</div>
+						  </div>
+			             
+			              <input type="hidden" th:name="categoria" th:value="E" />
+			            
+													<div class="form-group">														
+														
+													        <label class="col-md-2 control-label">RUT </label>
+													        <div class="col-md-10">
+															    <input th:field="*{rutCompleto}"  maxlength="12" type="text" class="form-control input-sm"  placeholder="12345678-K"/>
+															</div>											    
+  
+													</div>
+
+													<div class="form-group">
+														<label class="col-md-2 control-label">Nombre</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{nombres}" maxlength="50" required="required" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="col-md-2 control-label">Dirección</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{direccion}" maxlength="100" required="required" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-md-2 control-label">Teléfono</label>
+														<div class="col-md-10">
+															<input type="text" th:field="*{telefono}" maxlength="9" required="required" pattern="[0-9]+" title="Ingrese solo numeros" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-md-2 control-label">Email</label>
+														<div class="col-md-10">
+															<input type="email" th:field="*{email}" maxlength="100" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" title="Ingrese email valido" class="form-control input-sm" placeholder="" />
+														</div>
+													</div>
+
+												
+													<div align="center">
+													
+													<button type="submit" class="btn btn-primary" id="btnActualizarHincha" >Ingresar Entidad</button>
+													</div>
+													
+													
+													
+												
+												</form>	
+						</div>
+			 </div>
+	   </div>
+	   </div>
+	   <div class="col-md-1"></div>
+	   </div>
+	   
+	   
+          
+  </div>
+ </html>
