@@ -24,30 +24,20 @@
 		         		ckeckFormValid();
 		         });
 	        	 
-	        	 if($('select[name=categoria]').val() == 'E') {
-	        			// alert("val E");
-	        			 $("#divApellidos").hide();
-	        			 $("#divFechaNacimiento").hide();
-	        			 $("#divGenero").hide();
+	        	 if($('select[name=categoria]').val() == 'A') {	        			
+	        			 $("#divDatosAbonado").show();
+	        			
 	        		 } else {
-	        			// alert("val P");
-	        			 $("#divApellidos").show();
-	        			 $("#divFechaNacimiento").show();
-	        			 $("#divGenero").show();
+	        			 $("#divDatosAbonado").hide();
 	             }
 	        	 
-	        	 $("#selectCategoria").change(function(){
-	        		// alert($('select[name=categoria]').val());
-	        		 if($('select[name=categoria]').val() == 'E') {
-	        			// alert("val E");
-	        			 $("#divApellidos").hide();
-	        			 $("#divFechaNacimiento").hide();
-	        			 $("#divGenero").hide();
+	        	 $("#selectCategoria").change(function(){	
+	        		 console.log('categoria: '+$('select[name=categoria]').val())
+	        		 if($('select[name=categoria]').val() == 'A') {
+	        			 console.log('show');
+	        			 $("#divDatosAbonado").show();
 	        		 } else {
-	        			// alert("val P");
-	        			 $("#divApellidos").show();
-	        			 $("#divFechaNacimiento").show();
-	        			 $("#divGenero").show();
+	        			 $("#divDatosAbonado").hide();
 	        		 }
 	        		 
 	        	 });
@@ -106,11 +96,53 @@
 														<div class="col-md-10">
 															<select th:field="*{categoria}"  class="form-control input-sm" required="required" id="selectCategoria">
 															    <option value="" >Seleccione...</option>	
-															    <option value="P">Persona</option>
-															    <option value="E">Entidad</option>															    													    												
+															    <option value="P">NORMAL</option>
+															    <option value="A">ABONADO</option>															    													    												
 															</select>
 														</div>
 												    </div>	
+												 
+												 <div  id="divDatosAbonado">   
+												    <div class="form-group">
+														    <label class="col-md-2 control-label">Sector</label>
+															<div class="col-md-10">
+																<select th:field="*{idSector}"  class="form-control input-sm" >
+																    <option value="" >Seleccione...</option>	
+																    <option th:each="sector : ${sectores}" th:value="${sector.idSector}" th:text="${sector.descripcion}" >partido</option>													
+																</select>
+															</div>
+													</div>
+													<div class="form-group"  >
+														<label class="col-md-2 control-label">Valido Hasta</label>
+														<div class="col-md-10">
+															  <div class="row">
+															    <div class="col-md-3">
+																    <select th:field="*{mesVigencia}"  class="form-control input-sm" >
+																		    <option value="" >Seleccione...</option>
+																		    <option value="01" >ENERO</option>
+																		    <option value="02" >FEBRERO</option>
+																		    <option value="03" >MARZO</option>
+																		    <option value="04" >ABRIL</option>
+																		    <option value="05" >MAYO</option>
+																		    <option value="06" >JUNIO</option>
+																		    <option value="07" >JULIO</option>
+																		    <option value="08" >AGOSTO</option>
+																		    <option value="09" >SEPTIEMBRE</option>
+																		    <option value="10" >OCTUBRE</option>
+																		    <option value="11" >NOVIEMBRE</option>
+																		    <option value="12" >DICIEMBRE</option>	
+																		    													
+																    </select>
+															    </div>
+															    <div class="col-md-2">
+																  <input type="text" th:field="*{anioVigencia}" maxlength="4"  pattern="\d{4}" title="Ingrese número de 4 digitos"  class="form-control input-sm" placeholder="Año(4 digitos)" />
+																</div>
+																<div class="col-md-7"></div>
+															</div>
+														</div>
+													</div>
+												  </div> 
+												    
 													<div class="form-group">
 														<label class="col-md-2 control-label">Nombre</label>
 														<div class="col-md-10">
@@ -120,7 +152,7 @@
 													<div class="form-group" id="divApellidos" >
 														<label class="col-md-2 control-label">Apellidos</label>
 														<div class="col-md-10">
-															<input type="text" th:field="*{apellidos}" maxlength="70"  pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
+															<input type="text" th:field="*{apellidos}" maxlength="70"  required="required" pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
 														</div>
 													</div>
 													<div class="form-group">
@@ -144,7 +176,7 @@
 													<div class="form-group" id="divFechaNacimiento" >
 														<label class="col-md-2 control-label">Fecha Nacimiento (dd/mm/aaaa)</label>
 														<div class="col-md-10">
-															<input type="text" th:field="*{fechaNac}" maxlength="10"  pattern="\d{1,2}/\d{1,2}/\d{4}" title="Ingrese el formato solicitado"  class="form-control input-sm" placeholder="" />
+															<input type="text" th:field="*{fechaNac}" maxlength="10" required="required" pattern="\d{1,2}/\d{1,2}/\d{4}" title="Ingrese el formato solicitado"  class="form-control input-sm" placeholder="" />
 														</div>
 													</div>
 
@@ -153,7 +185,7 @@
 														<div class="col-md-10">
 															<div class="radio">
 																<label>
-																	<input type="radio" th:field="*{genero}" value="M" /> Masculino
+																	<input type="radio" th:field="*{genero}" value="M" required="required" /> Masculino
 																</label>
 															</div>
 															<div class="radio">

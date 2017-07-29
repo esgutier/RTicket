@@ -1,6 +1,10 @@
 package cl.rticket.services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -18,24 +22,87 @@ public class HinchaServiceImpl implements HinchaService{
 	HinchaMapper hinchaMapper ;
 	
 	public Hincha obtenerHincha(Integer rut) {
-		return hinchaMapper.obtenerHincha(rut);
+		Hincha hin = hinchaMapper.obtenerHincha(rut);
+		if(hin != null && hin.getCategoria().equals("A")) {
+			Hincha datos = hinchaMapper.obtenerDatosAbonado(rut);
+			hin.setMesVigencia(datos.getMesVigencia());
+			hin.setAnioVigencia(datos.getAnioVigencia());
+			hin.setIdSector(datos.getIdSector());
+		}
+		return hin;
 	}
 	
-	public int insertarHincha(Hincha hincha) {
-		if(hincha.getCategoria().equals("P")) {
-		    return hinchaMapper.insertarHincha(hincha);
+	@Transactional(rollbackFor={UpdateException.class, Exception.class})
+	public void insertarHincha(Hincha hincha) throws UpdateException {
+		
+		int res = hinchaMapper.insertarHincha(hincha);
+		if(res > 0) {
+			if(hincha.getCategoria().equals("A")) {				
+				//insertar datos abonados
+				//construir la fecha
+				String date ="01/"+hincha.getMesVigencia()+"/"+hincha.getAnioVigencia();				
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				Date convertedDate;
+				try {
+					convertedDate = dateFormat.parse(date);
+					Calendar c = Calendar.getInstance();
+					c.setTime(convertedDate);
+					c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));					
+					date = c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH) + 1)+"/"+c.get(Calendar.YEAR);
+					hincha.setVigencia(date);
+					
+				} catch (ParseException e) {
+					throw new UpdateException();
+				}
+				res = hinchaMapper.insertarAbonado(hincha);
+				if(res < 1) {
+					throw new UpdateException();
+				}
+			}
 		} else {
-			return hinchaMapper.insertarHinchaEntidad(hincha);
+			throw new UpdateException();
 		}
+		
+		
 	}
 	
-	public int actualizarHincha(Hincha hincha) {
-		if(hincha.getCategoria().equals("P")) {
-		   return hinchaMapper.actualizarHincha(hincha);
-		} else {
-			
-			return hinchaMapper.actualizarHinchaEntidad(hincha);
-		}
+	@Transactional(rollbackFor={UpdateException.class, Exception.class})
+	public void actualizarHincha(Hincha hincha) throws UpdateException {
+		
+		   int res = hinchaMapper.actualizarHincha(hincha);
+		   if(res > 0) {
+			   if(hincha.getCategoria().equals("A")) {				
+					//insertar datos abonados
+					//construir la fecha
+					String date ="01/"+hincha.getMesVigencia()+"/"+hincha.getAnioVigencia();				
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					Date convertedDate;
+					try {
+						convertedDate = dateFormat.parse(date);
+						Calendar c = Calendar.getInstance();
+						c.setTime(convertedDate);
+						c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));					
+						date = c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH) + 1)+"/"+c.get(Calendar.YEAR);
+						hincha.setVigencia(date);
+						
+					} catch (ParseException e) {
+						throw new UpdateException();
+					}
+					res = hinchaMapper.actualizarAbonado(hincha);
+					if(res < 1) {
+						//entonces de hincha normal esta pasando a ser abonado
+						res = hinchaMapper.insertarAbonado(hincha);
+						if(res < 1) {
+							throw new UpdateException();
+						}
+						
+					}
+				}
+			   
+		   } else {
+			   throw new UpdateException();
+		   }
+		
 	}
 	
 	public ArrayList<Hincha> obtenerEntidades() {
@@ -108,6 +175,10 @@ public class HinchaServiceImpl implements HinchaService{
 		if( res < 1) {
 		    	throw new UpdateException();
 		}
+	}
+	
+	public Hincha obtenerDatosAbonado(Integer rut) {
+		return hinchaMapper.obtenerDatosAbonado(rut);
 	}
 	
 }

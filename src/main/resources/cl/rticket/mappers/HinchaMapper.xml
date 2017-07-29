@@ -6,7 +6,7 @@
 <mapper namespace="cl.rticket.mappers.HinchaMapper">
 
 
-
+<!-- 
 <select id="obtenerHinchaAbonado"  resultType="Hincha" parameterType="int">
 select    h.hin_rut rut, h.hin_dv dv, 
 	        h.hin_nombres nombres, h.hin_apellidos apellidos, h.hin_direccion direccion,
@@ -17,6 +17,7 @@ select    h.hin_rut rut, h.hin_dv dv,
 	where h.hin_rut = #{rut} and
 	      h.hin_rut = a.hin_rut
 </select>
+ -->
 
 <insert id="insertarAbonado"  parameterType="Hincha">
 insert into abonados_sector (hin_rut, sec_id, abs_vigencia) 
@@ -29,6 +30,13 @@ values (#{rut},#{idSector},STR_TO_DATE(#{vigencia}, '%d/%m/%Y'))
    where
      hin_rut = #{rut}
 </update>
+
+<select id="obtenerDatosAbonado"  resultType="Hincha" parameterType="int">
+select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia
+	from abonados_sector a
+	where a.hin_rut = #{rut} 
+	     
+</select>
 
 
 

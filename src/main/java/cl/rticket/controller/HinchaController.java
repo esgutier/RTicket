@@ -3,11 +3,7 @@ package cl.rticket.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -46,6 +42,7 @@ public class HinchaController {
 	@RequestMapping(value="/cargar-hincha-mantenedor", method=RequestMethod.GET)
 	public String cargarHinchaMantenedor(Model model) {
 		model.addAttribute("hincha", new Hincha());
+		model.addAttribute("sectores", itemService.obtenerSectores());
 		return "content/hinchaMantenedor";
 	}
 	
@@ -69,11 +66,13 @@ public class HinchaController {
 			} else {
 				hin.setRutCompleto(hincha.getRutCompleto());
 				model.addAttribute("accion", "ACTUALIZAR");
+				//verificar si es abonado				
 				model.addAttribute("hincha", hin);
 			}
 		} else {
 			model.addAttribute("error", "El Rut ingresado no es válido");
 		}
+		model.addAttribute("sectores", itemService.obtenerSectores());
 		return "content/hinchaMantenedor";
 	}
 	
@@ -81,26 +80,34 @@ public class HinchaController {
 	public String actualizarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
 		//validacion de inputs
 		int error = 0;
-	    if(hincha.getCategoria().equals("P") && GenericValidator.isBlankOrNull(hincha.getGenero())) {
-			model.addAttribute("error", "Debe indicar un género");
-			error = 1;
-		} else if(hincha.getCategoria().equals("0")) {
-			model.addAttribute("error", "Debe indicar una categoría");
-			error = 1;
+		
+		if(hincha.getCategoria().equals("A")) {
+			if(hincha.getIdSector() == null || hincha.getIdSector().intValue() == 0) {
+				model.addAttribute("error", "Debe indicar sector para el abonado");
+				error = 1;
+			} else if(hincha.getMesVigencia() == null || hincha.getMesVigencia().isEmpty()) {
+				model.addAttribute("error", "Debe indicar un mes de vigencia para el abonado");
+				error = 1;
+			} else if(hincha.getAnioVigencia() == null || hincha.getAnioVigencia().isEmpty()) {
+				model.addAttribute("error", "Debe indicar un año de vigencia para el abonado");
+				error = 1;
+			}
 		}
 		if(error == 1) {
 			model.addAttribute("accion", "ACTUALIZAR");
+			model.addAttribute("sectores", itemService.obtenerSectores());
 			return "content/hinchaMantenedor";
 		}
-		
-		
-		int result = hinchaService.actualizarHincha(hincha);
-		if(result > 0) {
+				
+		try {
+			hinchaService.actualizarHincha(hincha);
 			flash.addFlashAttribute("info", "La actualización se realizó correctamente");
 			return "redirect:/cargar-hincha-mantenedor";
-		} else {
+		} catch (UpdateException e) {
 			model.addAttribute("error", "Error: No se puedo realizar la actualización");
 		}
+		
+		model.addAttribute("sectores", itemService.obtenerSectores());
 		return "content/hinchaMantenedor";
 	}
 	
@@ -108,141 +115,36 @@ public class HinchaController {
 	public String insertarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
 		//validar inputs
 		int error = 0;
-	    if(hincha.getCategoria().equals("P") && GenericValidator.isBlankOrNull(hincha.getGenero())) {
-			model.addAttribute("error", "Debe indicar un género");
-			error = 1;
-		} else if(hincha.getCategoria().equals("0")) {
-			model.addAttribute("error", "Debe indicar una categoría");
-			error = 1;
+		if(hincha.getCategoria().equals("A")) {
+			if(hincha.getIdSector() == null || hincha.getIdSector().intValue() == 0) {
+				model.addAttribute("error", "Debe indicar sector para el abonado");
+				error = 1;
+			} else if(hincha.getMesVigencia() == null || hincha.getMesVigencia().isEmpty()) {
+				model.addAttribute("error", "Debe indicar un mes de vigencia para el abonado");
+				error = 1;
+			} else if(hincha.getAnioVigencia() == null || hincha.getAnioVigencia().isEmpty()) {
+				model.addAttribute("error", "Debe indicar un año de vigencia para el abonado");
+				error = 1;
+			}
 		}
+	  
 		if(error == 1) {
 			model.addAttribute("accion", "INSERTAR");
+			model.addAttribute("sectores", itemService.obtenerSectores());
 			return "content/hinchaMantenedor";
 		}
 		
-		int result = hinchaService.insertarHincha(hincha);
-		if(result > 0) {
+		try {
+			hinchaService.insertarHincha(hincha);
 			flash.addFlashAttribute("info", "El registro fue agregado correctamente");
 			return "redirect:/cargar-hincha-mantenedor";
-		} else {
+		} catch (UpdateException e) {
+			model.addAttribute("sectores", itemService.obtenerSectores());
 			model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
 		}
+		
 		
 		return "content/hinchaMantenedor";
-	}
-	
-	//================================================================================================
-	// Mantenedor de Abonados
-	//================================================================================================
-	
-	@RequestMapping(value="/cargar-abonado-mantenedor", method=RequestMethod.GET)
-	public String cargarAbonadoMantenedor(Model model) {
-		model.addAttribute("hincha", new Hincha());
-		model.addAttribute("sectores", itemService.obtenerSectores());
-		return "content/abonadoMantenedor";
-	}
-	
-	@RequestMapping(value="/buscar-abonado-mantenedor", method=RequestMethod.POST)
-	public String buscarAbonadoMantenedor(Model model, Hincha hincha) {
-		if(Util.verificaRUT(hincha.getRutCompleto().trim())) {
-			String[] parts = hincha.getRutCompleto().trim().split("-");
-			String nro = parts[0]; 	
-			String dv = parts[1];
-			Integer rut = Integer.parseInt(nro);
-					
-			Hincha hin = hinchaService.obtenerHinchaAbonado(rut);
-			if(hin == null) {
-				model.addAttribute("accion", "INSERTAR");
-				hin = new Hincha();
-				hin.setRutCompleto(hincha.getRutCompleto());
-				hin.setRut(rut);
-				hin.setDv(dv);
-				model.addAttribute("hincha", hin);
-				model.addAttribute("info", "Abonado no se encuentra registrado");
-			} else {
-				hin.setRutCompleto(hincha.getRutCompleto());
-				model.addAttribute("accion", "ACTUALIZAR");
-				model.addAttribute("hincha", hin);
-			}
-		} else {
-			model.addAttribute("error", "El Rut ingresado no es válido");
-		}
-		model.addAttribute("sectores", itemService.obtenerSectores());
-		return "content/abonadoMantenedor";
-	}
-	
-	@RequestMapping(value="/insertar-abonado-mantenedor", method=RequestMethod.POST)
-	public String insertarAbonadoMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
-
-		//construir la fecha
-		String date ="01/"+hincha.getMesVigencia()+"/"+hincha.getAnioVigencia();
-		System.out.println("date:"+date);
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Date convertedDate;
-		try {
-			convertedDate = dateFormat.parse(date);
-			Calendar c = Calendar.getInstance();
-			c.setTime(convertedDate);
-			c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-			System.out.println("Dia:"+c.get(Calendar.DAY_OF_MONTH));
-			System.out.println("Mes:"+c.get(Calendar.MONTH));
-			System.out.println("Año:"+c.get(Calendar.YEAR));
-			date = c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH) + 1)+"/"+c.get(Calendar.YEAR);
-			hincha.setVigencia(date);
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			model.addAttribute("error", "Error: La fecha de vigencia no es válida");
-			model.addAttribute("sectores", itemService.obtenerSectores());
-			return "content/abonadoMantenedor";
-		}
-		
-		try {
-			hinchaService.insertarAbonado(hincha);
-			flash.addFlashAttribute("info", "El registro fue agregado correctamente");
-			return "redirect:/cargar-abonado-mantenedor";
-		} catch(UpdateException e) {
-			model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
-		}		
-		model.addAttribute("sectores", itemService.obtenerSectores());
-		return "content/abonadoMantenedor";
-	}
-	
-	@RequestMapping(value="/actualizar-abonado-mantenedor", method=RequestMethod.POST)
-	public String actualizarAbonadoMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
-
-		//construir la fecha
-		String date ="01/"+hincha.getMesVigencia()+"/"+hincha.getAnioVigencia();
-		System.out.println("date:"+date);
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Date convertedDate;
-		try {
-			convertedDate = dateFormat.parse(date);
-			Calendar c = Calendar.getInstance();
-			c.setTime(convertedDate);
-			c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-			System.out.println("Dia:"+c.get(Calendar.DAY_OF_MONTH));
-			System.out.println("Mes:"+c.get(Calendar.MONTH));
-			System.out.println("Año:"+c.get(Calendar.YEAR));
-			date = c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH) + 1)+"/"+c.get(Calendar.YEAR);
-			hincha.setVigencia(date);
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			model.addAttribute("error", "Error: La fecha de vigencia no es válida");
-			model.addAttribute("sectores", itemService.obtenerSectores());
-			return "content/abonadoMantenedor";
-		}
-		
-		try {
-			hinchaService.actualizarAbonado(hincha);
-			flash.addFlashAttribute("info", "El registro fue actualizado correctamente");
-			return "redirect:/cargar-abonado-mantenedor";
-		} catch(UpdateException e) {
-			model.addAttribute("error", "Error: No se puedo realizar la actualización del registro");
-		}		
-		model.addAttribute("sectores", itemService.obtenerSectores());
-		return "content/abonadoMantenedor";
 	}
 	
 //===================================================================================================
@@ -270,13 +172,14 @@ public class HinchaController {
 	public String actualizarEntidad(Model model, Hincha hincha, RedirectAttributes flash) {
 		//validacion de inputs
 
-		int result = hinchaService.actualizarHincha(hincha);
-		if(result > 0) {
+		try {
+			hinchaService.actualizarHincha(hincha);
 			flash.addFlashAttribute("exito", "La actualización se realizó correctamente");
 			return "redirect:/cargar-entidad-lista";
-		} else {
+		} catch (UpdateException e) {
 			model.addAttribute("error", "Error: No se puedo realizar la actualización");
 		}
+		
 		return "content/entidadesBuscar";
 	}
 	
@@ -295,13 +198,14 @@ public class HinchaController {
 			String dv = parts[1];
 			hincha.setRut(Integer.parseInt(nro));
 			hincha.setDv(dv);					
-			int result = hinchaService.insertarHincha(hincha);
-			if(result > 0) {
+			try {
+				hinchaService.insertarHincha(hincha);
 				flash.addFlashAttribute("exito", "El registro fue agregado correctamente");
 				return "redirect:/cargar-entidad-lista";
-			} else {
+			} catch (UpdateException e) {
 				model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
 			}
+			
 		} else {
 			model.addAttribute("error", "El Rut ingresado no es válido");
 		}
@@ -440,8 +344,8 @@ public class HinchaController {
 		Integer rut = Integer.parseInt(nro);
 		hincha.setRut(rut);
 		hincha.setDv(dv);
-		int insert = hinchaService.insertarHincha(hincha);
-		if(insert > 0) {
+		try {
+			hinchaService.insertarHincha(hincha);
 			Hincha tmp = hinchaService.obtenerHincha(rut);
 			compra.setNombreHincha(tmp.getNombres()+" "+tmp.getApellidos());
 			 //agregar la entrada al carro
@@ -475,9 +379,10 @@ public class HinchaController {
 				total = total + c.getMonto();
 			}
 			SecurityUtils.getSubject().getSession().setAttribute("totalCompra",total);
-		} else {
+		} catch (UpdateException e) {
 			model.addAttribute("error", "No se pudo ingresar el hincha");
 		}
+		
 		model.addAttribute("compra", compra);
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));

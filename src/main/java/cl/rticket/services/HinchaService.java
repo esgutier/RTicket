@@ -8,8 +8,8 @@ import cl.rticket.model.Hincha;
 public interface HinchaService {
 
 	public Hincha obtenerHincha(Integer rut);
-	public int insertarHincha(Hincha hincha);
-	public int actualizarHincha(Hincha hincha);
+	public void insertarHincha(Hincha hincha) throws UpdateException;
+	public void actualizarHincha(Hincha hincha) throws UpdateException;
 	public ArrayList<Hincha> obtenerEntidades();
 	public Integer[] ingresarListaNegra(ArrayList<Hincha> impedidos);
 	public Integer totalListaNegra();
@@ -17,5 +17,6 @@ public interface HinchaService {
 	public Hincha obtenerHinchaAbonado(Integer rut);
 	public void insertarAbonado(Hincha hincha)throws UpdateException;
 	public void actualizarAbonado(Hincha hincha)throws UpdateException;
+	public Hincha obtenerDatosAbonado(Integer rut);
 	
 }
