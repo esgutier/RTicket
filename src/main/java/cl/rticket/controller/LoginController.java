@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import cl.rticket.exception.ImpresoraNoDisponibleException;
 import cl.rticket.model.Usuario;
+import cl.rticket.utils.ImpresionTest;
 
 
 
@@ -52,6 +54,17 @@ public class LoginController {
 		Subject subject = SecurityUtils.getSubject();
 		subject.logout();
 		return "redirect:/";
+	}
+	
+	@RequestMapping(value="/test-impresora", method=RequestMethod.GET)
+	public String testImpresora(Model model) {		
+		ImpresionTest printer = new ImpresionTest();
+		try {
+			printer.imprimirTest();
+		} catch (ImpresoraNoDisponibleException e) {
+			model.addAttribute("error", "Impresora no disponible");
+		}
+		return "content/dashboard";
 	}
 	
 	

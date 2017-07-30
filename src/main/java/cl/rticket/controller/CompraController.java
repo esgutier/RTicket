@@ -1,6 +1,7 @@
 package cl.rticket.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.print.PrintService;
@@ -19,6 +20,7 @@ import cl.rticket.exception.UpdateException;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Ticket;
+import cl.rticket.model.TotalesEntrada;
 import cl.rticket.services.ItemService;
 import cl.rticket.utils.ImpresionNominativa;
 
@@ -82,6 +84,24 @@ public class CompraController {
 		return "content/compra";
 	}
 	
+	@RequestMapping(value="/obtener-disponibilidad-sector", method=RequestMethod.POST)
+	public String obtenerDisponibilidadSector(Model model, Compra compra) {
+		
+		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+		TotalesEntrada total = map.get(compra.getIdEntrada());
+		model.addAttribute("total", total);
+		if(total.getMaximo() <= (total.getTotalCortesia() + total.getTotalNominativa() + total.getTotalNormales())) {
+			model.addAttribute("agotadas", "agotadas");
+			model.addAttribute("error", "Entradas agotadas para el sector especificado");
+		}
+		
+		
+		return "content/compra";
+	}
+	
+	
 	@RequestMapping(value="/compra-buscar-hincha", method=RequestMethod.POST)
 	public String buscarHinchaCompra(Model model, Compra compra) {
 		
@@ -96,6 +116,8 @@ public class CompraController {
 
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+		model.addAttribute("total", map.get(compra.getIdEntrada()));
 		
 		return "content/compra";
 	}
@@ -122,6 +144,8 @@ public class CompraController {
 		model.addAttribute("entradas", itemService.obtenerEntradas(idPartido));
 		compra.setIdPartido(idPartido);
 		compra.setIdEntrada(idEntrada);
+		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+		model.addAttribute("total", map.get(compra.getIdEntrada()));
 		
 		return "content/compra";
 	}
@@ -139,6 +163,8 @@ public class CompraController {
 		if((totalvendidas + compraList.size())  > entrada.getMaximo()){
 			model.addAttribute("partidos", itemService.obtenerPartidos());
 			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+			HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+			model.addAttribute("total", map.get(compra.getIdEntrada()));
 			model.addAttribute("error", "Error: La venta excede el total de entradas disponibles para el sector seleccionado");
 			return "content/compra";
 		}
@@ -146,10 +172,12 @@ public class CompraController {
 		//aca se chequea que este disponible la impresora
 		ImpresionNominativa impresora = new ImpresionNominativa();
 		PrintService service = impresora.obtenerImpresoraService();
-		System.out.println("service:"+service);
+		//System.out.println("service:"+service);
 		if(service == null) {
 			model.addAttribute("partidos", itemService.obtenerPartidos());
 			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+			HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+			model.addAttribute("total", map.get(compra.getIdEntrada()));
 			model.addAttribute("error", "Error: Verifique que la impresora esté conectada y que posea el nombre de ticket");
 			return "content/compra";
 		}
@@ -165,6 +193,8 @@ public class CompraController {
 				} catch (ImpresoraNoDisponibleException e) {
 					model.addAttribute("partidos", itemService.obtenerPartidos());
 					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+					HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+					model.addAttribute("total", map.get(compra.getIdEntrada()));
 					model.addAttribute("error", "Error: Verifique que la impresora esté conectada y que posea el nombre de ticket");
 					return "content/compra";
 				}

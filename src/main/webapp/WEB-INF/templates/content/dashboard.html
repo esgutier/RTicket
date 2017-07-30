@@ -5,7 +5,12 @@
   <div th:fragment="content"> 
     <h1>Bienvenido</h1>
     <hr/>
-    
+    <br/>
+    <div  th:if="${error != null}" >
+			      		<div class="alert alert-danger " th:text="${error}">
+							Aqui van los mensajes de error																	
+				  		</div>
+	</div>	
      
           
   </div>

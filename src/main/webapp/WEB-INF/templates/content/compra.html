@@ -22,6 +22,8 @@
         	});*/
         	$("#selectIdEntrada").change(function(){
         		$("#inputRutEscaneado").focus();
+        		document.forms[0].action = "obtener-disponibilidad-sector";      		
+        		document.forms[0].submit();
         	});
         	
         	$("#inputRutDigitado").val('');
@@ -78,6 +80,40 @@
 							</div>
 					 </div>
 					 
+					 <div th:if="${total != null}">
+					 <div class="row">
+					     <div class="col-md-2"></div>
+					     <div class="col-md-10">
+							      <table class="table table-bordered">
+										<thead>
+											<tr>
+											  <th width="20%">MÁXIMO</th>
+											  <th width="20%">TOTAL GENERAL</th>									 
+											  <th width="20%">TOTAL NOMINATIVAS</th>
+											  <th width="20%">TOTAL NORMALES</th>										  					  
+											  <th width="20%">TOTAL CORTESIA</th>
+											
+											</tr>
+										</thead>
+										
+										<tbody>
+											<tr >     
+											    <td align="center" ><b><span th:text="${total.maximo}"></span></b></td> 
+											    <td align="center" ><b><span th:text="${total.totalNominativa + total.totalNormales + total.totalCortesia}"></span></b></td> 
+											    <td align="center" ><b><span th:text="${total.totalNominativa}"></span></b></td> 
+											    <td align="center" ><b><span th:text="${total.totalNormales}"></span></b></td> 
+											    <td align="center" ><b><span th:text="${total.totalCortesia}"></span></b></td>  
+											</tr> 										
+										</tbody>
+										
+								   </table>
+						   </div>
+						   
+						</div>
+					 </div>
+					
+					
+					<div th:if="${agotadas == null}">
 					 <div class="form-group">
 						    <label class="col-md-2 control-label">RUT</label>
 							<div class="col-md-10">
@@ -94,14 +130,7 @@
 							</div>
 					 </div>
 					 
-					 <!-- 
-					 <div class="form-group" th:if="${compra.nombreHincha != null }">
-						    <label class="col-md-2 control-label">Nombre Hincha</label>
-							<div class="col-md-10">
-								 <input th:field="*{nombreHincha}"  maxlength="20" type="text" class="form-control" disabled="disabled" />
-							</div>
-					 </div>
-					  --> 
+					
 					 <div class="row">	
 					     <div class="col-md-1">	</div>
 					     <div class="col-md-10">
@@ -137,6 +166,7 @@
 						   </div>
 						   <div class="col-md-1">	</div>
 					   </div>
+					</div>
 					
 				</div>
 				</form>

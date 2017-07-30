@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -23,6 +24,7 @@ import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Hincha;
 import cl.rticket.model.RUT;
+import cl.rticket.model.TotalesEntrada;
 import cl.rticket.model.Usuario;
 import cl.rticket.services.HinchaService;
 import cl.rticket.services.ItemService;
@@ -230,6 +232,8 @@ public class HinchaController {
 			model.addAttribute("error", "Debe ingresar el RUT del Hincha");
 			model.addAttribute("partidos", itemService.obtenerPartidos());
 			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+			HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+			model.addAttribute("total", map.get(compra.getIdEntrada()));
 			return "content/compra";
 		}
 		
@@ -242,6 +246,8 @@ public class HinchaController {
 					model.addAttribute("error", "El Hincha se encuentra en Lista Negra");
 					model.addAttribute("partidos", itemService.obtenerPartidos());
 					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+					HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+					model.addAttribute("total", map.get(compra.getIdEntrada()));
 					return "content/compra";
 				}
 				
@@ -287,6 +293,8 @@ public class HinchaController {
 						model.addAttribute("error", "El Hincha ya se encuentra agregado al carro de compras");
 						model.addAttribute("partidos", itemService.obtenerPartidos());
 						model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+						HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+						model.addAttribute("total", map.get(compra.getIdEntrada()));
 						return "content/compra";
 					}
 					
@@ -304,6 +312,8 @@ public class HinchaController {
 			
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+		model.addAttribute("total", map.get(compra.getIdEntrada()));
 		
 		
 		
@@ -386,6 +396,8 @@ public class HinchaController {
 		model.addAttribute("compra", compra);
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+		model.addAttribute("total", map.get(compra.getIdEntrada()));
 		
 		return "content/compra";	
 	}
