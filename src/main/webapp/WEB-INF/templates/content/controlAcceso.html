@@ -40,8 +40,8 @@
 				  		</div>
 					 </div>	
 					 <div class="form-group">
-						    <label class="col-md-1 control-label"></label>
-							<div class="col-md-5">
+						    <label class="col-md-3 control-label"></label>
+							<div class="col-md-6">
 								<select th:field="*{idPartido}"   class="form-control input-sm" id="selectIdPartido" >
 								    <option value="" >Seleccione...</option>	
 								    <option th:each="partido : ${partidos}" th:value="${partido.idPartido}" th:text="${partido.descripcion}+' ('+${partido.fecha}+')'" >partido</option>													
@@ -55,7 +55,7 @@
 								</select>
 							</div>
 							 -->
-							<label class="col-md-1 control-label"></label>
+							<label class="col-md-3 control-label"></label>
 					 </div>
 					
 					 <div align="center">

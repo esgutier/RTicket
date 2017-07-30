@@ -53,7 +53,7 @@ public class ImpresionMasiva {
 			                if (pageIndex == 0) {                    
 			                Graphics2D g2d = (Graphics2D) graphics;                    
 			                             
-			                ticket.print(); 
+			                //ticket.print(); 
 			                g2d.translate((int) pageFormat.getImageableX(),(int) pageFormat.getImageableY()); 
 			                Font font = new Font("Arial",Font.BOLD,12);       
 			                Font fontVS = new Font("Arial",Font.BOLD,10); 

@@ -6,6 +6,7 @@
     <script type="text/javascript">
     /*<![CDATA[*/
         $(document).ready(function (){	
+        	$("#cargandoButton").hide();
         	
         	$("#selectIdPartido").change(function(){
         		document.forms[0].action = "carga-entradas-cortesia";          		
@@ -19,7 +20,8 @@
         
         	
         	$("#generarEntradasButton").click(function(){
-        		 $('#generandoTicketModal').modal('show');       		
+        		 $('#generarEntradasButton').hide();  
+        		 $("#cargandoButton").show();
         	});
         	
         	$(".imprimir").click(function(){
@@ -94,6 +96,7 @@
 					 </div>
 					 <div align="center">
 					    <button type="submit" class="btn btn-custom-primary" id="generarEntradasButton">Generar Entradas</button>	
+					    <button type="button" class="btn btn-custom-primary" disabled="disabled" id="cargandoButton"><i class="fa fa-spinner fa-spin"></i> Generando Entradas</button>
 					 </div>
 					 <br/>
 					 

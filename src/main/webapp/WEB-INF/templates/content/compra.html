@@ -125,7 +125,7 @@
 										<td th:text="${ticket.nombreHincha}">1</td>
 										<td th:text="${ticket.descPartido}">xxx</td>
 										<td th:text="${ticket.descSector}">xxx</td>									
-										<td><a href="#" th:href="@{/eliminar-entrada-carro(idEntrada=${ticket.idEntrada},idPartido=${ticket.idPartido}, rut=${ticket.rut})}"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+										<td><a href="#" th:href="@{/eliminar-entrada-carro(idEntrada=${ticket.idEntrada},idPartido=${ticket.idPartido}, rut=${ticket.rut})}"><span class="badge element-bg-color-blue"><i class="fa fa-trash-o" aria-hidden="true"></i>  Eliminar</span></a></td>
 									</tr>
 									<tr>
 									   <td colspan="4" style="text-align:right"><strong>TOTAL: $</strong></td>

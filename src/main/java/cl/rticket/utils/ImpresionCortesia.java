@@ -51,12 +51,12 @@ private static final String PRINTER_NAME = "ticket";
             if (pageIndex == 0) {                    
             Graphics2D g2d = (Graphics2D) graphics;                    
                          
-            ticket.print(); 
+            //ticket.print(); 
             g2d.translate((int) pageFormat.getImageableX(),(int) pageFormat.getImageableY()); 
             Font font = new Font("Arial",Font.BOLD,12);       
             Font fontVS = new Font("Arial",Font.BOLD,10); 
             Font fontFecha = new Font("Monospaced",Font.BOLD,9); 
-            Font fontSector = new Font("Arial",Font.BOLD,16); 
+            Font fontSector = new Font("Arial",Font.BOLD,14); 
             Font fontSocio = new Font("Monospaced",Font.BOLD,12); 
             g2d.setFont(font);
             Rectangle rec1 = new Rectangle(5,5,200,300);

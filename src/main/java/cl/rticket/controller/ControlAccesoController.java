@@ -83,6 +83,14 @@ public class ControlAccesoController {
 		
 		//cargar todas los tickets por sector
 		
+		this.normales.clear();
+		this.nominativas.clear();
+		this.abonados.clear();
+		this.listaNegra.clear();
+		this.totalNormales = 0;
+		this.totalNominativas = 0;
+		this.totalAbonados = 0;
+		
 		for(Sector sec: this.getSectores()) {
 			HashMap<String,Integer> normalesPorSector = itemService.obtenerEntradasNormalesPorSector(partido.getIdPartido(), sec.getIdSector());
 			this.getNormales().put(sec.getIdSector(), normalesPorSector);

@@ -7,13 +7,16 @@
     /*<![CDATA[*/
         $(document).ready(function (){	
         	
+        	$("#cargandoButton").hide();
+        	
         	$("#selectIdPartido").change(function(){
         		document.forms[0].action = "carga-entradas-masivo";          		
         		document.forms[0].submit();
         	});
         	
         	$("#generarEntradasButton").click(function(){
-        		 $('#generandoTicketModal').modal('show');       		
+        		 $('#generarEntradasButton').hide();  
+        		 $("#cargandoButton").show();
         	});
         	
         	$(".imprimir").click(function(){
@@ -84,6 +87,8 @@
 					 </div>
 					 <div align="center">
 					    <button type="submit" class="btn btn-custom-primary" id="generarEntradasButton">Generar Entradas</button>	
+					    <button type="button" class="btn btn-custom-primary" disabled="disabled" id="cargandoButton"><i class="fa fa-spinner fa-spin"></i> Generando Entradas</button>
+					    
 					 </div>
 					 <br/>
 					 <div class="row">	
@@ -96,13 +101,13 @@
 						 <table class="table table-bordered">
 								<thead>
 									<tr>
-									  <th>SECTOR</th>
-									  <th>MAXIMO</th>
-									  <th>TOTAL NOMINATIVAS</th>
-									  <th>TOTAL NORMALES</th>										  					  
-									  <th>TOTAL CORTESIA</th>
+									  <th width="25%">SECTOR</th>
+									  <th width="10%">MAXIMO</th>
+									  <th width="10%">TOTAL NOMINATIVAS</th>
+									  <th width="10%">TOTAL NORMALES</th>										  					  
+									  <th width="10%">TOTAL CORTESIA</th>
 									<!--  <th>IMPRIMIR </th>  --> 
-									  <th>IMPRIMIR RANGO </th>
+									  <th width="35%">IMPRIMIR RANGO </th>
 									</tr>
 								</thead>
 								
@@ -128,12 +133,12 @@
 									     
 									    <td > 									     
 									      <div th:if="${row.value.tipo == 'R'}">
-									        Inicio:<input name="inicio_p" required="required" pattern="[0-9]+"  maxlength="4" size="4" type="text"   th:id="${row.value.idEntrada+'inicio_p'}"/>&nbsp;&nbsp;&nbsp;
-									        Fin:<input name="fin_p" required="required" pattern="[0-9]+"  maxlength="4" size="4" type="text"   th:id="${row.value.idEntrada+'fin_p'}" />	
+									        Inicio:<input name="inicio_p"  pattern="[0-9]+"  maxlength="4" size="4" type="text"   th:id="${row.value.idEntrada+'inicio_p'}"/>&nbsp;&nbsp;&nbsp;
+									        Fin:<input name="fin_p"  pattern="[0-9]+"  maxlength="4" size="4" type="text"   th:id="${row.value.idEntrada+'fin_p'}" />	
 									        
 									       <a th:href="@{'javascript:imprimirRango(\''+${row.value.idEntrada}+'\')'}" >
 									       <span class="badge element-bg-color-blue">
-									          <i class="fa fa-print" aria-hidden="true"></i>  Imprimir Rango
+									          <i class="fa fa-print" aria-hidden="true"></i>  Imprimir 
 									          </span>
 									        </a>
 									       </div>

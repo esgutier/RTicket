@@ -32,20 +32,103 @@
 	    <div class="top-bar navbar-fixed-top">
 	       <div class="container">
 				<div class="clearfix">
-					<a href="#" class="pull-left toggle-sidebar-collapse"><i class="fa fa-bars"></i></a>
+					
 					<!-- logo -->
 					<div class="pull-left left logo">
 						
 						
 					</div>
 					<!-- end logo -->
-					<div class="pull-right right">
+					<!--  <div class="pull-right right">-->
 												
 						<!-- top-bar-right -->
-						<div class="top-bar-right">		
+						<div class="top-bar-right">	
+						<div class="collapse navbar-collapse" id="main-navbar-collapse">
+						<ul class="nav navbar-nav">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket" aria-hidden="true"></i>Tickets <i class="fa fa-caret-down"></i></a>
+								<ul class="dropdown-menu">
+									<li >
+									   <a href="#" th:href="@{/carga-ingreso-compra}">Venta Nominativo</a>									
+								    </li>
+									<li><a href="#" th:href="@{/carga-pagina-masivo}">Generación Masiva</a></li>
+									<li><a href="#" th:href="@{/carga-pagina-cortesia}">Cortesía</a></li>	
+									<li><a href="#" th:href="@{/carga-anular-ticket}">Anular</a></li>
+									<li></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-users" aria-hidden="true"></i> Hinchas  <i class="fa fa-caret-down"></i></a>
+								<ul class="dropdown-menu">
+									<li>
+											<a href="#" th:href="@{/cargar-hincha-mantenedor}">
+												Normal y Abonados												
+											</a>
+								         </li>
+								         <li>
+											<a href="#" th:href="@{/cargar-entidad-lista}">
+												Entidades												
+											</a>
+								    </li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true"></i> Administración  <i class="fa fa-caret-down"></i></a>
+								<ul class="dropdown-menu">
+									<li >
+										<a href="#" th:href="@{/carga-pagina-control}">
+										   <span class="text">Control Acceso</span>
+										</a>									
+								    </li>
+								   
+									<li >
+										<a href="#" th:href="@{/carga-ingreso-entrada}">
+										   <span class="text">Entradas</span>
+										 </a>									
+									</li>								
+								
+									<li >
+										<a href="#" th:href="@{/carga-pagina-partidos}">
+										   <span class="text">Partidos</span>
+										 </a>									
+									</li>								
+								
+									<li >
+										<a href="#" th:href="@{/carga-pagina-sectores}">
+										   <span class="text">Sectores</span>
+										 </a>									
+									</li>								
+								
+									<li >
+										<a href="#" th:href="@{/carga-pagina-lista-negra}">
+										   <span class="text">Lista Negra</span>
+										 </a>									
+									</li>								
+								</ul>
+							</li>
+							
+							
+							
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									
+									<span class="name" th:text="${session.usuario.nombre}+' '+${session.usuario.apellidos}">USUARIO</span>  <span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="#" th:href="@{/logout}">
+												<i class="fa fa-power-off"></i>
+												<span class="text">Salir</span>
+											</a>
+									</li>
+									
+								</ul>
+							</li>
+						</ul>
+					</div>	
 						   									
 							<!-- logged user and the menu -->
-							<div class="logged-user">
+							<!-- <div class="logged-user">
 								<div class="btn-group">
 									<a href="#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">										
 										<i class="fa fa-user" aria-hidden="true"></i>
@@ -53,14 +136,7 @@
 										    <span class="caret"></span>
 									</a>
 									<ul class="dropdown-menu" role="menu">	
-									<!-- 							
-										<li>
-											<a href="#">
-												<i class="fa fa-key"></i>
-												<span class="text">Cambiar clave</span>
-											</a>
-										</li>
-									 -->		
+											
 										<li>
 											<a href="#" th:href="@{/logout}">
 												<i class="fa fa-power-off"></i>
@@ -69,11 +145,11 @@
 										</li>
 									</ul>
 								</div>
-							</div>
+							</div> -->
 							<!-- end logged user and the menu -->
 						</div>
 						<!-- end top-bar-right -->
-					</div>
+					<!-- </div> -->
 				</div>
 			</div>
 			<!-- /container -->
@@ -81,10 +157,10 @@
 	       
 	    </div>
 		
-		<div id="left-sidebar" class="left-sidebar ">
-		<!-- 
+		<!--  <div id="left-sidebar" class="left-sidebar "> 
+		
 		<div align="center"><img src="assets/img/logo_png.png" height="80" width="80" /></div>
-		 -->
+		
 		<div class="sidebar-scroll">
 				<nav class="main-nav">
 					<ul class="main-menu">
@@ -103,8 +179,7 @@
 							</ul>
 							<ul class="sub-menu">
 								<li >
-									<a href="#" th:href="@{/carga-pagina-masivo}">
-									   <span class="text">Generación Masiva</span></a>								
+									<a href="#" th:href="@{/carga-pagina-masivo}"><span class="text">Generación Masiva</span></a>								
 								</li>
 								
 							</ul>
@@ -190,11 +265,11 @@
 						</li>
 					</ul>
 				</nav>
-				<!-- /main-nav -->
+				
 				
 			</div>
 			
-		</div>
+	  	</div>-->
 		
 		<!-- MAIN CONTENT WRAPPER -->
 		<div id="main-content-wrapper" class="content-wrapper expanded-full">
@@ -202,8 +277,10 @@
 			<div class="content">
 				<div class="main-content">
 				 <div class="row">
-				   <div class="col-md-2"></div>
-				   <div class="col-md-9">
+				   <div class="col-md-1"></div>
+				   <div class="col-md-10">
+				        <br/>
+				        <br/>
 					    <div th:include="this :: content"></div>
 					</div>
 				   <div class="col-md-1"></div>
