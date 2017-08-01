@@ -89,23 +89,13 @@
 						   </div>
 						   <div class="col-md-2">	</div>
 					   </div>
-					   <!--  
+					
+					<div align="center">
+					   <a href="#" th:href="@{/carga-pagina-control}" class="btn btn-custom-primary"> Ver Total Ingreso</a>
 					   <br/>
-					    <div class="form-group">
-						   <label class="col-md-1 control-label"></label>
-							<div class="col-md-10">							  				
-								 <input th:field="*{scan}" id="scan" type="text" class="form-control input-sm" />							  
-							</div>
-							<label class="col-md-1 control-label"></label>
-					     </div>
-					     <br/>
-					     <br/>
-					     <div align="center">
-					         <span style="font-size:40px" th:utext="${respuesta}"> </span>
-					        
-					        
-					     </div>
-					   -->
+					   <h2><span th:text="${total}"></span></h2>
+					
+					</div>
 					   
 					   
 					   

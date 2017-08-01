@@ -41,6 +41,7 @@ public class ControlAccesoController {
 	private Integer totalNominativas = 0;
 	private Integer totalAbonados = 0;
 	private Integer totalListaNegra = 0;
+	private int totalEscaneado = 0;
 	
 	
 	@PostConstruct
@@ -53,6 +54,7 @@ public class ControlAccesoController {
 		Entrada entrada = new Entrada();		
 		model.addAttribute("entrada", entrada);
 		model.addAttribute("sectores", this.getSectores());
+		
 		return "content/control";
 	}
 
@@ -70,6 +72,7 @@ public class ControlAccesoController {
 		model.addAttribute("totalNominativas", this.totalNominativas);
 		model.addAttribute("totalListaNegra", this.totalListaNegra);
 		model.addAttribute("totalAbonados", this.totalAbonados);
+		model.addAttribute("total", this.getTotalEscaneado());
 		
 
 		return "content/controlAcceso";
@@ -139,6 +142,7 @@ public class ControlAccesoController {
 				} else {
 					model.addAttribute("respuesta", "<font color=\"green\">"+scan+"<br/>TICKET OK!</font>");
 					entradasSector.put(scan, 1);
+					this.totalEscaneado++;
 				}
 			} else {
 				model.addAttribute("respuesta", "DATOS NO CARGADOS");
@@ -149,40 +153,44 @@ public class ControlAccesoController {
 			RUT rut = Util.obtieneRUT(scan);
 			
 			//buscar en lista negra
-			if(!hinchaService.estaEnListaNegra(rut.getNumero())) {
+			//if(this.getListaNegra().get(rut.getNumero()) == null) {
 				//buscar en nominativas
 				HashMap<Integer,Integer> nominativasSector = this.getNominativas().get(entrada.getIdSector());
 				if(nominativasSector != null) {
 					Integer value = nominativasSector.get(rut.getNumero());
 					if(value == null) {
-						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CÉDULA SIN REGISTRO</font>");
+						//no esta en nominativas, buscar en abonados
+						HashMap<Integer,Integer> abonadosSector = this.getAbonados().get(entrada.getIdSector());
+						if(abonadosSector != null) {
+							value = abonadosSector.get(rut.getNumero());
+							if(value == null) {
+								//no esta en abonados, buscar en estadio seguro
+								if(!this.estaEnListaNegra(this.getListaNegra(),rut.getNumero()))  {
+									model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ESTADIO SEGURO)</font>");
+								} else {
+									model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>ESTADIO SEGURO</font>");
+								}																
+							} else if(value == 1) {
+								model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA</font>");
+							} else {
+								model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ABONADO)</font>");
+								abonadosSector.put(rut.getNumero(), 1);
+								this.totalEscaneado++;
+							}
+						} else {
+							model.addAttribute("respuesta", "DATOS NO CARGADOS");	
+						}
+						
 					} else if(value == 1) {
 						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA</font>");
 					} else {
-						model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK!</font>");
+						model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (NOMINATIVA)</font>");
 						nominativasSector.put(rut.getNumero(), 1);
+						this.totalEscaneado++;
 					}
-				} else { //buscar en abonados
-					HashMap<Integer,Integer> abonadosSector = this.getAbonados().get(entrada.getIdSector());
-					if(abonadosSector != null) {
-						Integer value = abonadosSector.get(rut.getNumero());
-						if(value == null) {
-							model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CÉDULA SIN REGISTRO</font>");
-						} else if(value == 1) {
-							model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA</font>");
-						} else {
-							model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ABONADO)</font>");
-							abonadosSector.put(rut.getNumero(), 1);
-						}
-					} else {
-						model.addAttribute("respuesta", "DATOS NO CARGADOS");	
-					}
+				} else { 
+					model.addAttribute("respuesta", "DATOS NO CARGADOS");	
 				}
-
-			} else {
-				model.addAttribute("respuesta", "ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>EN LISTA NEGRA");
-			}
-			
 			
 		} else {
 			model.addAttribute("respuesta", "TEXTO ESCANEADO NO RECONOCIDO");					
@@ -190,6 +198,15 @@ public class ControlAccesoController {
 		model.addAttribute("sectores", this.getSectores());
 		return "content/control";
 	}
+	
+	private boolean estaEnListaNegra(HashMap<Integer,Integer> listaNegra, int rut) {
+		boolean esta = false;
+		if(listaNegra.get(rut) != null) {
+			esta = true;
+		}
+		return esta;
+	}
+	
 	public ArrayList<Partido> getPartidos() {
 		return partidos;
 	}
@@ -276,5 +293,13 @@ public class ControlAccesoController {
 
 	public void setAbonados(HashMap<Integer,HashMap<Integer,Integer>> abonados) {
 		this.abonados = abonados;
+	}
+
+	public int getTotalEscaneado() {
+		return totalEscaneado;
+	}
+
+	public void setTotalEscaneado(int totalEscaneado) {
+		this.totalEscaneado = totalEscaneado;
 	}
 }

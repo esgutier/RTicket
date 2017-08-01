@@ -130,7 +130,7 @@
 
   </dependencies>
   <build>
-    <finalName>rticket</finalName>
+    <finalName>ticket</finalName>
     <plugins>
 			
 			<plugin>

@@ -148,7 +148,7 @@
                   /acceso = anon 
                   /control = anon
                   /validar-acceso = anon
-                  /rest/**   = anon                 
+                  /api/rest/**   = anon                 
                     /** = authc       
             </value>
         </property>
