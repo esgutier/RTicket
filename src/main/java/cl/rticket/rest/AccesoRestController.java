@@ -1,5 +1,6 @@
 package cl.rticket.rest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.rticket.controller.ControlAccesoController;
+import cl.rticket.model.Sector;
+import cl.rticket.services.ItemService;
 
 @RestController
 public class AccesoRestController {
@@ -18,6 +21,9 @@ public class AccesoRestController {
 	
 	@Autowired
 	ControlAccesoController controlAcceso;
+	
+	@Autowired
+	ItemService itemService;
 	
 	
 	@GetMapping("api/rest/validar-acceso/{input}/sector/{idSector}")
@@ -100,6 +106,12 @@ public class AccesoRestController {
 		}		
 		
 		return new ResponseEntity<Integer>(response, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("api/rest/validar-acceso/sectores")
+	public ResponseEntity<ArrayList<Sector>> obtenerSectores() {
+		return new ResponseEntity<ArrayList<Sector>>(itemService.obtenerSectores(), HttpStatus.OK);
 	}
 	
 	private boolean estaEnListaNegra(HashMap<Integer,Integer> listaNegra, int rut) {

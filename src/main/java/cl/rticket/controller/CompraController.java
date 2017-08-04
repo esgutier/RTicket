@@ -170,9 +170,9 @@ public class CompraController {
 		}
 		
 		//aca se chequea que este disponible la impresora
-		ImpresionNominativa impresora = new ImpresionNominativa();
+		/*ImpresionNominativa impresora = new ImpresionNominativa();
 		PrintService service = impresora.obtenerImpresoraService();
-		//System.out.println("service:"+service);
+	
 		if(service == null) {
 			model.addAttribute("partidos", itemService.obtenerPartidos());
 			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
@@ -180,13 +180,13 @@ public class CompraController {
 			model.addAttribute("total", map.get(compra.getIdEntrada()));
 			model.addAttribute("error", "Error: Verifique que la impresora esté conectada y que posea el nombre de ticket");
 			return "content/compra";
-		}
+		}*/
 		
 		
 		try {
 			ArrayList<Ticket> listaTicket = itemService.insertarCompra(compraList);	
 			//System.out.println("---->size:"+listaTicket.size());
-			for(Ticket ticket: listaTicket) {				
+			/*for(Ticket ticket: listaTicket) {				
 				try {
 					//System.out.println("id compra="+ticket.getToken());
 					impresora.imprimirTicket(ticket,service);
@@ -198,7 +198,7 @@ public class CompraController {
 					model.addAttribute("error", "Error: Verifique que la impresora esté conectada y que posea el nombre de ticket");
 					return "content/compra";
 				}
-			}
+			}*/
 			
 			
 			
