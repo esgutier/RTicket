@@ -90,12 +90,14 @@ public class CompraController {
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
 		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
-		TotalesEntrada total = map.get(compra.getIdEntrada());
+		TotalesEntrada total = map.get(compra.getIdEntrada());		
 		model.addAttribute("total", total);
 		if(total.getMaximo() <= (total.getTotalCortesia() + total.getTotalNominativa() + total.getTotalNormales())) {
-			model.addAttribute("agotadas", "agotadas");
-			model.addAttribute("error", "Entradas agotadas para el sector especificado");
-		}
+				model.addAttribute("agotadas", "agotadas");
+				model.addAttribute("error", "Entradas agotadas para el sector especificado");
+		}	
+	
+		
 		
 		
 		return "content/compra";

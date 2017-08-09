@@ -17,7 +17,7 @@ public interface ItemMapper {
    
 	public ArrayList<Partido>   obtenerPartidos();
 	public ArrayList<Sector>    obtenerSectores();
-	public ArrayList<Sector>    obtenerEntradas(@Param("idPartido")Integer idPartido);
+	public ArrayList<Entrada>    obtenerEntradas(@Param("idPartido")Integer idPartido);
 	
 	
 	public void insertarEntrada(Entrada entrada);

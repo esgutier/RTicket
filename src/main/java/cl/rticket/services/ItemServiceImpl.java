@@ -31,7 +31,7 @@ public class ItemServiceImpl implements ItemService{
 		return itemMapper.obtenerSectores();
 	}
 	
-	public ArrayList<Sector> obtenerEntradas( Integer idPartido) {
+	public ArrayList<Entrada> obtenerEntradas( Integer idPartido) {
 		return itemMapper.obtenerEntradas(idPartido);
 	}
 	
@@ -120,44 +120,53 @@ public class ItemServiceImpl implements ItemService{
 		
 		ArrayList<TotalesEntrada> list = itemMapper.obtenerTotalesEntradas(idPartido);
 		//System.out.println("-->"+list.size());
-		for(TotalesEntrada t: list) {
-			TotalesEntrada tmp = (TotalesEntrada)map.get(t.getIdEntrada());
-			//System.out.println("-->"+tmp);
-			if(tmp == null) {
-				tmp = new TotalesEntrada();
-				//System.out.println("tmp  null  total: "+t.getTotal());
-				if(t.getTipo().equals("N")) {
-					//System.out.println("tmp null  ->N");
-					tmp.setTotalNominativa(t.getTotal());
-				} else if(t.getTipo().equals("R")) {
-					//System.out.println("tmp null  ->R");
-					tmp.setTotalNormales(t.getTotal());
-				} else if(t.getTipo().equals("C")) {
-					//System.out.println("tmp null  ->C");
-					tmp.setTotalCortesia(t.getTotal());
+		//if(list != null && !list.isEmpty()) {
+			for(TotalesEntrada t: list) {
+				TotalesEntrada tmp = (TotalesEntrada)map.get(t.getIdEntrada());
+				//System.out.println("-->"+tmp);
+				if(tmp == null) {
+					tmp = new TotalesEntrada();
+					if(t.getTipo() != null) {
+						if(t.getTipo().equals("N")) {
+							//System.out.println("tmp null  ->N");
+							tmp.setTotalNominativa(t.getTotal());
+						} else if(t.getTipo().equals("R")) {
+							//System.out.println("tmp null  ->R");
+							tmp.setTotalNormales(t.getTotal());
+						} else if(t.getTipo().equals("C")) {
+							//System.out.println("tmp null  ->C");
+							tmp.setTotalCortesia(t.getTotal());
+						}
+					}
+					tmp.setIdEntrada(t.getIdEntrada());
+					tmp.setIdPartido(t.getIdPartido());
+					tmp.setNombreSector(t.getNombreSector());
+					tmp.setMaximo(t.getMaximo());
+					tmp.setTipo(t.getTipo());
+					map.put(tmp.getIdEntrada(), tmp);
+				} else {
+					//System.out.println("tmp NO null  total: "+t.getTotal());
+					tmp.setTipo(t.getTipo());
+					if(t.getTipo().equals("N")) {
+						//System.out.println("tmp NO null  ->N");
+						tmp.setTotalNominativa(t.getTotal());
+					} else if(t.getTipo().equals("R")) {
+						//System.out.println("tmp NO null  ->R");
+						tmp.setTotalNormales(t.getTotal());
+					} else if(t.getTipo().equals("C")) {
+						//System.out.println("tmp NO null  ->C");
+						tmp.setTotalCortesia(t.getTotal());
+					}			
 				}
-				
-				tmp.setIdEntrada(t.getIdEntrada());
-				tmp.setIdPartido(t.getIdPartido());
-				tmp.setNombreSector(t.getNombreSector());
-				tmp.setMaximo(t.getMaximo());
-				tmp.setTipo(t.getTipo());
-				map.put(tmp.getIdEntrada(), tmp);
-			} else {
-				//System.out.println("tmp NO null  total: "+t.getTotal());
-				tmp.setTipo(t.getTipo());
-				if(t.getTipo().equals("N")) {
-					//System.out.println("tmp NO null  ->N");
-					tmp.setTotalNominativa(t.getTotal());
-				} else if(t.getTipo().equals("R")) {
-					//System.out.println("tmp NO null  ->R");
-					tmp.setTotalNormales(t.getTotal());
-				} else if(t.getTipo().equals("C")) {
-					//System.out.println("tmp NO null  ->C");
-					tmp.setTotalCortesia(t.getTotal());
-				}			
 			}
-		}
+		/*} else {
+			ArrayList<Entrada> entradas = itemMapper.obtenerEntradas(idPartido);
+			for(Entrada e: entradas) {
+				TotalesEntrada tmp = new TotalesEntrada();
+				tmp.setMaximo(e.getMaximo());				
+				map.put(e.getIdEntrada(), tmp);
+			}
+		}*/
 		return map;
 	}
 	

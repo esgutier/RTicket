@@ -119,6 +119,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- =================================================================================================== -->
 
 <select id="obtenerTotalesEntradas" parameterType="int" resultType="TotalesEntrada">
+  <!-- 
   select e.par_id idPartido, e.ent_id idEntrada,CONCAT(s.sec_desc,' ',e.ent_comentario) nombreSector, e.ent_maximo maximo, c.com_tipo tipo , count(*) total
 	
 	from entrada e , compra c, sector s
@@ -128,6 +129,24 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	     e.ent_id = c.ent_id and
 	     c.com_anulada not in ('S')
     group by s.sec_desc, e.ent_id, c.com_tipo 
+   -->  
+    select 
+		e.par_id idPartido, 
+		e.ent_id idEntrada,
+		CONCAT(s.sec_desc,' ',e.ent_comentario) nombreSector,
+		e.ent_maximo maximo, 
+		c.com_tipo tipo ,  
+		count(c.com_tipo) total
+    from entrada e 
+		inner join sector s  on
+		e.par_id = #{idPartido} and
+		   e.sec_id = s.sec_id 
+		left join compra c on
+		e.ent_id = c.ent_id and
+		   c.com_anulada not in ('S')    
+	group by s.sec_desc, e.ent_id , c.com_tipo
+    
+    
 
 </select>
 

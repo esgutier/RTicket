@@ -17,7 +17,7 @@ public interface ItemService {
 
 	public ArrayList<Partido>   obtenerPartidos();
 	public ArrayList<Sector>    obtenerSectores();
-	public ArrayList<Sector>    obtenerEntradas(Integer idPartido);
+	public ArrayList<Entrada>    obtenerEntradas(Integer idPartido);
 	
 	public void insertarEntrada(Entrada entrada);
 	public int eliminarEntrada(Integer idEntrada)throws DataIntegrityViolationException;
