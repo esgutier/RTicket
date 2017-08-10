@@ -107,5 +107,13 @@ select 1 from lista_negra where lne_rut = #{rut}
 </select>
 
 
+<select id="tieneEntradaPartido" resultType="int" parameterType="map">
+     select 1 from compra c, entrada e 
+		where
+		    e.par_id = #{idPartido} and
+		    e.ent_id = c.ent_id and
+		    c.hin_rut = #{rut}
+</select>
+
 
 </mapper>

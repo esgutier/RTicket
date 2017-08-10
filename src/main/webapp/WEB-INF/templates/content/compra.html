@@ -6,20 +6,10 @@
     <script type="text/javascript">
     /*<![CDATA[*/
         $(document).ready(function (){	
-        	
-       
-        	
+        	     	
         	$('#inputRutEscaneado').val('');
         	$("#inputRutEscaneado").focus();
         	
-           /* $('#inputRutEscaneado').on('change paste',function(e){  
-            	
-            	var rutEscaneado = "";
-            	document.forms[0].action = "buscar-hincha-compra";  
-            	$('#inputRutEscaneado').val(rutEscaneado);
-        		document.forms[0].submit();
-        		
-        	});*/
         	$("#selectIdEntrada").change(function(){
         		$("#inputRutEscaneado").focus();
         		document.forms[0].action = "obtener-disponibilidad-sector";      		
@@ -34,6 +24,7 @@
         	
         	$("#btnConfirmarCompra").click(function(){
         		
+        		$("#btnConfirmarCompra").prop('disabled', true);
         		document.forms[0].action = "confirmar-compra";      		
         		document.forms[0].submit();       		
         	});
@@ -156,9 +147,10 @@
 										<td th:text="${ticket.descSector}">xxx</td>									
 										<td><a href="#" th:href="@{/eliminar-entrada-carro(idEntrada=${ticket.idEntrada},idPartido=${ticket.idPartido}, rut=${ticket.rut})}"><span class="badge element-bg-color-blue"><i class="fa fa-trash-o" aria-hidden="true"></i>  Eliminar</span></a></td>
 									</tr>
-									<tr>
-									   <td colspan="4" style="text-align:right"><strong>TOTAL: $</strong></td>
-									   <td th:text="${session.totalCompra}" ></td>
+									
+									<tr th:if="${session.totalCompra != null}">
+									   <td colspan="4" style="text-align:right"><h4><strong>TOTAL: $</strong></h4></td>
+									   <td  ><h4><b><span th:text="${#numbers.formatDecimal(session.totalCompra, 0, 'DEFAULT', 0, 'DEFAULT')}"></span></b></h4></td>
 									</tr>											
 								</tbody>
 								

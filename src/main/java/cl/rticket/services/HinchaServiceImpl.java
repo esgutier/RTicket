@@ -181,4 +181,12 @@ public class HinchaServiceImpl implements HinchaService{
 		return hinchaMapper.obtenerDatosAbonado(rut);
 	}
 	
+	public boolean tieneEntradaPartido(Integer idPartido, Integer rut) {
+		Integer res = hinchaMapper.tieneEntradaPartido(idPartido, rut);
+		if(res == null) {
+			return false;
+		}
+		return true;
+	}
+	
 }

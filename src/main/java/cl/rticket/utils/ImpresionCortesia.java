@@ -75,7 +75,7 @@ private static final String PRINTER_NAME = "ticket";
                 
                  drawCenteredString(g2d,(formateador.format(ticket.getFecha())).toUpperCase(),rec1,98,fontFecha);	
                 
-                 drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
+                 drawCenteredString(g2d,ticket.getHora()+" hrs.",rec1,107,fontFecha);
                  
                  drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
                  g2d.drawLine(20, 120, 185, 120);   

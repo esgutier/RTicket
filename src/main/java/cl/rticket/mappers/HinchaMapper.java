@@ -24,5 +24,6 @@ public interface HinchaMapper {
 	public int insertarAbonado(Hincha hincha);
 	public int actualizarAbonado(Hincha hincha);
 	public Hincha obtenerDatosAbonado(@Param("rut")Integer rut);
+	public Integer tieneEntradaPartido(@Param("idPartido")Integer idPartido, @Param("rut")Integer rut);
 	
 }

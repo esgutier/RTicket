@@ -18,5 +18,6 @@ public interface HinchaService {
 	public void insertarAbonado(Hincha hincha)throws UpdateException;
 	public void actualizarAbonado(Hincha hincha)throws UpdateException;
 	public Hincha obtenerDatosAbonado(Integer rut);
+	public boolean tieneEntradaPartido(Integer idPartido, Integer rut);
 	
 }

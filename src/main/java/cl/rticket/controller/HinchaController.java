@@ -223,7 +223,7 @@ public class HinchaController {
 	@RequestMapping(value="/buscar-hincha-compra", method=RequestMethod.POST)
 	public String buscarHinchaCompra(Model model, Compra compra) {
 		
-		System.out.println("rut escaneado ="+compra.getRutEscaneado());
+		//System.out.println("rut escaneado ="+compra.getRutEscaneado());
 		RUT rut = null;
 		
 		if(compra.getRutEscaneado() != null && !compra.getRutEscaneado().isEmpty()) {
@@ -262,6 +262,16 @@ public class HinchaController {
 					model.addAttribute("hincha", hincha);
 					return "content/ingresoHinchaCompra";
 				} else {
+					//validar si un hincha ya tiene una entrada para el partido
+					if(hinchaService.tieneEntradaPartido(compra.getIdPartido(), rut.getNumero())) {
+						model.addAttribute("error", "El Hincha ya posee un ticket para el partido seleccionado");
+						model.addAttribute("partidos", itemService.obtenerPartidos());
+						model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+						HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+						model.addAttribute("total", map.get(compra.getIdEntrada()));
+						return "content/compra";
+					}
+					
 				   compra.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
 				    //agregar la entrada al carro
 					Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());

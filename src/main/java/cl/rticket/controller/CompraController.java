@@ -52,8 +52,8 @@ public class CompraController {
 	public String anularTicket(Model model, Ticket ticket, RedirectAttributes flash) {
 		
 		String token = "";
-		System.out.println("token digitado:"+ticket.getTokenDigitado());
-		System.out.println("token escaneado:"+ticket.getTokenEscaneado());
+		//System.out.println("token digitado:"+ticket.getTokenDigitado());
+		//System.out.println("token escaneado:"+ticket.getTokenEscaneado());
 		if(ticket.getTokenEscaneado() != null && !ticket.getTokenEscaneado().isEmpty()){
 			token = ticket.getTokenEscaneado();
 		} if(ticket.getTokenDigitado() != null && !ticket.getTokenDigitado().isEmpty()) {
@@ -159,9 +159,9 @@ public class CompraController {
 		
 		//aca se valida la disponibilidad de las entradas
 		Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
-		System.out.println("BUSCAR HINCHA Entrada     idEntrada="+compra.getIdEntrada()+"   idPartido="+compra.getIdPartido());
+		//System.out.println("BUSCAR HINCHA Entrada     idEntrada="+compra.getIdEntrada()+"   idPartido="+compra.getIdPartido());
 		Integer totalvendidas = itemService.obtenerTotalSectorVendidas(compra.getIdEntrada(), compra.getIdPartido());
-		System.out.println("BUSCAR HINCHA Entrada     MAXIMO="+entrada.getMaximo()+"   TOTAL="+totalvendidas);
+		//System.out.println("BUSCAR HINCHA Entrada     MAXIMO="+entrada.getMaximo()+"   TOTAL="+totalvendidas);
 		if((totalvendidas + compraList.size())  > entrada.getMaximo()){
 			model.addAttribute("partidos", itemService.obtenerPartidos());
 			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));

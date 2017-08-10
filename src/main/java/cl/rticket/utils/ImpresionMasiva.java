@@ -80,7 +80,7 @@ public class ImpresionMasiva {
 		                         drawCenteredString(g2d,"V/S",rec1,70,fontVS);
 		                         drawCenteredString(g2d,ticket.getRival(),rec1,85,font);
 		                         drawCenteredString(g2d,(formateador.format(ticket.getFecha())).toUpperCase(),rec1,98,fontFecha);		                        
-		                         drawCenteredString(g2d,ticket.getHora(),rec1,107,fontFecha);
+		                         drawCenteredString(g2d,ticket.getHora()+" hrs.",rec1,107,fontFecha);
 		                         drawCenteredString(g2d,"Estadio B. Nelson Oyarzún A.",rec1,115,fontFecha);
 		                         g2d.drawLine(20, 120, 185, 120);   
 		                         drawCenteredString(g2d,ticket.getSector()+" "+ticket.getComentario(),rec1,148,fontSector);
