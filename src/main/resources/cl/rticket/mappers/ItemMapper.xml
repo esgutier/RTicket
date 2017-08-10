@@ -175,7 +175,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- ============================================================================================= -->
 
 <select id="obtenerTotalesCortesiaPorEntidad" parameterType="map" resultType="TotalesEntrada">
-    select e.par_id idPartido, e.ent_id idEntrada, s.sec_desc nombreSector, count(*) total 
+    select e.par_id idPartido, e.ent_id idEntrada, CONCAT(s.sec_desc,'  ',e.ent_comentario) nombreSector, count(*) total 
 	 from compra c, entrada e, hincha h, sector s
     where
          e.par_id = #{idPartido} and
