@@ -278,6 +278,7 @@ public class HinchaController {
 					Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 					Compra ticket = new Compra();
 					ticket.setIdPartido(entrada.getIdPartido());
+					//aqui setear el idSector
 					ticket.setIdEntrada(compra.getIdEntrada());
 					ticket.setRut(rut.getNumero());
 					ticket.setRutCompleto(rut.rutCompleto());
