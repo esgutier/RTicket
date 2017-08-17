@@ -4,25 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.print.PrintService;
-
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import cl.rticket.exception.ImpresoraNoDisponibleException;
 import cl.rticket.exception.UpdateException;
+import cl.rticket.model.AjaxResponseBody;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Ticket;
 import cl.rticket.model.TotalesEntrada;
 import cl.rticket.services.ItemService;
-import cl.rticket.utils.ImpresionNominativa;
 
 @Controller
 public class CompraController {
@@ -229,5 +228,37 @@ public class CompraController {
 		return "redirect:/carga-ingreso-compra";
 	}
 	
+	
+	@RequestMapping(value="/confirmar-compra-ajax", method=RequestMethod.POST)
+	public @ResponseBody AjaxResponseBody confirmarCompraAjax( @RequestParam(value="idPartido")Integer idPartido,
+                                                               @RequestParam(value="idEntrada")Integer idEntrada) {
+		
+		ArrayList<Compra> compraList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
+		
+		System.out.println("idPartido:"+idPartido);
+		System.out.println("idEntrada:"+idEntrada);
+		
+		//aca se valida la disponibilidad de las entradas
+		Entrada entrada =itemService.obtenerEntrada(idEntrada);
+		//System.out.println("BUSCAR HINCHA Entrada     idEntrada="+compra.getIdEntrada()+"   idPartido="+compra.getIdPartido());
+		Integer totalvendidas = itemService.obtenerTotalSectorVendidas(idEntrada, idPartido);
+		//System.out.println("BUSCAR HINCHA Entrada     MAXIMO="+entrada.getMaximo()+"   TOTAL="+totalvendidas);
+		if((totalvendidas + compraList.size())  > entrada.getMaximo()){			
+			return new AjaxResponseBody("0","Error: La venta excede el total de entradas disponibles para el sector seleccionado",null);			
+		}
+
+		try {
+			ArrayList<Ticket> listaTicket = itemService.insertarCompra(compraList);	
+			
+			return new AjaxResponseBody("1","La compra fue registrada correctamente",listaTicket);
+			
+			
+		} catch (UpdateException e) {		
+			return new AjaxResponseBody("0","Error: No se pudo registrar la compra",null);		
+		}
+		
+		
+		
+	}
 	
 }
