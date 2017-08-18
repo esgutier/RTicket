@@ -150,15 +150,29 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 
 </select>
 
-<select id="obtenerDatosTicketMasivo" parameterType="map" resultType="Ticket">
-      select  p.par_desc rival ,
-	      p.par_fecha fecha,
+
+<resultMap id="masivaResult" type="cl.rticket.model.Masiva">
+     <result property="rival" column="par_desc"/>
+     <result property="fecha"  column="par_fecha"/>
+     <result property="hora"  column="hora"/>
+     <result property="sector"  column="sec_desc"/>
+     <result property="comentario"  column="ent_comentario"/>
+     <result property="precio"  column="com_monto"/>
+     
+	      <collection property="tokens" ofType="java.lang.String" javaType="list">
+		     <result column="com_token" />	   
+		  </collection>
+</resultMap>
+
+<select id="obtenerDatosTicketMasivo" parameterType="map" resultMap="masivaResult">
+      select  p.par_desc ,
+	      p.par_fecha ,
 	      date_format(p.par_fecha,' %H:%i') hora,
-	      s.sec_desc sector ,
-	      e.ent_comentario comentario,
-	      c.com_token token,
-	      c.com_tipo tipo,
-	      c.com_monto precio
+	      s.sec_desc ,
+	      e.ent_comentario ,
+	      c.com_token ,
+	      c.com_tipo ,
+	      c.com_monto 
 	from compra c, entrada e, partido p, sector s
 	where c.ent_id = #{idSector} and
 	      c.ent_id = e.ent_id and	     

@@ -11,12 +11,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.rticket.exception.ImpresoraNoDisponibleException;
 import cl.rticket.exception.UpdateException;
+import cl.rticket.model.AjaxResponseBody;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
+import cl.rticket.model.Masiva;
 import cl.rticket.model.Ticket;
 import cl.rticket.model.Usuario;
 import cl.rticket.services.ItemService;
@@ -101,7 +104,7 @@ public class MasivasController {
 		//return cargaIngresoMasivo(model,entrada);
 		return "redirect:/carga-entradas-masivo";
 	}
-	
+	/*
 	@RequestMapping(value="/imprimir-entradas-masivo", method=RequestMethod.GET)
 	public String imprimirEntradasMasivo(Model model, 
 			                             @RequestParam(value="idEntrada")Integer idEntrada,
@@ -131,7 +134,7 @@ public class MasivasController {
 		flash.addFlashAttribute("entrada", entrada);
 		return "redirect:/carga-entradas-masivo";
 	}
-	
+	*/
 	@RequestMapping(value="/imprimir-entradas-rango", method=RequestMethod.POST)
 	public String imprimirEntradasRango(Model model, 
 			                             Entrada entrada,
@@ -153,18 +156,19 @@ public class MasivasController {
 		}
 		
 		//obtener datos de los tickets
-		ArrayList<Ticket> tickets = itemService.obtenerDatosTicketMasivo(entrada.getIdEntrada(), "R");
-		System.out.println("tickets size="+tickets.size());
+		Masiva masiva = itemService.obtenerDatosTicketMasivo(entrada.getIdEntrada(), "R");
+		//System.out.println("tickets size="+masiva.getTokens().size());
 		try {
-			tickets = new ArrayList<Ticket>( tickets.subList(entrada.getInicio().intValue() - 1, entrada.getFin().intValue() ));
-			System.out.println("tickets sublist size="+tickets.size());
+			ArrayList<String> tokens = new ArrayList<String>( masiva.getTokens().subList(entrada.getInicio().intValue() - 1, entrada.getFin().intValue() ));
+			//System.out.println("tickets sublist size="+tokens.size());
+			
 		} catch(IndexOutOfBoundsException e) {
 			flash.addFlashAttribute("error", "El rango de impresión indicado no es correcto, favor verifique");			
 			entrada.setIdPartido(entrada.getIdPartido());
 			flash.addFlashAttribute("entrada", entrada);
 			return "redirect:/carga-entradas-masivo";
 		}
-		ImpresionMasiva impresionMasiva = new ImpresionMasiva();
+		/*ImpresionMasiva impresionMasiva = new ImpresionMasiva();
 		PrintService service = impresionMasiva.obtenerImpresoraService();
 		int secuencia = entrada.getInicio().intValue();
 		for(Ticket t : tickets) {
@@ -177,12 +181,38 @@ public class MasivasController {
 				break;
 			}
 			secuencia++;
-		}
+		}*/
 		
 		entrada.setIdPartido(entrada.getIdPartido());
 		entrada.setIdEntrada(0);
 		flash.addFlashAttribute("entrada", entrada);
 		return "redirect:/carga-entradas-masivo";
+	}
+	
+	@RequestMapping(value="/imprimir-entradas-rango-ajax", method=RequestMethod.POST)
+	public @ResponseBody AjaxResponseBody imprimirEntradasRangoAjax(@RequestParam(value="idPartido")Integer idPartido,
+                                            @RequestParam(value="idEntrada")Integer idEntrada,
+                                            @RequestParam(value="inicio")Integer inicio,
+                                            @RequestParam(value="fin")Integer fin) {
+		System.out.println("--->inicio:"+inicio+"  fin:"+fin);		
+		if(inicio == null || fin == null) {
+			return new AjaxResponseBody("0","Error: Debe ingresar los rangos",null);
+		} else if(inicio > fin) {
+			return new AjaxResponseBody("0","Error: Inicio no puede ser mayor a fin",null);
+		}
+		//obtener datos de los tickets
+		Masiva masiva = itemService.obtenerDatosTicketMasivo(idEntrada, "R");		
+		try {
+			ArrayList<String> tokens = new ArrayList<String>( masiva.getTokens().subList(inicio - 1, fin ));		
+			masiva.setTokens(tokens);
+			masiva.setSecuencia(inicio);
+			return new AjaxResponseBody("1","",masiva);
+		} catch(IndexOutOfBoundsException e) {			
+			return new AjaxResponseBody("0","El rango de impresión indicado no es correcto, favor verifique",null);			
+		}
+		
+		
+		
 	}
 
 }

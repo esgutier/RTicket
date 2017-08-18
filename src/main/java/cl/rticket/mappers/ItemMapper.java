@@ -1,13 +1,13 @@
 package cl.rticket.mappers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
+import cl.rticket.model.Masiva;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
 import cl.rticket.model.Ticket;
@@ -38,7 +38,7 @@ public interface ItemMapper {
 	
 	public ArrayList<TotalesEntrada> obtenerTotalesEntradas(@Param("idPartido")Integer idPartido);
 	
-	public ArrayList<Ticket> obtenerDatosTicketMasivo(@Param("idSector")Integer idSector,
+	public Masiva obtenerDatosTicketMasivo(@Param("idSector")Integer idSector,
 													  @Param("tipo")String tipo);
 	
 	public ArrayList<TotalesEntrada> obtenerTotalesCortesiaPorEntidad(@Param("idPartido")Integer idPartido,

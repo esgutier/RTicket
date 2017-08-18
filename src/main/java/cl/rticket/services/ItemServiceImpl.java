@@ -12,6 +12,7 @@ import cl.rticket.exception.UpdateException;
 import cl.rticket.mappers.ItemMapper;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
+import cl.rticket.model.Masiva;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
 import cl.rticket.model.Ticket;
@@ -98,7 +99,7 @@ public class ItemServiceImpl implements ItemService{
 			
 	}
 	
-	public ArrayList<Ticket> obtenerDatosTicketMasivo(Integer idSector, String tipo) {
+	public Masiva obtenerDatosTicketMasivo(Integer idSector, String tipo) {
 		return itemMapper.obtenerDatosTicketMasivo(idSector, tipo);
 	}
 	

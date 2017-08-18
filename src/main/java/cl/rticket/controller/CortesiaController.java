@@ -11,10 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.rticket.exception.ImpresoraNoDisponibleException;
 import cl.rticket.exception.UpdateException;
+import cl.rticket.model.AjaxResponseBody;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Ticket;
@@ -67,7 +69,7 @@ public class CortesiaController {
 			//obtener totales
 			totales = itemService.obtenerTotalesCortesiaPorEntidad(entrada.getIdPartido(), entrada.getRut());
 		}		
-		model.addAttribute("totales", totales);		
+		model.addAttribute("totales", totales);	
 		model.addAttribute("partidos", itemService.obtenerPartidos());
 		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
 		model.addAttribute("entidades", hinchaService.obtenerEntidades());
@@ -121,7 +123,7 @@ public class CortesiaController {
 
 	}
 	
-	@RequestMapping(value="/imprimir-entradas-cortesia", method=RequestMethod.GET)
+	/*@RequestMapping(value="/imprimir-entradas-cortesia", method=RequestMethod.GET)
 	public String imprimirEntradasCortesia(Model model, 
 			                             @RequestParam(value="idEntrada")Integer idEntrada,
 			                             @RequestParam(value="idPartido")Integer idPartido,
@@ -151,6 +153,21 @@ public class CortesiaController {
 		entrada.setRut(rut);
 		flash.addFlashAttribute("entrada", entrada);
 		return "redirect:/obtener-totales-entidad-cortesia";
+	}*/
+	
+	@RequestMapping(value="/imprimir-entradas-cortesia-ajax", method=RequestMethod.POST)
+	public  @ResponseBody AjaxResponseBody  imprimirEntradasCortesiaAjax(
+			                             @RequestParam(value="idEntrada")Integer idEntrada,
+			                             @RequestParam(value="idPartido")Integer idPartido,
+			                             @RequestParam(value="rut")Integer rut
+			                            ) {
+		
+		
+		//obtener datos de los tickets
+		ArrayList<Ticket> tickets = itemService.obtenerDatosTicketRut(idEntrada, rut, "C");
+		System.out.println(""+tickets.size());
+		return new AjaxResponseBody("1","",tickets);	
+		
 	}
 	
 
