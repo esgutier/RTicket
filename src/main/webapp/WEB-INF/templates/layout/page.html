@@ -21,9 +21,26 @@
 <script src="assets/js/king-common.js"></script>	
 <script src="assets/js/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script type="text/javascript">
+
     window.history.forward();
     function noBack() { window.history.forward(); }
+    function probarImpresora() {
+    	$.ajax({
+		    type: 'get', 
+		    url: 'https://localhost/',
+		    success: function(data) {
+		    	 //var resp = JSON.parse(data);
+		    	 //alert('success: '+data.codigo);
+		    	 //redirect
+		    	 window.location.href = 'acceso';
+		    },
+		    error: function(data) {
+		        alert('Ocurrio un error');
+		    }
+		});
+    }
 </script>
+
 
  <body class="sidebar-fixed topnav-fixed  " onload="noBack();">
 	
@@ -113,7 +130,7 @@
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench" aria-hidden="true"></i> Herramientas  <i class="fa fa-caret-down"></i></a>
 								<ul class="dropdown-menu">
 									<li>
-											<a href="#" th:href="@{/test-impresora}">
+											<a href="#" th:href="@{'javascript:probarImpresora()'}">
 												Probar Impresora												
 											</a>
 								         </li>
