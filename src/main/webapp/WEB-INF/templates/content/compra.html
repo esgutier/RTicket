@@ -40,17 +40,18 @@
 	  	    	    		//pasar el json a printer-client para que imprima el ticket
 	  	    	    		$.ajax({
 	  	    	    		    type: 'get', // it's easier to read GET request parameters
-	  	    	    		    url: 'http://172.16.187.90:9090/test',
+	  	    	    		    url: 'https://localhost/nominativa',
 	  	    	    		    dataType: 'JSON',
 	  	    	    		    data: {   	    	    		    
-	  	    	    		      test: JSON.stringify(response.object) // look here!
+	  	    	    		      tickets: JSON.stringify(response.object) // look here!
 	  	    	    		    },
 	  	    	    		    success: function(data) {
 	  	    	    		    	 //var resp = JSON.parse(data);
-	  	    	    		    	 alert('success: '+data.codigo);
+	  	    	    		    	 //alert('success: '+data.codigo);
+	  	    	    		    	 //redirect
 	  	    	    		    },
 	  	    	    		    error: function(data) {
-	  	    	    		        alert('fail');
+	  	    	    		        alert('Ocurrio un error, verifique que la impresora este conectada correctamente. Sin embargo la compra fue ingresada en la base de datos');
 	  	    	    		    }
 	  	    	    		});
 	 	  	    	    	
