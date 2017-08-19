@@ -41,8 +41,7 @@
   	 	         url: "imprimir-entradas-rango-ajax?idPartido="+idPartido+"&idEntrada="+idEntrada+"&inicio="+inicio+"&fin="+fin,        			    	     	    	    
  	    	     dataType : 'json',
  	    	     success: function(response){	
- 	    	    	 console.log(response.object);
- 	    	    	 alert(response.object);
+ 	    	    	 console.log(response.object); 	    	    	 
  	    	    	 if(response.codigo == 1 ) { //response ok
  	    	    		//pasar el json a printer-client para que imprima el ticket
  	    	    		

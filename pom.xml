@@ -150,7 +150,7 @@
 					<artifactId>tomcat7-maven-plugin</artifactId>
 					<version>2.0</version>
 					<configuration>
-					<port>8080</port>
+					<port>8090</port>
 					<contextFile>src/test/resources/context.xml</contextFile> 
 					</configuration>	
 			</plugin>

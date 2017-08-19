@@ -56,14 +56,8 @@ public class LoginController {
 		return "redirect:/";
 	}
 	
-	@RequestMapping(value="/test-impresora", method=RequestMethod.GET)
-	public String testImpresora(Model model) {		
-		ImpresionTest printer = new ImpresionTest();
-		try {
-			printer.imprimirTest();
-		} catch (ImpresoraNoDisponibleException e) {
-			model.addAttribute("error", "Impresora no disponible");
-		}
+	@RequestMapping(value="/inicio", method=RequestMethod.GET)
+	public String testImpresora(Model model) {				
 		return "content/dashboard";
 	}
 	
