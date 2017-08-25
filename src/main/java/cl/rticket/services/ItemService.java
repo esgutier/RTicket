@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import cl.rticket.exception.UpdateException;
 import cl.rticket.model.Compra;
@@ -60,5 +61,7 @@ public interface ItemService {
 	public ArrayList<String> listaEntradasNormalesPorSector(Integer idPartido,Integer idSector );
 	public ArrayList<Integer> listaEntradasNominativasPorSector(Integer idPartido,Integer idSector);
 	public HashMap<Integer,Integer> obtenerTotalListaNegra();
+	
+	public void insertarAccesoEstadio(String id, Integer idPartido, Integer idSector) throws DuplicateKeyException;
 	
 }

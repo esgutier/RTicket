@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -252,6 +253,12 @@ public class ItemServiceImpl implements ItemService{
 			map.put(i, 0);
 		}
 		return map;
+	}
+	
+	public void insertarAccesoEstadio(String id, Integer idPartido, Integer idSector)  throws DuplicateKeyException{
+		
+		   itemMapper.insertarAccesoEstadio(id, idPartido, idSector);
+		
 	}
 
 }

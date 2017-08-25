@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
@@ -65,5 +66,7 @@ public interface ItemMapper {
 	public ArrayList<Integer> obtenerEntradasNominativasPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector);
 	public ArrayList<Integer> obtenerTotalListaNegra();
 	public ArrayList<Integer> obtenerAbonadosPorSector(@Param("idSector")Integer idSector);
+	
+	public int insertarAccesoEstadio(@Param("id")String id, @Param("idPartido")Integer idPartido, @Param("idSector")Integer idSector) throws DuplicateKeyException;
 
 }

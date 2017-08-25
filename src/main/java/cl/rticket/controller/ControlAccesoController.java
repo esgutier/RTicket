@@ -6,6 +6,7 @@ import java.util.HashMap;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -140,9 +141,14 @@ public class ControlAccesoController {
 				} else if(value == 1){
 					model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET YA UTILIZADO</font>");
 				} else {
-					model.addAttribute("respuesta", "<font color=\"green\">"+scan+"<br/>TICKET OK!</font>");
-					entradasSector.put(scan, 1);
-					this.totalEscaneado++;
+					try {
+						itemService.insertarAccesoEstadio(scan, this.getIdPartido(), entrada.getIdSector());
+						model.addAttribute("respuesta", "<font color=\"green\">"+scan+"<br/>TICKET OK!</font>");
+						entradasSector.put(scan, 1);
+						this.totalEscaneado++;
+					} catch (DuplicateKeyException e) {
+						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET YA UTILIZADO</font>");
+					}		
 				}
 			} else {
 				model.addAttribute("respuesta", "DATOS NO CARGADOS");
@@ -171,22 +177,32 @@ public class ControlAccesoController {
 									model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>ESTADIO SEGURO</font>");
 								}																
 							} else if(value == 1) {
-								model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA</font>");
+								model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (ABONADO)</font>");
 							} else {
-								model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ABONADO)</font>");
-								abonadosSector.put(rut.getNumero(), 1);
-								this.totalEscaneado++;
+								try {
+									itemService.insertarAccesoEstadio(""+rut.getNumero(), this.getIdPartido(), entrada.getIdSector());
+									model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ABONADO)</font>");
+									abonadosSector.put(rut.getNumero(), 1);
+									this.totalEscaneado++;
+								} catch (DuplicateKeyException e) {
+									model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (ABONADO)</font>");
+								}						
 							}
 						} else {
 							model.addAttribute("respuesta", "DATOS NO CARGADOS");	
 						}
 						
 					} else if(value == 1) {
-						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA</font>");
+						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (NOMINATIVA)</font>");
 					} else {
-						model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (NOMINATIVA)</font>");
-						nominativasSector.put(rut.getNumero(), 1);
-						this.totalEscaneado++;
+						try {
+						    itemService.insertarAccesoEstadio(""+rut.getNumero(), this.getIdPartido(), entrada.getIdSector());
+						    model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (NOMINATIVA)</font>");
+							nominativasSector.put(rut.getNumero(), 1);
+							this.totalEscaneado++;
+						} catch(DuplicateKeyException e) {
+							model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (NOMINATIVA)</font>");
+						}	
 					}
 				} else { 
 					model.addAttribute("respuesta", "DATOS NO CARGADOS");	

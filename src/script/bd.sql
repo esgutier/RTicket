@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS sector;
 DROP TABLE IF EXISTS partido;
 DROP TABLE IF EXISTS lista_negra;
 DROP TABLE IF EXISTS abonados_sector;
+DROP TABLE IF EXISTS acceso_estadio;
 
 SET lc_time_names = 'es_MX';
 
@@ -138,3 +139,10 @@ CREATE TABLE abonados_sector (
   FOREIGN KEY (hin_rut) REFERENCES hincha(hin_rut)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
+
+CREATE TABLE acceso_estadio (
+  id  varchar(15) NOT NULL,
+  par_id int(3) NOT NULL,
+  sec_id int(3) NOT NULL ,  
+  PRIMARY KEY  (id, sec_id,par_id)  
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;

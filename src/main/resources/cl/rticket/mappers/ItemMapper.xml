@@ -304,4 +304,11 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
  select lne_rut from lista_negra
 </select>
 
+
+<insert id="insertarAccesoEstadio" parameterType="map">
+ insert into acceso_estadio(id, par_id, sec_id) values (#{id},#{idPartido},#{idSector})
+</insert>
+
+
+
 </mapper>
