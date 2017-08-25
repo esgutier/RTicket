@@ -144,5 +144,6 @@ CREATE TABLE acceso_estadio (
   id  varchar(15) NOT NULL,
   par_id int(3) NOT NULL,
   sec_id int(3) NOT NULL ,  
+  fecha datetime NOT NULL,
   PRIMARY KEY  (id, sec_id,par_id)  
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;

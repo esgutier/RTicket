@@ -306,7 +306,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 
 
 <insert id="insertarAccesoEstadio" parameterType="map">
- insert into acceso_estadio(id, par_id, sec_id) values (#{id},#{idPartido},#{idSector})
+ insert into acceso_estadio(id, par_id, sec_id, fecha) values (#{id},#{idPartido},#{idSector}, NOW())
 </insert>
 
 
