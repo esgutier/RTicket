@@ -7,9 +7,25 @@
 	   
 	         $(document).ready(function (){	
 	        	 
-	        	 $("#btnBuscarHincha").click(function(){	         		
-	         		document.forms[0].action = "buscar-hincha-mantenedor";      		
-	         		document.forms[0].submit();
+	        	 $('#formHincha').on('submit', function(e){
+	                 e.preventDefault();
+	                 var inputRut = $("#inputRut").val();
+	                 if(inputRut == '') {
+	                 	alert('Error: Debe ingresar un RUT');
+	                 }  else {
+	                 	this.submit();
+	                 }               
+	             });
+	        	 
+	        	 $("#btnBuscarHincha").click(function(){
+	        		var inputRut = $("#inputRut").val();
+	        		if(inputRut == '') {
+	        			alert('Error - Debe ingresar un RUT');
+	        		} else {
+	        			document.forms[0].action = "buscar-hincha-mantenedor";      		
+		         		document.forms[0].submit();
+	        		}
+	         		
 	         	 });
 	        	 
 	        	 $("#btnActualizarHincha").click(function(){	         		
@@ -64,7 +80,7 @@
 		     </div>
 			 <div class="widget-content">
 			     <div class="form-horizontal">
-			     <form action="#" th:action="@{/ingresar-hincha }"  th:object="${hincha}" method="POST">
+			     <form action="#" th:action="@{/buscar-hincha-mantenedor}"  th:object="${hincha}" method="POST" id="formHincha">
 			              <div  th:if="${error != null}" >
 				      		<div class="alert alert-danger " th:text="${error}">
 								Aqui van los mensajes de error																	
@@ -82,7 +98,7 @@
 														
 													        <label class="col-md-2 control-label">RUT (digite)</label>
 													        <div class="col-md-3">
-															    <input th:field="*{rutCompleto}"  maxlength="12" type="text" class="form-control input-sm"  placeholder="12345678-K"/>
+															    <input th:field="*{rutCompleto}"  maxlength="12" type="text" class="form-control input-sm"  placeholder="12345678-K" id="inputRut"/>
 															</div>											    
 															
 															<div class="col-md-2"><button type="button"  class="btn btn-primary" id="btnBuscarHincha">Buscar Hincha</button></div>

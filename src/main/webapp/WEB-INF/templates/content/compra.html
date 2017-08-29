@@ -22,6 +22,19 @@
         		document.forms[0].submit();
         	});
         	
+        	$('#formCompra').on('submit', function(e){
+                e.preventDefault();
+                var idPartido = $("#selectIdPartido").val();
+                var idEntrada = $("#selectIdEntrada").val();
+                if(idPartido == 0) {
+                	alert('Error: Debe seleccionar un partido');
+                } else if(idEntrada == 0) {
+                	alert('Error: Debe seleccionar un tipo de entrada');
+                } else {
+                	this.submit();
+                }               
+            });
+        	
         	$("#btnConfirmarCompra").click(function(){
         		
         		/*$("#btnConfirmarCompra").prop('disabled', true);

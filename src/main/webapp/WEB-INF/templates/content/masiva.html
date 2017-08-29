@@ -14,15 +14,30 @@
         		document.forms[0].submit();
         	});
         	
-        	$("#generarEntradasButton").click(function(){
+        	/*$("#generarEntradasButton").click(function(){
         		 $('#generarEntradasButton').hide();  
         		 $("#cargandoButton").show();
-        	});
+        	});*/
         	
         	$(".imprimir").click(function(){
         		
         		 $('#imprimiendoTicketModal').modal('show'); 
         	});
+        	
+        	$('#formMasiva').on('submit', function(e){
+                e.preventDefault();
+                var idPartido = $("#selectIdPartido").val();
+                var idEntrada = $("#selectIdEntrada").val();
+                if(idPartido == 0) {
+                	alert('Error: Debe seleccionar un partido');
+                } else if(idEntrada == 0) {
+                	alert('Error: Debe seleccionar un tipo de entrada');
+                } else {
+                	$('#generarEntradasButton').hide();  
+           		    $("#cargandoButton").show();
+                	this.submit();
+                }               
+            });
         	
 
         }); 
@@ -85,7 +100,7 @@
 				<h3><i class="fa fa-edit"></i> Generación de Tickets Masivos</h3>
 		     </div>
 			 <div class="widget-content">
-			 <form action="#" th:action="@{/generar-entradas-masivo}"  th:object="${entrada}" method="POST" >
+			 <form action="#" th:action="@{/generar-entradas-masivo}"  th:object="${entrada}" method="POST" id="formMasiva">
 			   
 			   <div class="form-horizontal">	
 				     <div  th:if="${error != null}" >

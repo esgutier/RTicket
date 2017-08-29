@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.rticket.model.Partido;
 import cl.rticket.services.ItemService;
+import cl.rticket.utils.Util;
 
 @Controller
 public class PartidoController {
@@ -35,6 +36,12 @@ public class PartidoController {
 	@RequestMapping(value="/insertar-partido", method=RequestMethod.POST)
 	public String insertarPartidos(Model model, Partido partido, RedirectAttributes flash) {
 		
+		//valida fecha 
+		if(!Util.validaFecha(partido.getFecha(), "dd-mm-yyyy")) {
+			model.addAttribute("error", "La fecha es incorrecta");
+			return "content/partidosListar";
+		}
+		
 		String retorno = "content/partidosListar";
 		partido.setFechaTexto(partido.getFecha()+" "+partido.getHora());		
 		int res = itemService.insertarPartido(partido);
@@ -50,6 +57,12 @@ public class PartidoController {
 	
 	@RequestMapping(value="/actualizar-partido", method=RequestMethod.POST)
 	public String actualizarPartido(Model model, Partido partido, RedirectAttributes flash) {
+		
+	   //valida fecha 
+	   if(!Util.validaFecha(partido.getFecha(), "dd-mm-yyyy")) {
+		    model.addAttribute("error", "La fecha es incorrecta");
+			return "content/partidosEditar";
+	   }
 		
 		String retorno = "content/partidosEditar"; 
 		partido.setFechaTexto(partido.getFecha()+" "+partido.getHora());	
