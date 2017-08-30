@@ -24,8 +24,12 @@
 <SCRIPT type="text/javascript">
     window.history.forward();
     function noBack() { window.history.forward(); }
+    function onSubmit(token) {
+        document.getElementById("login-form").submit();
+    }
 </SCRIPT>
 <script src='https://www.google.com/recaptcha/api.js'></script>
+
 </head>
 
 
@@ -44,7 +48,7 @@
 		</div>
 		
 		<div class="login-box center-block">
-				<form action="#"  th:action="@{/acceso}"   th:object="${usuario}"  class="form-horizontal" method="POST">
+				<form action="#"  th:action="@{/acceso}"   th:object="${usuario}"  class="form-horizontal" method="POST" id="login-form">
 				<div  th:if="${error_message != null}" >
 		      		<div class="alert alert-danger " th:text="${error_message}">
 						Error general																	
@@ -70,13 +74,16 @@
 							
 						</div>
 					</div>
-					<br/>
-					<div align="center">
-					   <div class="g-recaptcha" data-sitekey="6LdfMy4UAAAAAB0eZppecUS68SWTefvw9qWorQoT"></div>
-					</div>
-					<br/>
+					<br/>    
 					    
-					    <button type="submit" name="login" class="btn btn-danger btn-lg btn-block btn-auth"><i class="fa fa-arrow-circle-o-right"></i> <b>INGRESAR</b></button>
+					    <button
+					        type="submit"
+					        name="login"
+							class="g-recaptcha btn btn-danger btn-lg btn-block btn-auth"
+							data-sitekey="6Ld1sy4UAAAAAIrFbdmx6utmf1ffuwySKX0BeBDg"
+							data-callback="onSubmit">
+						    <i class="fa fa-arrow-circle-o-right"></i> <b>INGRESAR</b>
+						</button>
 					
 				</form>
 				

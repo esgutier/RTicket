@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 public class VerifyRecaptcha {
 
 	public static final String url = "https://www.google.com/recaptcha/api/siteverify";
-	public static final String secret = "6LdfMy4UAAAAADgh7fwyO8EYcDmFFMXhlH0vB7pn";
+	public static final String secret = "6Ld1sy4UAAAAAAO8DrhC318bExkBZP12onoaFUT0";
 	
 	public static boolean verify(String gRecaptchaResponse) throws IOException {
 		
