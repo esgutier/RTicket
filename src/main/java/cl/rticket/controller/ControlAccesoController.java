@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,8 @@ import cl.rticket.utils.Util;
 @Controller
 public class ControlAccesoController {
 
+	private static final Logger logger = Logger.getLogger(ControlAccesoController.class);
+	
 	@Autowired
 	ItemService itemService;
 	
@@ -173,6 +176,7 @@ public class ControlAccesoController {
 								//no esta en abonados, buscar en estadio seguro
 								if(!this.estaEnListaNegra(this.getListaNegra(),rut.getNumero()))  {
 									model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ESTADIO SEGURO)</font>");
+									logger.info("HINCHA_REGULAR|"+scan+"-"+entrada.getIdSector()+"-"+this.getIdPartido());
 								} else {
 									model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>ESTADIO SEGURO</font>");
 								}																

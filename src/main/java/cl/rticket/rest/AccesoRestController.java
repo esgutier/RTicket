@@ -3,6 +3,7 @@ package cl.rticket.rest;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import cl.rticket.services.ItemService;
 @RestController
 public class AccesoRestController {
 	
-	
+	private static final Logger logger = Logger.getLogger(AccesoRestController.class);
 	
 	@Autowired
 	ControlAccesoController controlAcceso;
@@ -51,7 +52,7 @@ public class AccesoRestController {
 					    itemService.insertarAccesoEstadio(input, controlAcceso.getIdPartido(), idSector);
 					    response = 10; // ticket ok;
 						entradasSector.put(input, 1);
-						controlAcceso.setTotalEscaneado(controlAcceso.getTotalEscaneado() + 1);
+						controlAcceso.setTotalEscaneado(controlAcceso.getTotalEscaneado() + 1);						
 					} catch(DuplicateKeyException e) {
 						response = 12; // acceso no permitido - ticket ya utilizado
 					}
@@ -80,6 +81,7 @@ public class AccesoRestController {
 								if(!estaEnListaNegra(controlAcceso.getListaNegra(),rut))  {
 									//System.out.println("Estadio Seguro: Cedula OK");
 									response = 23; //cedula ok - estadio seguro
+									logger.info("HINCHA_REGULAR|"+input+"-"+idSector+"-"+controlAcceso.getIdPartido());
 								} else {
 									//System.out.println("Estadio Seguro: Acceso no permitido");
 									response = 0; //acceso no permitido - estadio seguro
@@ -93,7 +95,7 @@ public class AccesoRestController {
 								    itemService.insertarAccesoEstadio(""+rut, controlAcceso.getIdPartido(), idSector);
 								    abonadosSector.put(rut, 1);
 									response = 21; // cedula ok - abonado
-									controlAcceso.setTotalEscaneado(controlAcceso.getTotalEscaneado() + 1);
+									controlAcceso.setTotalEscaneado(controlAcceso.getTotalEscaneado() + 1);									
 								} catch (DuplicateKeyException e)	{
 									//System.out.println("Abonado: Cedula ya utilizada (DuplicateKeyException)");
 									response = 22; //acceso no permitido - cedula ya utilizada
