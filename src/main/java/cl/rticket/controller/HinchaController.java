@@ -218,7 +218,7 @@ public class HinchaController {
 				flash.addFlashAttribute("exito", "El registro fue agregado correctamente");
 				return "redirect:/cargar-entidad-lista";
 			} catch (UpdateException e) {
-				model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
+				model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro "+e.getMensaje());
 			}
 			
 		} else {

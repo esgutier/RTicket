@@ -11,8 +11,8 @@ public interface HinchaMapper {
 
 	
 	public Hincha obtenerHincha(Integer rut);
-	public int insertarHincha(Hincha hincha);
-	public int insertarHinchaEntidad(Hincha hincha);
+	public int insertarHincha(Hincha hincha)throws DuplicateKeyException;
+	public int insertarHinchaEntidad(Hincha hincha) throws DuplicateKeyException;
 	public int actualizarHincha(Hincha hincha);
 	public int actualizarHinchaEntidad(Hincha hincha);
 	public ArrayList<Hincha> obtenerEntidades();
