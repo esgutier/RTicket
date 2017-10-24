@@ -126,7 +126,18 @@
 			<version>2.4</version>
 		</dependency>
 		
-    
+		<dependency>
+      		<groupId>com.google.code.gson</groupId>
+      		<artifactId>gson</artifactId>
+      		<version>2.3.1</version>
+      	
+    	</dependency>
+    	
+        <dependency>
+			  <groupId>log4j</groupId>
+			  <artifactId>log4j</artifactId>
+			  <version>1.2.17</version>			 
+	    </dependency>
 
   </dependencies>
   <build>
@@ -150,7 +161,7 @@
 					<artifactId>tomcat7-maven-plugin</artifactId>
 					<version>2.0</version>
 					<configuration>
-					<port>8080</port>
+					<port>8090</port>
 					<contextFile>src/test/resources/context.xml</contextFile> 
 					</configuration>	
 			</plugin>

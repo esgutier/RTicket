@@ -14,15 +14,30 @@
         		document.forms[0].submit();
         	});
         	
-        	$("#generarEntradasButton").click(function(){
+        	/*$("#generarEntradasButton").click(function(){
         		 $('#generarEntradasButton').hide();  
         		 $("#cargandoButton").show();
-        	});
+        	});*/
         	
         	$(".imprimir").click(function(){
         		
         		 $('#imprimiendoTicketModal').modal('show'); 
         	});
+        	
+        	$('#formMasiva').on('submit', function(e){
+                e.preventDefault();
+                var idPartido = $("#selectIdPartido").val();
+                var idEntrada = $("#selectIdEntrada").val();
+                if(idPartido == 0) {
+                	alert('Error: Debe seleccionar un partido');
+                } else if(idEntrada == 0) {
+                	alert('Error: Debe seleccionar un tipo de entrada');
+                } else {
+                	$('#generarEntradasButton').hide();  
+           		    $("#cargandoButton").show();
+                	this.submit();
+                }               
+            });
         	
 
         }); 
@@ -31,8 +46,50 @@
         	$("#inicio").val($("#"+idEntrada+'inicio_p').val());
         	$("#fin").val($("#"+idEntrada+'fin_p').val());
         	$("#selectIdEntrada").val(idEntrada);
-        	document.forms[0].action = "imprimir-entradas-rango";      		
-    		document.forms[0].submit();     
+        	var inicio = $("#inicio").val();
+        	var fin    = $("#fin").val();
+        	var idPartido = $("#selectIdPartido").val();
+        	
+        	$.ajax({
+     			 type: "POST",  
+     			 headers: { "Accept" : "application/json; charset=utf-8","Content-Type": "application/json; charset=utf-8"},	
+  	 	         url: "imprimir-entradas-rango-ajax?idPartido="+idPartido+"&idEntrada="+idEntrada+"&inicio="+inicio+"&fin="+fin,        			    	     	    	    
+ 	    	     dataType : 'json',
+ 	    	     success: function(response){	
+ 	    	    	 console.log(response.object); 	    	    	 
+ 	    	    	 if(response.codigo == 1 ) { //response ok
+ 	    	    		//pasar el json a printer-client para que imprima el ticket
+ 	    	    		
+ 	    	    		$.ajax({
+ 	    	    		    type: 'get', // it's easier to read GET request parameters
+ 	    	    		    url: 'https://localhost/masivas',
+ 	    	    		    dataType: 'JSON',
+ 	    	    		    data: {   	    	    		    
+ 	    	    		      tickets: JSON.stringify(response.object) // look here!
+ 	    	    		    },
+ 	    	    		    success: function(data) {
+ 	    	    		    	 //var resp = JSON.parse(data);
+ 	    	    		    	 //alert('success: '+data.codigo);
+ 	    	    		    	 //redirect
+ 	    	    		    	 window.location.href = 'carga-pagina-masivo';
+ 	    	    		    },
+ 	    	    		    error: function(data) {
+ 	    	    		        alert('Ocurrio un error, verifique que la impresora este conectada correctamente. Sin embargo la compra fue ingresada en la base de datos');
+ 	    	    		    }
+ 	    	    		});
+	  	    	    	
+	  	    	    	
+ 	    	    	 } else {
+ 	    	    		 alert(''+response.mensaje);
+ 	    	    		//$('#modalNotificaciones').modal('show');
+ 	    	    		//$('#mensajeNotificacion').html(response.mensaje);
+ 	    	    	 } 	  	    	    	  	    	    	
+       	     }, error: function(e){
+       	    	 alert('Error');
+       	    	//$('#modalNotificaciones').modal('show');
+ 	    	    	//$('#mensajeNotificacion').html("Ocurrió un error inesperado");
+ 	    	     } 
+ 	         });//fin ajax	  
         }
      
        /*]]>*/ 
@@ -43,7 +100,7 @@
 				<h3><i class="fa fa-edit"></i> Generación de Tickets Masivos</h3>
 		     </div>
 			 <div class="widget-content">
-			 <form action="#" th:action="@{/generar-entradas-masivo}"  th:object="${entrada}" method="POST" >
+			 <form action="#" th:action="@{/generar-entradas-masivo}"  th:object="${entrada}" method="POST" id="formMasiva">
 			   
 			   <div class="form-horizontal">	
 				     <div  th:if="${error != null}" >

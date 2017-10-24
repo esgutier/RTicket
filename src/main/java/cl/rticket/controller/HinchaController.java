@@ -83,6 +83,12 @@ public class HinchaController {
 		//validacion de inputs
 		int error = 0;
 		
+		//valida fecha de nacimiento
+		if(!Util.validaFecha(hincha.getFechaNac(), "dd/mm/yyyy")) {
+			model.addAttribute("error", "Fecha de Nacimiento no es válida");
+			error = 1;
+		}
+		
 		if(hincha.getCategoria().equals("A")) {
 			if(hincha.getIdSector() == null || hincha.getIdSector().intValue() == 0) {
 				model.addAttribute("error", "Debe indicar sector para el abonado");
@@ -117,6 +123,13 @@ public class HinchaController {
 	public String insertarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
 		//validar inputs
 		int error = 0;
+		
+		//valida fecha de nacimiento
+		if(!Util.validaFecha(hincha.getFechaNac(), "dd/mm/yyyy")) {
+					model.addAttribute("error", "Fecha de Nacimiento no es válida");
+					error = 1;
+		}
+		
 		if(hincha.getCategoria().equals("A")) {
 			if(hincha.getIdSector() == null || hincha.getIdSector().intValue() == 0) {
 				model.addAttribute("error", "Debe indicar sector para el abonado");
@@ -205,7 +218,7 @@ public class HinchaController {
 				flash.addFlashAttribute("exito", "El registro fue agregado correctamente");
 				return "redirect:/cargar-entidad-lista";
 			} catch (UpdateException e) {
-				model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
+				model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro "+e.getMensaje());
 			}
 			
 		} else {

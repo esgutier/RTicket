@@ -1,13 +1,14 @@
 package cl.rticket.mappers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
+import cl.rticket.model.Masiva;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
 import cl.rticket.model.Ticket;
@@ -38,7 +39,7 @@ public interface ItemMapper {
 	
 	public ArrayList<TotalesEntrada> obtenerTotalesEntradas(@Param("idPartido")Integer idPartido);
 	
-	public ArrayList<Ticket> obtenerDatosTicketMasivo(@Param("idSector")Integer idSector,
+	public Masiva obtenerDatosTicketMasivo(@Param("idSector")Integer idSector,
 													  @Param("tipo")String tipo);
 	
 	public ArrayList<TotalesEntrada> obtenerTotalesCortesiaPorEntidad(@Param("idPartido")Integer idPartido,
@@ -65,5 +66,7 @@ public interface ItemMapper {
 	public ArrayList<Integer> obtenerEntradasNominativasPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector);
 	public ArrayList<Integer> obtenerTotalListaNegra();
 	public ArrayList<Integer> obtenerAbonadosPorSector(@Param("idSector")Integer idSector);
+	
+	public int insertarAccesoEstadio(@Param("id")String id, @Param("idPartido")Integer idPartido, @Param("idSector")Integer idSector) throws DuplicateKeyException;
 
 }

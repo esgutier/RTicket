@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import cl.rticket.exception.UpdateException;
 import cl.rticket.mappers.ItemMapper;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
+import cl.rticket.model.Masiva;
 import cl.rticket.model.Partido;
 import cl.rticket.model.Sector;
 import cl.rticket.model.Ticket;
@@ -98,7 +100,7 @@ public class ItemServiceImpl implements ItemService{
 			
 	}
 	
-	public ArrayList<Ticket> obtenerDatosTicketMasivo(Integer idSector, String tipo) {
+	public Masiva obtenerDatosTicketMasivo(Integer idSector, String tipo) {
 		return itemMapper.obtenerDatosTicketMasivo(idSector, tipo);
 	}
 	
@@ -251,6 +253,12 @@ public class ItemServiceImpl implements ItemService{
 			map.put(i, 0);
 		}
 		return map;
+	}
+	
+	public void insertarAccesoEstadio(String id, Integer idPartido, Integer idSector)  throws DuplicateKeyException{
+		
+		   itemMapper.insertarAccesoEstadio(id, idPartido, idSector);
+		
 	}
 
 }

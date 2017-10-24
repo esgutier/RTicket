@@ -2,6 +2,9 @@ package cl.rticket.utils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -114,6 +117,25 @@ public class Util {
 	    return map;  
 	}
 	
+	public  static boolean validaFecha(String dateToValidate, String dateFromat) {		
+			if(dateToValidate == null){
+				return false;
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat(dateFromat);
+			sdf.setLenient(false);
+
+			try {
+				//if not valid, it will throw ParseException
+				Date date = sdf.parse(dateToValidate);
+				System.out.println(date);
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			}
+			return true;		
+	}
+	
 	public static void main(String args[]) {
 		//for(int i = 0 ; i < 10000 ; i++)
 		  // System.out.println("---->13859176|"+ random());
@@ -128,4 +150,6 @@ public class Util {
 		//System.out.println("--->"+obtieneRUT("13.859.176-K    ").rutCompleto());
 			
 	}
+	
+	
 }

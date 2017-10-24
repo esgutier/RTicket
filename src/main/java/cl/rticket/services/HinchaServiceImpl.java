@@ -35,34 +35,37 @@ public class HinchaServiceImpl implements HinchaService{
 	@Transactional(rollbackFor={UpdateException.class, Exception.class})
 	public void insertarHincha(Hincha hincha) throws UpdateException {
 		
-		int res = hinchaMapper.insertarHincha(hincha);
-		if(res > 0) {
-			if(hincha.getCategoria().equals("A")) {				
-				//insertar datos abonados
-				//construir la fecha
-				String date ="01/"+hincha.getMesVigencia()+"/"+hincha.getAnioVigencia();				
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				Date convertedDate;
-				try {
-					convertedDate = dateFormat.parse(date);
-					Calendar c = Calendar.getInstance();
-					c.setTime(convertedDate);
-					c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));					
-					date = c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH) + 1)+"/"+c.get(Calendar.YEAR);
-					hincha.setVigencia(date);
-					
-				} catch (ParseException e) {
-					throw new UpdateException();
+		try {
+			int res = hinchaMapper.insertarHincha(hincha);
+			if(res > 0) {
+				if(hincha.getCategoria().equals("A")) {				
+					//insertar datos abonados
+					//construir la fecha
+					String date ="01/"+hincha.getMesVigencia()+"/"+hincha.getAnioVigencia();				
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					Date convertedDate;
+					try {
+						convertedDate = dateFormat.parse(date);
+						Calendar c = Calendar.getInstance();
+						c.setTime(convertedDate);
+						c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));					
+						date = c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH) + 1)+"/"+c.get(Calendar.YEAR);
+						hincha.setVigencia(date);
+						
+					} catch (ParseException e) {
+						throw new UpdateException();
+					}
+					res = hinchaMapper.insertarAbonado(hincha);
+					if(res < 1) {
+						throw new UpdateException();
+					}
 				}
-				res = hinchaMapper.insertarAbonado(hincha);
-				if(res < 1) {
-					throw new UpdateException();
-				}
+			} else {
+				throw new UpdateException();
 			}
-		} else {
-			throw new UpdateException();
+		} catch(DuplicateKeyException e) {
+			throw new UpdateException("(Identificador ya existe)");
 		}
-		
 		
 	}
 	

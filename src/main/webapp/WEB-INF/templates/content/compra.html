@@ -22,11 +22,66 @@
         		document.forms[0].submit();
         	});
         	
+        	$('#formCompra').on('submit', function(e){
+                e.preventDefault();
+                var idPartido = $("#selectIdPartido").val();
+                var idEntrada = $("#selectIdEntrada").val();
+                if(idPartido == 0) {
+                	alert('Error: Debe seleccionar un partido');
+                } else if(idEntrada == 0) {
+                	alert('Error: Debe seleccionar un tipo de entrada');
+                } else {
+                	this.submit();
+                }               
+            });
+        	
         	$("#btnConfirmarCompra").click(function(){
         		
-        		$("#btnConfirmarCompra").prop('disabled', true);
+        		/*$("#btnConfirmarCompra").prop('disabled', true);
         		document.forms[0].action = "confirmar-compra";      		
-        		document.forms[0].submit();       		
+        		document.forms[0].submit();*/
+        		var idPartido = $('#selectIdPartido').val();
+        		var idEntrada = $('#selectIdEntrada').val();
+        		$.ajax({
+	      			 type: "POST",  
+	      			 headers: { "Accept" : "application/json; charset=utf-8","Content-Type": "application/json; charset=utf-8"},	
+	   	 	         url: "confirmar-compra-ajax?idPartido="+idPartido+"&idEntrada="+idEntrada,        			    	     	    	    
+	  	    	     dataType : 'json',
+	  	    	     success: function(response){	
+	  	    	    	 console.log(response.object);
+	  	    	    	 if(response.codigo == 1 ) { //response ok
+	  	    	    		//pasar el json a printer-client para que imprima el ticket
+	  	    	    		$.ajax({
+	  	    	    		    type: 'get', // it's easier to read GET request parameters
+	  	    	    		    url: 'https://localhost/nominativa',
+	  	    	    		    dataType: 'JSON',
+	  	    	    		    data: {   	    	    		    
+	  	    	    		      tickets: JSON.stringify(response.object) // look here!
+	  	    	    		    },
+	  	    	    		    success: function(data) {
+	  	    	    		    	 //var resp = JSON.parse(data);
+	  	    	    		    	 //alert('success: '+data.codigo);
+	  	    	    		    	 //redirect
+	  	    	    		    	 window.location.href = 'carga-ingreso-compra';
+	  	    	    		    },
+	  	    	    		    error: function(data) {
+	  	    	    		        alert('Ocurrio un error, verifique que la impresora este conectada correctamente. Sin embargo la compra fue ingresada en la base de datos');
+	  	    	    		    }
+	  	    	    		});
+	 	  	    	    	
+	 	  	    	    	
+	  	    	    	 } else {
+	  	    	    		 alert('Error: - codigo distinto de 1');
+	  	    	    		//$('#modalNotificaciones').modal('show');
+	  	    	    		//$('#mensajeNotificacion').html(response.mensaje);
+	  	    	    	 } 	  	    	    	  	    	    	
+	        	     }, error: function(e){
+	        	    	 alert('Error');
+	        	    	//$('#modalNotificaciones').modal('show');
+	  	    	    	//$('#mensajeNotificacion').html("Ocurrió un error inesperado");
+	  	    	     } 
+	  	         });//fin ajax	
+        		
         	});
         })
             

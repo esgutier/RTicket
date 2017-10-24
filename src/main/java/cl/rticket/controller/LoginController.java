@@ -1,5 +1,7 @@
 package cl.rticket.controller;
 
+import java.io.IOException;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -10,11 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import cl.rticket.exception.ImpresoraNoDisponibleException;
 import cl.rticket.model.Usuario;
-import cl.rticket.utils.ImpresionTest;
+import cl.rticket.utils.VerifyRecaptcha;
 
 
 
@@ -28,8 +30,23 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="/acceso", method=RequestMethod.POST)
-	public ModelAndView login(@ModelAttribute Usuario usuario) {
+	public ModelAndView login(@ModelAttribute Usuario usuario, @RequestParam(value="g-recaptcha-response") String captcha) {
 		ModelAndView mv = new ModelAndView();
+		//verificar el captcha
+				try {
+					if(!VerifyRecaptcha.verify(captcha)) {
+						mv.addObject("error_message", "Error en el captcha. Debe indicar que no es un robot");
+						mv.setViewName("login");
+						return mv;
+						
+					}
+				} catch (IOException e) {
+					mv.addObject("error_message", "Error al procesar el captcha");
+					mv.setViewName("login");
+					return mv;
+				}
+		
+		
 		mv.setViewName("content/dashboard");
 		Subject subject = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(usuario.getUsername(), usuario.getPassword());
@@ -56,14 +73,8 @@ public class LoginController {
 		return "redirect:/";
 	}
 	
-	@RequestMapping(value="/test-impresora", method=RequestMethod.GET)
-	public String testImpresora(Model model) {		
-		ImpresionTest printer = new ImpresionTest();
-		try {
-			printer.imprimirTest();
-		} catch (ImpresoraNoDisponibleException e) {
-			model.addAttribute("error", "Impresora no disponible");
-		}
+	@RequestMapping(value="/inicio", method=RequestMethod.GET)
+	public String testImpresora(Model model) {				
 		return "content/dashboard";
 	}
 	

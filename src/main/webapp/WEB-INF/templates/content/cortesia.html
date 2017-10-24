@@ -28,8 +28,56 @@
         		
         		 $('#imprimiendoTicketModal').modal('show'); 
         	});
+        	
+        	
 
-        });      
+        });     
+    
+       function imprimir(idPartido, idEntrada, rut) {
+    	   $.ajax({
+   			 type: "POST",  
+   			 headers: { "Accept" : "application/json; charset=utf-8","Content-Type": "application/json; charset=utf-8"},	
+	 	         url: "imprimir-entradas-cortesia-ajax?idPartido="+idPartido+"&idEntrada="+idEntrada+"&rut="+rut,        			    	     	    	    
+	    	     dataType : 'json',
+	    	     success: function(response){	
+	    	    	 console.log(response.object);
+	    	    	 //alert(response.object);
+	    	    	 if(response.codigo == 1 ) { //response ok
+	    	    		//pasar el json a printer-client para que imprima el ticket
+	    	    		//window.location.href = 'carga-pagina-cortesia';
+	    	    		$.ajax({
+	    	    		    type: 'get', 
+	    	    		    url: 'https://localhost/cortesia',
+	    	    		    dataType: 'JSON',
+	    	    		    data: {   	    	    		    
+	    	    		      tickets: JSON.stringify(response.object) // look here!
+	    	    		    },
+	    	    		    success: function(data) {
+	    	    		    	 //var resp = JSON.parse(data);
+	    	    		    	 //alert('success: '+data.codigo);
+	    	    		    	 //redirect
+	    	    		    	 window.location.href = 'carga-pagina-cortesia';
+	    	    		    },
+	    	    		    error: function(data) {
+	    	    		        alert('Ocurrio un error');
+	    	    		    }
+	    	    		});
+	  	    	    	
+	  	    	    	
+	    	    	 } else {
+	    	    		 alert(''+response.mensaje);
+	    	    		//$('#modalNotificaciones').modal('show');
+	    	    		//$('#mensajeNotificacion').html(response.mensaje);
+	    	    	 } 	  	    	    	  	    	    	
+     	     }, error: function(e){
+     	    	 alert('Error:'+e);
+     	    	//$('#modalNotificaciones').modal('show');
+	    	    	//$('#mensajeNotificacion').html("Ocurrió un error inesperado");
+	    	     } 
+	         });//fin ajax	  
+       }
+    
+    
        /*]]>*/ 
     </script>
   
@@ -120,7 +168,8 @@
 									    <td  th:text="${t.total}"></td> 									    									   
 									    <td> 									     
 									      <div th:if="${t.total > 0 }">
-									       <a href="#" th:href="@{/imprimir-entradas-cortesia(idPartido=${t.idPartido},idEntrada=${t.idEntrada},rut=*{rut})}" >
+									       <a href="#" th:href="@{'javascript:imprimir(\''+${t.idPartido}+'\',\''+${t.idEntrada}+'\',\''+${entrada.rut}+'\')'}" >
+									       
 									         <span class="badge element-bg-color-blue">
 									          <i class="fa fa-print" aria-hidden="true"></i>  Imprimir
 									         </span>
