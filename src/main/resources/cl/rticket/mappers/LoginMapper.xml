@@ -6,14 +6,24 @@
 <mapper namespace="cl.rticket.mappers.LoginMapper">
 
 <select id="obtenerUsuario" resultType="Usuario" parameterType="String">
-   select 
-          usr_username username,
-          usr_password password,
-          usr_rut rut,
-          usr_dv  dv,
-          usr_nombre nombre,
-          usr_apellidos apellidos
-    from usuario where usr_username = #{username}
+     select 
+          u.usr_username username,
+          u.usr_password password,
+          u.usr_rut rut,
+          u.usr_dv  dv,
+          u.usr_nombre nombre,
+          u.usr_apellidos apellidos,
+          e.equ_id idEquipo,
+          e.equ_nombre nombreEquipo
+    from usuario u, equipo e 
+	 where usr_username = #{username} and
+	      u.equ_id = e.equ_id
+</select>
+
+<select id="obtenerUsuarioRoles" resultType="String" parameterType="map">
+    select r.rol_desc from usuarios_roles u , rol r
+	  where u.usr_username = #{username} and 
+	        u.rol_id = r.rol_id
 </select>
 
 </mapper>

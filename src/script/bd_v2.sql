@@ -1,3 +1,19 @@
+create database if not exists rticket;
+
+USE rticket;
+
+DROP TABLE IF EXISTS compra;
+DROP TABLE IF EXISTS entrada;
+DROP TABLE IF EXISTS usuarios_roles;
+DROP TABLE IF EXISTS usuario;
+DROP TABLE IF EXISTS rol;
+DROP TABLE IF EXISTS hincha;
+DROP TABLE IF EXISTS sector;
+DROP TABLE IF EXISTS partido;
+DROP TABLE IF EXISTS lista_negra;
+DROP TABLE IF EXISTS abonados_sector;
+DROP TABLE IF EXISTS acceso_estadio;
+
 CREATE TABLE equipo (
   equ_id int(2) NOT NULL,
   equ_nombre varchar(100) NOT NULL,
@@ -102,6 +118,8 @@ CREATE TABLE entrada (
 CREATE TABLE compra ( 
   equ_id int(2) NOT NULL,
   com_id int  NOT NULL AUTO_INCREMENT,
+  par_id int NOT NULL,
+  sec_id int  NOT NULL,
   ent_id int(3) NOT NULL,
   hin_rut int(10) NOT NULL,
   usr_username varchar(20) NOT NULL,  
@@ -112,11 +130,13 @@ CREATE TABLE compra (
   com_fecha datetime NOT NULL,
   PRIMARY KEY  (com_id),
   FOREIGN KEY (ent_id) REFERENCES entrada(ent_id),
-  FOREIGN KEY (equ_id, hin_rut) REFERENCES hincha(equ_id, hin_rut), 
-  FOREIGN KEY (equ_id, usr_username) REFERENCES usuario(equ_id, usr_username)
+  FOREIGN KEY (equ_id, usr_username) REFERENCES usuario(equ_id, usr_username),
+  FOREIGN KEY (sec_id) REFERENCES sector(sec_id),
+  FOREIGN KEY (par_id) REFERENCES partido(par_id)
   
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 ALTER TABLE compra ADD UNIQUE (com_token);
+ALTER TABLE compra ADD INDEX (equ_id, par_id, sec_id, hin_rut);
 
 
 CREATE TABLE lista_negra (
@@ -147,3 +167,18 @@ CREATE TABLE acceso_estadio (
   fecha datetime NOT NULL,
   PRIMARY KEY  (equ_id, id, sec_id,par_id)  
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+
+insert into rol values(null,'ADMIN');
+insert into rol values(null,'VENDEDOR');
+insert into rol values(null,'CONTROL');
+
+insert into equipo values(1,'MANCHESTER CITY');
+insert into equipo values(2,'ARSENAL F.C.');
+insert into usuario values(1,'mcity','202cb962ac59075b964b07152d234b70',13859176,'K','TICKET','.');
+insert into usuario values(1,'con-mcity','202cb962ac59075b964b07152d234b70',13859176,'K','TICKET','.');
+insert into usuario values(2,'arsenal','202cb962ac59075b964b07152d234b70',13859176,'K','TICKET','.');
+
+insert into usuarios_roles values(1,'mcity',2);
+insert into usuarios_roles values(1,'con-mcity',3);
+insert into usuarios_roles values(2,'arsenal',2);

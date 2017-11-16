@@ -58,14 +58,12 @@
 	  	    	    		    data: {   	    	    		    
 	  	    	    		      tickets: JSON.stringify(response.object) // look here!
 	  	    	    		    },
-	  	    	    		    success: function(data) {
-	  	    	    		    	 //var resp = JSON.parse(data);
-	  	    	    		    	 //alert('success: '+data.codigo);
-	  	    	    		    	 //redirect
+	  	    	    		    success: function(data) {	  	    	    		    	
 	  	    	    		    	 window.location.href = 'carga-ingreso-compra';
 	  	    	    		    },
 	  	    	    		    error: function(data) {
-	  	    	    		        alert('Ocurrio un error, verifique que la impresora este conectada correctamente. Sin embargo la compra fue ingresada en la base de datos');
+	  	    	    		    	window.location.href = 'carga-ingreso-compra';
+	  	    	    		        //alert('Ocurrio un error, verifique que la impresora este conectada correctamente. Sin embargo la compra fue ingresada en la base de datos');
 	  	    	    		    }
 	  	    	    		});
 	 	  	    	    	
@@ -76,7 +74,7 @@
 	  	    	    		//$('#mensajeNotificacion').html(response.mensaje);
 	  	    	    	 } 	  	    	    	  	    	    	
 	        	     }, error: function(e){
-	        	    	 alert('Error');
+	        	    	 alert('Ocurrió un error inesperado');
 	        	    	//$('#modalNotificaciones').modal('show');
 	  	    	    	//$('#mensajeNotificacion').html("Ocurrió un error inesperado");
 	  	    	     } 

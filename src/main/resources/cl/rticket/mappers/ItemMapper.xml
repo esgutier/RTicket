@@ -7,31 +7,15 @@
 <!-- 
 SELECT date_format(NOW(),'%W %d de %M de %Y')
 SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
-<select id="obtenerPartidos" resultType="Partido" >
- select 
-          par_id idPartido,
-          par_desc descripcion ,
-          date_format(par_fecha,'%d-%m-%Y %H:%i') fecha   
-    from partido 
-    where  par_fecha > NOW()
-</select>
-
-<select id="obtenerSectores" resultType="Sector" >
-   select 
-          sec_id idSector,
-          sec_desc descripcion
-    from sector 
-</select>
-
 
 <!-- =================================================================================================== -->
 <!-- PAGINA DE ENTRADAS==================================================================================-->
 <!-- =================================================================================================== -->
 
 <insert id="insertarEntrada" parameterType="Entrada">
-   insert into entrada (ent_id, sec_id, par_id, ent_precio, ent_fecha_creacion,ent_comentario, ent_maximo)
+   insert into entrada (equ_id, ent_id, sec_id, par_id, ent_precio, ent_fecha_creacion,ent_comentario, ent_maximo)
    values 
-       (NULL, #{idSector}, #{idPartido}, #{precio},NOW(),UPPER(#{comentario}),#{maximo})
+       (#{idEquipo},NULL, #{idSector}, #{idPartido}, #{precio},NOW(),UPPER(#{comentario}),#{maximo})
 </insert>
 
 <delete id="eliminarEntrada" parameterType="map">
@@ -45,12 +29,13 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
                where ent_id = #{idEntrada} 
 </update>
 
-<select id="obtenerEntrada" resultType="Entrada" parameterType="int">
+<select id="obtenerEntrada" resultType="Entrada" parameterType="map">
       select  a.ent_id idEntrada, a.sec_id idSector, a.par_id idPartido , a.ent_precio precio ,
            p.par_desc descPartido, s.sec_desc descSector, a.ent_comentario comentario, a.ent_maximo maximo
           
    from entrada a, partido p, sector s
    where 
+       a.equ_id = #{idEquipo} and
 	   a.ent_id = #{idEntrada} and 	
 	   a.sec_id = s.sec_id and
 	   a.par_id = p.par_id
@@ -62,6 +47,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
           
    from entrada a, partido p, sector s
    where
+       a.equ_id = #{idEquipo} and
 	   a.par_id = #{idPartido} and 	  
 	   a.sec_id = s.sec_id and
 	   a.par_id = p.par_id
@@ -72,8 +58,8 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- =================================================================================================== -->
 
 <insert id="insertarCompra" parameterType="Compra"  useGeneratedKeys="true" keyProperty="idCompra"  keyColumn="com_id">
- insert into compra (ent_id,hin_rut,usr_username,com_monto,com_token,com_tipo,com_anulada,com_fecha) 
- values (#{idEntrada},#{rut},#{username},#{monto},#{token},#{tipo},#{anulada},NOW())
+ insert into compra (equ_id,ent_id,par_id,sec_id,hin_rut,usr_username,com_monto,com_token,com_tipo,com_anulada,com_fecha) 
+ values (#{idEquipo},#{idEntrada},#{idPartido},#{idSector},#{rut},#{username},#{monto},#{token},#{tipo},#{anulada},NOW())
  <selectKey keyProperty="idCompra" resultType="int" order="AFTER">
             SELECT LAST_INSERT_ID();
  </selectKey>
@@ -112,6 +98,15 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 	      e.sec_id = s.sec_id and
 	      e.par_id = p.par_id and
 	     c.com_anulada not in ('S')
+</select>
+
+<select id="esTicketNominativo" parameterType="map" resultType="int">
+select 1 from compra
+where
+  equ_id = #{idEquipo} and
+  par_id = #{idPartido} and
+  sec_id = #{idSector} and
+  hin_rut = #{rut}
 </select>
 
 <!-- =================================================================================================== -->
@@ -229,6 +224,16 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- MANTENEDOR PARTIDOS -->
 <!-- ============================================================================================ -->
 
+<select id="obtenerPartidos" parameterType="int" resultType="Partido" >
+ select 
+          par_id idPartido,
+          par_desc descripcion ,
+          date_format(par_fecha,'%d-%m-%Y %H:%i') fecha   
+    from partido 
+    where  par_fecha > NOW() and equ_id = #{idEquipo}
+</select>
+
+
 <update id="actualizarPartido" parameterType="Partido" > 
  update partido set par_desc = UPPER(#{descripcion}),
                     par_fecha = STR_TO_DATE(#{fechaTexto},'%d-%m-%Y %H:%i')
@@ -236,7 +241,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 </update>
 
 <insert id="insertarPartido" parameterType="Partido">
-  insert into partido values(null,UPPER(#{descripcion}),STR_TO_DATE(#{fechaTexto}, '%d-%m-%Y %H:%i'))
+  insert into partido values(#{idEquipo},null,UPPER(#{descripcion}),STR_TO_DATE(#{fechaTexto}, '%d-%m-%Y %H:%i'))
 </insert>
 
 <select id="obtenerPartido" resultType="Partido" parameterType="int">
@@ -251,17 +256,24 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- MANTENEDOR SECTORES =========================================================================== -->
 <!-- =============================================================================================== -->
 
+<select id="obtenerSectores" parameterType="int" resultType="Sector" >
+   select 
+          sec_id idSector,
+          sec_desc descripcion
+    from sector where  equ_id = #{idEquipo}
+</select>
+
 <update id="actualizarSector" parameterType="Sector">
  update sector  set sec_desc = UPPER(#{descripcion})
           where sec_id = #{idSector}
 </update>
 
 <insert id="insertarSector" parameterType="Sector">
-  insert into sector values(null,UPPER(#{descripcion}));
+  insert into sector values(#{idEquipo},null,UPPER(#{descripcion}));
 </insert>
 
-<select id="obtenerSector" parameterType="int" resultType="Sector">
-  select sec_id idSector, sec_desc descripcion from sector where sec_id = #{idSector}
+<select id="obtenerSector" parameterType="Sector" resultType="Sector">
+  select sec_id idSector, sec_desc descripcion from sector where sec_id = #{idSector} 
 </select>
 
 <delete id="eliminarSector" parameterType="int" >
@@ -272,6 +284,45 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 <!-- ================================================================================================ -->
 <!-- CONTROL DE ACCESO ============================================================================== -->
 <!-- ================================================================================================ -->
+
+<!--  
+<update id="actualizarAccesoNominativo" parameterType="map" >
+update compra set com_escaneada = 'S' 
+where 
+   equ_id = #{idEquipo} and
+   par_id = #{idPartido} and
+   sec_id = #{idSector} and
+   hin_rut = #{rut} and
+   com_anulada = 'N'
+   
+</update>
+
+<update id="actualizarAccesoNormal" parameterType="map" >
+update compra set com_escaneada = 'S' 
+where 
+   com_token = #{idTicket}  and
+   com_anulada = 'N'   
+</update>
+-->
+
+<select id="existeTicket" parameterType="map" resultType="int">
+ select 1 from compra 
+ where 
+    com_token = #{token} and
+    equ_id = #{idEquipo} and
+    par_id = #{idPartido} and
+    sec_id = #{idSector}
+</select>
+
+
+<select id="esAbonadoVigente" parameterType="map" resultType="int">
+ select 1 from abonados_sector 
+ where 
+    equ_id = #{idEquipo} and
+    sec_id = #{idSector} and
+    hin_rut = #{rut} and 
+    abs_vigencia > NOW()   
+</select>
 
 <select id="obtenerEntradasNormalesPorSector" parameterType="map" resultType="String"> 
      select c.com_token id from entrada e, compra c 
@@ -306,7 +357,7 @@ SELECT date_format(NOW(),'%d-%m-%Y %H:%i') -->
 
 
 <insert id="insertarAccesoEstadio" parameterType="map">
- insert into acceso_estadio(id, par_id, sec_id, fecha) values (#{id},#{idPartido},#{idSector}, NOW())
+ insert into acceso_estadio(equ_id,id, par_id, sec_id, fecha) values (#{idEquipo},#{id},#{idPartido},#{idSector}, NOW())
 </insert>
 
 

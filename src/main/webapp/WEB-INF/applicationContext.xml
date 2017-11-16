@@ -145,9 +145,7 @@
         <property name="filterChainDefinitions">
             <value>
                   /assets/** = anon
-                  /acceso = anon 
-                  /control = anon
-                  /validar-acceso = anon
+                  /acceso = anon                  
                   /api/rest/**   = anon                 
                     /** = authc       
             </value>

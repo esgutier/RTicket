@@ -8,6 +8,7 @@ public class Hincha implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 4570698422292479318L;	
+	private Integer idEquipo;
 	private Integer rut;
 	private String dv;
 	private String rutCompleto;
@@ -113,6 +114,12 @@ public class Hincha implements Serializable{
 	}
 	public void setVigencia(String vigencia) {
 		this.vigencia = vigencia;
+	}
+	public Integer getIdEquipo() {
+		return idEquipo;
+	}
+	public void setIdEquipo(Integer idEquipo) {
+		this.idEquipo = idEquipo;
 	}
 
 }

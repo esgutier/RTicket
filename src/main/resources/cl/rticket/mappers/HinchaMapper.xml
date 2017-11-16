@@ -5,36 +5,22 @@
 
 <mapper namespace="cl.rticket.mappers.HinchaMapper">
 
-
-<!-- 
-<select id="obtenerHinchaAbonado"  resultType="Hincha" parameterType="int">
-select    h.hin_rut rut, h.hin_dv dv, 
-	        h.hin_nombres nombres, h.hin_apellidos apellidos, h.hin_direccion direccion,
-	        h.hin_genero genero,  h.hin_telefono telefono,  h.hin_email email,DATE_FORMAT(h.hin_fecha_nac, '%d/%m/%Y') fechaNac,
-	        h.hin_fecha_ingreso, h.hin_categoria categoria, a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia,
-	        DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia
-	from hincha h, abonados_sector a
-	where h.hin_rut = #{rut} and
-	      h.hin_rut = a.hin_rut
-</select>
- -->
-
 <insert id="insertarAbonado"  parameterType="Hincha">
-insert into abonados_sector (hin_rut, sec_id, abs_vigencia) 
-values (#{rut},#{idSector},STR_TO_DATE(#{vigencia}, '%d/%m/%Y'))
+insert into abonados_sector (equ_id, hin_rut, sec_id, abs_vigencia) 
+values (#{idEquipo}, #{rut},#{idSector},STR_TO_DATE(#{vigencia}, '%d/%m/%Y'))
 </insert>
 
 <update id="actualizarAbonado" parameterType="Hincha">
    update abonados_sector 
        set sec_id = #{idSector}, abs_vigencia= STR_TO_DATE(#{vigencia}, '%d/%m/%Y')
    where
-     hin_rut = #{rut}
+     hin_rut = #{rut} and equ_id = #{idEquipo}
 </update>
 
-<select id="obtenerDatosAbonado"  resultType="Hincha" parameterType="int">
+<select id="obtenerDatosAbonado"  resultType="Hincha" parameterType="map">
 select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia
 	from abonados_sector a
-	where a.hin_rut = #{rut} 
+	where a.hin_rut = #{rut} and equ_id=#{idEquipo}
 	     
 </select>
 
@@ -42,24 +28,24 @@ select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE
 
 <!-- ================================================================================================= -->
 
-<select id="obtenerHincha" resultType="Hincha" parameterType="int">
+<select id="obtenerHincha" resultType="Hincha" parameterType="map">
   select    hin_rut rut, hin_dv dv, 
 	        hin_nombres nombres, hin_apellidos apellidos, hin_direccion direccion,
 	        hin_genero genero,  hin_telefono telefono,  hin_email email,DATE_FORMAT(hin_fecha_nac, '%d/%m/%Y') fechaNac,
 	        hin_fecha_ingreso, hin_categoria categoria
 	from hincha
-	where hin_rut = #{rut}
+	where hin_rut = #{rut} and equ_id = #{idEquipo}
 
 </select>
 
 <insert id="insertarHincha"  parameterType="Hincha">
-insert into hincha (hin_rut, hin_dv,hin_nombres, hin_apellidos, hin_direccion,hin_genero, hin_telefono,hin_email ,hin_fecha_nac,hin_fecha_ingreso,hin_categoria) 
-values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#{genero},#{telefono},#{email},STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),NOW(),#{categoria})
+insert into hincha (equ_id, hin_rut, hin_dv,hin_nombres, hin_apellidos, hin_direccion,hin_genero, hin_telefono,hin_email ,hin_fecha_nac,hin_fecha_ingreso,hin_categoria) 
+values (#{idEquipo}, #{rut},UPPER(#{dv}),UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#{genero},#{telefono},#{email},STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),NOW(),#{categoria})
 </insert>
 
 <insert id="insertarHinchaEntidad"  parameterType="Hincha">
-insert into hincha (hin_rut, hin_dv,hin_nombres, hin_direccion, hin_telefono,hin_email ,hin_fecha_ingreso,hin_categoria) 
-values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),#{direccion},#{telefono},#{email},NOW(),#{categoria})
+insert into hincha (equ_id, hin_rut, hin_dv,hin_nombres, hin_direccion, hin_telefono,hin_email ,hin_fecha_ingreso,hin_categoria) 
+values (#{idEquipo}, #{rut},UPPER(#{dv}),UPPER(#{nombres}),#{direccion},#{telefono},#{email},NOW(),#{categoria})
 </insert>
 
 <update id="actualizarHincha" parameterType="Hincha">
@@ -72,7 +58,7 @@ values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),#{direccion},#{telefono},#{email},
                     hin_email = #{email},
                     hin_fecha_nac =STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),
                     hin_categoria = #{categoria}
-                 where hin_rut = #{rut}
+                 where hin_rut = #{rut} and equ_id = #{idEquipo}
 </update>
 
 <update id="actualizarHinchaEntidad" parameterType="Hincha">
@@ -82,12 +68,12 @@ values (#{rut},UPPER(#{dv}),UPPER(#{nombres}),#{direccion},#{telefono},#{email},
                     hin_telefono = #{telefono},
                     hin_email = #{email},                   
                     hin_categoria = #{categoria}
-                 where hin_rut = #{rut}
+                 where hin_rut = #{rut}  and equ_id = #{idEquipo}
 </update>
 
 
-<select id="obtenerEntidades" resultType="Hincha">
-     select hin_rut rut, hin_dv dv, hin_nombres nombres from hincha where hin_categoria = 'E' order by hin_nombres
+<select id="obtenerEntidades" resultType="Hincha" parameterType="map">
+     select hin_rut rut, hin_dv dv, hin_nombres nombres from hincha where hin_categoria = 'E'  and equ_id = #{idEquipo} order by hin_nombres
 </select>
 
 <delete id="borrarListaNegra" >

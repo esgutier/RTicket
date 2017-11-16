@@ -16,9 +16,9 @@ import cl.rticket.model.TotalesEntrada;
 
 public interface ItemMapper {
    
-	public ArrayList<Partido>   obtenerPartidos();
-	public ArrayList<Sector>    obtenerSectores();
-	public ArrayList<Entrada>    obtenerEntradas(@Param("idPartido")Integer idPartido);
+	public ArrayList<Partido>   obtenerPartidos(@Param("idEquipo")Integer idEquipo);
+	public ArrayList<Sector>    obtenerSectores(@Param("idEquipo")Integer idEquipo);
+	public ArrayList<Entrada>    obtenerEntradas(@Param("idPartido")Integer idPartido, @Param("idEquipo")Integer idEquipo);
 	
 	
 	public void insertarEntrada(Entrada entrada);
@@ -26,7 +26,12 @@ public interface ItemMapper {
 	public int actualizarEntrada(Entrada entrada);
 	
 	
-	public Entrada obtenerEntrada(Integer idEntrada);
+	public Entrada obtenerEntrada(@Param("idEntrada") Integer idEntrada, @Param("idEquipo")Integer idEquipo);
+	
+	public Integer esTicketNominativo(@Param("idEquipo")Integer idEquipo,
+						            @Param("idPartido")Integer idPartido,
+						            @Param("idSector")Integer idSector,
+						            @Param("rut")Integer rut);
 	public void insertarCompra(Compra compra);
 	public int actualizarTokenCompra(@Param("idCompra")Integer idCompra,
 			                         @Param("token")String token);
@@ -62,11 +67,28 @@ public interface ItemMapper {
 	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException;
 	
 	//Control de acceso
+	/*
+	public int actualizarAccesoNominativo(@Param("idEquipo")Integer idEquipo,
+			                              @Param("idPartido")Integer idPartido,
+			                              @Param("idSector")Integer idSector,
+			                              @Param("rut")Integer rut);
+	
+	public int actualizarAccesoNormal(@Param("idTicket")String idTicket); */
+	
+	public Integer existeTicket(@Param("idEquipo")Integer idEquipo, 
+								@Param("token")String token,
+								@Param("idPartido") Integer idPartido, 
+								@Param("idSector") Integer idSector);
+	
+	public Integer esAbonadoVigente(@Param("idEquipo")Integer idEquipo,
+								@Param("idSector")Integer idSector,
+								@Param("rut")Integer rut);
+	
 	public ArrayList<String> obtenerEntradasNormalesPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector );
 	public ArrayList<Integer> obtenerEntradasNominativasPorSector(@Param("idPartido")Integer idPartido,@Param("idSector")Integer idSector);
 	public ArrayList<Integer> obtenerTotalListaNegra();
 	public ArrayList<Integer> obtenerAbonadosPorSector(@Param("idSector")Integer idSector);
 	
-	public int insertarAccesoEstadio(@Param("id")String id, @Param("idPartido")Integer idPartido, @Param("idSector")Integer idSector) throws DuplicateKeyException;
+	public int insertarAccesoEstadio(@Param("idEquipo")Integer idEquipo, @Param("id")String id, @Param("idPartido")Integer idPartido, @Param("idSector")Integer idSector) throws DuplicateKeyException;
 
 }

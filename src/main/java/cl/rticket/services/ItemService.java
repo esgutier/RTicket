@@ -3,6 +3,7 @@ package cl.rticket.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -17,17 +18,17 @@ import cl.rticket.model.TotalesEntrada;
 
 public interface ItemService {
 
-	public ArrayList<Partido>   obtenerPartidos();
-	public ArrayList<Sector>    obtenerSectores();
-	public ArrayList<Entrada>    obtenerEntradas(Integer idPartido);
+	public ArrayList<Partido>   obtenerPartidos(Integer idEquipo);
+	public ArrayList<Sector>    obtenerSectores(Integer idEquipo);
+	public ArrayList<Entrada>    obtenerEntradas(Integer idPartido, Integer idEquipo);
 	
 	public void insertarEntrada(Entrada entrada);
 	public int eliminarEntrada(Integer idEntrada)throws DataIntegrityViolationException;
 	public int actualizarEntrada(Entrada entrada);	
-	public Entrada obtenerEntrada(Integer idEntrada);
+	public Entrada obtenerEntrada(Integer idEntrada, Integer idEquipo);
 	
-	
-	public ArrayList<Ticket> insertarCompra(ArrayList<Compra> list) throws UpdateException;
+	public Integer esTicketNominativo(Integer idEquipo,Integer idPartido,Integer idSector,Integer rut);
+	public ArrayList<Ticket> insertarCompra(ArrayList<Compra> list, Integer idEquipo) throws UpdateException;
 	public void insertarCompra(Compra compra) throws UpdateException;
 	public int anularTicket(String token);
 	
@@ -55,6 +56,14 @@ public interface ItemService {
 	public int eliminarSector(Integer idSector) throws DataIntegrityViolationException;
 	
 	//control de acceso
+	
+	/*public int actualizarAccesoNominativo(Integer idEquipo,Integer idPartido,Integer idSector,Integer rut);
+
+    public int actualizarAccesoNormal(String idTicket);*/
+	
+	public Integer existeTicket(Integer idEquipo, String token,Integer idPartido, Integer idSector);
+    public Integer esAbonadoVigente(Integer idEquipo,Integer idSector,Integer rut);
+	
 	public HashMap<String, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector );
 	public HashMap<Integer, Integer> obtenerEntradasNominativasPorSector(Integer idPartido,Integer idSector);
 	public HashMap<Integer, Integer> obtenerAbonadosPorSector(Integer idSector);
@@ -62,6 +71,6 @@ public interface ItemService {
 	public ArrayList<Integer> listaEntradasNominativasPorSector(Integer idPartido,Integer idSector);
 	public HashMap<Integer,Integer> obtenerTotalListaNegra();
 	
-	public void insertarAccesoEstadio(String id, Integer idPartido, Integer idSector) throws DuplicateKeyException;
+	public void insertarAccesoEstadio(Integer idEquipo,String id, Integer idPartido, Integer idSector) throws DuplicateKeyException;
 	
 }

@@ -33,9 +33,9 @@ public class MasivasController {
 	
 	@RequestMapping(value="/carga-pagina-masivo", method=RequestMethod.GET)
 	public String cargaPaginaMasivo(Model model) {
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		model.addAttribute("entrada", new Entrada());
-		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
 		
 		
 		return "content/masiva";
@@ -44,9 +44,9 @@ public class MasivasController {
 	@RequestMapping(value="/carga-entradas-masivo",method={RequestMethod.POST,RequestMethod.GET})
 	public String cargaIngresoMasivo(Model model, Entrada entrada) {
 		
-		System.out.println("entrada id ===>"+entrada.getIdEntrada());
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido(), user.getIdEquipo()));
 		//cargar totales
 		System.out.println("--->"+itemService.obtenerTotalesEntradas(entrada.getIdPartido()).size());
 		model.addAttribute("totales",itemService.obtenerTotalesEntradas(entrada.getIdPartido()));
@@ -61,7 +61,7 @@ public class MasivasController {
 		
 		
 		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		Entrada ent =itemService.obtenerEntrada(entrada.getIdEntrada());
+		Entrada ent =itemService.obtenerEntrada(entrada.getIdEntrada(), usuario.getIdEquipo());
 		//validar numero ingresado
 		Integer totalvendidas = itemService.obtenerTotalSectorVendidas(entrada.getIdEntrada(), entrada.getIdPartido());
 		System.out.println("-->totalvendidas:"+totalvendidas);
@@ -78,6 +78,8 @@ public class MasivasController {
 		for(int i = 0 ; i < entrada.getMaximo().intValue(); i++) {
 			//generar el objeto compra
 			Compra compra = new Compra();
+			compra.setIdPartido(entrada.getIdPartido());
+			compra.setIdEquipo(usuario.getIdEquipo());
 			compra.setIdEntrada(entrada.getIdEntrada());			
 			compra.setRut(11111111);			
 			compra.setUsername(usuario.getUsername());
@@ -168,20 +170,6 @@ public class MasivasController {
 			flash.addFlashAttribute("entrada", entrada);
 			return "redirect:/carga-entradas-masivo";
 		}
-		/*ImpresionMasiva impresionMasiva = new ImpresionMasiva();
-		PrintService service = impresionMasiva.obtenerImpresoraService();
-		int secuencia = entrada.getInicio().intValue();
-		for(Ticket t : tickets) {
-
-            t.setSecuencia(secuencia);
-			try {
-				impresionMasiva.imprimirTicket(t,service);
-			} catch (ImpresoraNoDisponibleException e) {
-				flash.addFlashAttribute("error", "ERROR: La impresora no esta disponible");
-				break;
-			}
-			secuencia++;
-		}*/
 		
 		entrada.setIdPartido(entrada.getIdPartido());
 		entrada.setIdEntrada(0);

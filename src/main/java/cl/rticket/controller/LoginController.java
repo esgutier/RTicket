@@ -7,6 +7,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,13 +16,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import cl.rticket.model.Entrada;
 import cl.rticket.model.Usuario;
+import cl.rticket.services.ItemService;
 import cl.rticket.utils.VerifyRecaptcha;
+
 
 
 
 @Controller
 public class LoginController {
+	
+	@Autowired
+	ItemService itemService;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String index(Model model) {	
@@ -51,7 +58,8 @@ public class LoginController {
 		Subject subject = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(usuario.getUsername(), usuario.getPassword());
 		try { 
-		    subject.login(token);  
+		    subject.login(token); 
+		   
 		} catch (IncorrectCredentialsException ex) {          
 			mv.addObject("error_message", "Credenciales incorrectas");
 			mv.setViewName("login");
@@ -63,6 +71,16 @@ public class LoginController {
 	     finally {
 		   		token.clear();
 	      }
+		
+		
+	    if(subject.hasRole("CONTROL")) {
+	    	Entrada entrada = new Entrada();	
+			Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");			
+			mv.addObject("entrada", entrada);
+			mv.addObject("sectores", itemService.obtenerSectores(user.getIdEquipo()));
+			mv.addObject("partidos", itemService.obtenerPartidos(user.getIdEquipo()));			
+			mv.setViewName("content/control");
+	    }
 		return mv;
 	}
 	

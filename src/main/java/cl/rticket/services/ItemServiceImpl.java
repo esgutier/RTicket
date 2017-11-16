@@ -3,6 +3,7 @@ package cl.rticket.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -26,15 +27,15 @@ public class ItemServiceImpl implements ItemService{
 	@Autowired
 	ItemMapper itemMapper ;
 	
-	public ArrayList<Partido> obtenerPartidos() {
-		return itemMapper.obtenerPartidos();
+	public ArrayList<Partido> obtenerPartidos(Integer idEquipo) {
+		return itemMapper.obtenerPartidos(idEquipo);
 	}
-	public ArrayList<Sector> obtenerSectores( ) {
-		return itemMapper.obtenerSectores();
+	public ArrayList<Sector> obtenerSectores(Integer idEquipo ) {
+		return itemMapper.obtenerSectores(idEquipo);
 	}
 	
-	public ArrayList<Entrada> obtenerEntradas( Integer idPartido) {
-		return itemMapper.obtenerEntradas(idPartido);
+	public ArrayList<Entrada> obtenerEntradas( Integer idPartido, Integer idEquipo) {
+		return itemMapper.obtenerEntradas(idPartido, idEquipo);
 	}
 	
 	public void insertarEntrada(Entrada entrada) {
@@ -49,16 +50,19 @@ public class ItemServiceImpl implements ItemService{
 		return itemMapper.actualizarEntrada(entrada);
 	}
 	
-	public Entrada obtenerEntrada(Integer idEntrada) {
-		return itemMapper.obtenerEntrada(idEntrada);
+	public Entrada obtenerEntrada(Integer idEntrada, Integer idEquipo) {
+		return itemMapper.obtenerEntrada(idEntrada, idEquipo);
 	}
 	
 	@Transactional(rollbackFor={UpdateException.class, Exception.class})
-	public ArrayList<Ticket> insertarCompra(ArrayList<Compra> list) throws UpdateException {
+	public ArrayList<Ticket> insertarCompra(ArrayList<Compra> list, Integer idEquipo) throws UpdateException {
 		
 		ArrayList<Ticket> listaTickets = new ArrayList<Ticket>();
 		for(Compra compra: list) {
+			Entrada entrada = itemMapper.obtenerEntrada(compra.getIdEntrada(), idEquipo);
 			//inserto compra con token 0
+			compra.setIdEquipo(idEquipo);
+			compra.setIdSector(entrada.getIdSector());
 			itemMapper.insertarCompra(compra);			
 			if(compra.getIdCompra() < 1) {
 				throw new UpdateException();
@@ -79,10 +83,15 @@ public class ItemServiceImpl implements ItemService{
 		}	
 		return listaTickets;
 	}
+	public Integer esTicketNominativo(Integer idEquipo,Integer idPartido,Integer idSector,Integer rut) {
+		return itemMapper.esTicketNominativo(idEquipo, idPartido, idSector, rut);
+	}
 	
 	@Transactional(rollbackFor={UpdateException.class, Exception.class})
 	public void insertarCompra(Compra compra) throws UpdateException {
 		
+		    Entrada entrada = itemMapper.obtenerEntrada(compra.getIdEntrada(), compra.getIdEquipo());
+		    compra.setIdSector(entrada.getIdSector());
 			//inserto compra con token 0		
 			itemMapper.insertarCompra(compra);			
 			if(compra.getIdCompra() < 1) {
@@ -209,6 +218,23 @@ public class ItemServiceImpl implements ItemService{
 	}
 	
 	//control de acceso
+	/*
+	public int actualizarAccesoNominativo(Integer idEquipo,Integer idPartido,Integer idSector,Integer rut) {
+		return itemMapper.actualizarAccesoNominativo(idEquipo, idPartido, idSector, rut);
+	}
+
+    public int actualizarAccesoNormal(String idTicket) {
+    	return itemMapper.actualizarAccesoNormal(idTicket);
+    }
+	*/
+	
+	public Integer existeTicket(Integer idEquipo, String token,Integer idPartido, Integer idSector) {
+		return itemMapper.existeTicket(idEquipo, token, idPartido, idSector);
+	}
+	
+    public Integer esAbonadoVigente(Integer idEquipo,Integer idSector,Integer rut) {
+    	return itemMapper.esAbonadoVigente(idEquipo, idSector, rut);
+    }
 	public HashMap<String, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector ) {
 		ArrayList<String> list = itemMapper.obtenerEntradasNormalesPorSector(idPartido, idSector);
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
@@ -255,9 +281,9 @@ public class ItemServiceImpl implements ItemService{
 		return map;
 	}
 	
-	public void insertarAccesoEstadio(String id, Integer idPartido, Integer idSector)  throws DuplicateKeyException{
+	public void insertarAccesoEstadio(Integer idEquipo, String id, Integer idPartido, Integer idSector)  throws DuplicateKeyException{
 		
-		   itemMapper.insertarAccesoEstadio(id, idPartido, idSector);
+		   itemMapper.insertarAccesoEstadio(idEquipo,id, idPartido, idSector);
 		
 	}
 

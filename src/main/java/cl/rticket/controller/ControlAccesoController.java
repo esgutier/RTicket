@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -17,6 +17,7 @@ import cl.rticket.model.Entrada;
 import cl.rticket.model.Partido;
 import cl.rticket.model.RUT;
 import cl.rticket.model.Sector;
+import cl.rticket.model.Usuario;
 import cl.rticket.services.HinchaService;
 import cl.rticket.services.ItemService;
 import cl.rticket.utils.Util;
@@ -24,7 +25,6 @@ import cl.rticket.utils.Util;
 @Controller
 public class ControlAccesoController {
 
-	private static final Logger logger = Logger.getLogger(ControlAccesoController.class);
 	
 	@Autowired
 	ItemService itemService;
@@ -55,177 +55,79 @@ public class ControlAccesoController {
 
 	@RequestMapping(value="/control", method=RequestMethod.GET)
 	public String cargaControlPuerta(Model model) {
-		Entrada entrada = new Entrada();		
+		Entrada entrada = new Entrada();	
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		model.addAttribute("entrada", entrada);
-		model.addAttribute("sectores", this.getSectores());
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
 		
 		return "content/control";
 	}
 
-	@RequestMapping(value="/carga-pagina-control", method=RequestMethod.GET)
-	public String cargaPaginaSectores(Model model) {
-		Partido partido = new Partido();
-		partido.setIdPartido(this.idPartido);
-		model.addAttribute("partido", partido);
-		this.setPartidos(itemService.obtenerPartidos());
-		this.setSectores(itemService.obtenerSectores());
-		model.addAttribute("partidos", this.getPartidos());
-		model.addAttribute("sectores", this.getSectores());
-		
-		model.addAttribute("totalNormales", this.totalNormales);
-		model.addAttribute("totalNominativas", this.totalNominativas);
-		model.addAttribute("totalListaNegra", this.totalListaNegra);
-		model.addAttribute("totalAbonados", this.totalAbonados);
-		model.addAttribute("total", this.getTotalEscaneado());
-		
 
-		return "content/controlAcceso";
-	}
-	
-	@RequestMapping(value="/cargar-control-acceso", method=RequestMethod.POST)
-	public String cargarAccesoSector(Model model, Partido partido) {
-		
-		model.addAttribute("partidos", this.getPartidos());
-		this.setIdPartido(partido.getIdPartido());
-		
-		//cargar todas los tickets por sector
-		
-		this.normales.clear();
-		this.nominativas.clear();
-		this.abonados.clear();
-		this.listaNegra.clear();
-		this.totalNormales = 0;
-		this.totalNominativas = 0;
-		this.totalAbonados = 0;
-		
-		for(Sector sec: this.getSectores()) {
-			HashMap<String,Integer> normalesPorSector = itemService.obtenerEntradasNormalesPorSector(partido.getIdPartido(), sec.getIdSector());
-			this.getNormales().put(sec.getIdSector(), normalesPorSector);
-			this.totalNormales = this.totalNormales + normalesPorSector.size();
-			
-			HashMap<Integer,Integer> nominativasPorSector = itemService.obtenerEntradasNominativasPorSector(partido.getIdPartido(), sec.getIdSector()); 
-			this.getNominativas().put(sec.getIdSector(), nominativasPorSector);
-			this.totalNominativas = this.totalNominativas + nominativasPorSector.size();
-			
-			HashMap<Integer,Integer> abonadosPorSector = itemService.obtenerAbonadosPorSector(sec.getIdSector()); 
-			this.getAbonados().put(sec.getIdSector(), abonadosPorSector);
-			this.totalAbonados = this.totalAbonados + abonadosPorSector.size();
-		}
-		
-		//obtener lista negra
-		
-		this.setListaNegra(itemService.obtenerTotalListaNegra());
-        this.totalListaNegra = this.getListaNegra().size();
-		
-		model.addAttribute("totalNormales", totalNormales);
-		model.addAttribute("totalNominativas", totalNominativas);
-		model.addAttribute("totalListaNegra", this.totalListaNegra);
-		model.addAttribute("totalAbonados", this.totalAbonados);
-		
-		return "content/controlAcceso";
-	}
-	
-	
 	@RequestMapping(value="/validar-acceso", method=RequestMethod.POST)
 	public String validarAcceso(Model model, Entrada entrada) {
 		
 		String scan = entrada.getScan().trim();
 		String first = scan.substring(0, 1);
 		model.addAttribute("respuesta", " ACCESO NO PERMITIDO");
-		//System.out.println("------>"+first);
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");	
 		if(first.equals("E")) {
-			//System.out.println("scan:"+scan+" sector:"+entrada.getIdSector());
-			HashMap<String,Integer> entradasSector  = this.getNormales().get(entrada.getIdSector());
-			
-			if(entradasSector != null) {
-				Integer value = entradasSector.get(scan);
-				if(value == null) {
-					model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET INVÁLIDO</font>");
-				} else if(value == 1){
-					model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET YA UTILIZADO</font>");
-				} else {
-					try {
-						itemService.insertarAccesoEstadio(scan, this.getIdPartido(), entrada.getIdSector());
-						model.addAttribute("respuesta", "<font color=\"green\">"+scan+"<br/>TICKET OK!</font>");
-						entradasSector.put(scan, 1);
-						this.totalEscaneado++;
-					} catch (DuplicateKeyException e) {
-						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET YA UTILIZADO</font>");
-					}		
-				}
-			} else {
-				model.addAttribute("respuesta", "DATOS NO CARGADOS");
+			//lectura del codigo del ticket
+			try {
+				   Integer existe = itemService.existeTicket(user.getIdEquipo(), scan, entrada.getIdPartido(), entrada.getIdSector());
+				   if(existe != null) {
+					   itemService.insertarAccesoEstadio(user.getIdEquipo(), scan, entrada.getIdPartido(), entrada.getIdSector());
+					   model.addAttribute("respuesta", "<font color=\"green\">"+scan+"<br/>TICKET OK!</font>"); //ticket ok
+				   } else {
+					   model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET INVÁLIDO</font>"); //ticket invalido
+				   }
+				  
+			} catch (DuplicateKeyException e) {
+				model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/>"+scan+"<br/>TICKET YA UTILIZADO</font>"); // ticket ya utilizado
 			}
 			
 		} else if(scan.length() < 11) {
-			//es una cedula nueva
+			//es una cedula 
+			
 			RUT rut = Util.obtieneRUT(scan);
-			
-			//buscar en lista negra
-			//if(this.getListaNegra().get(rut.getNumero()) == null) {
-				//buscar en nominativas
-				HashMap<Integer,Integer> nominativasSector = this.getNominativas().get(entrada.getIdSector());
-				if(nominativasSector != null) {
-					Integer value = nominativasSector.get(rut.getNumero());
-					if(value == null) {
-						//no esta en nominativas, buscar en abonados
-						HashMap<Integer,Integer> abonadosSector = this.getAbonados().get(entrada.getIdSector());
-						if(abonadosSector != null) {
-							value = abonadosSector.get(rut.getNumero());
-							if(value == null) {
-								//no esta en abonados, buscar en estadio seguro
-								if(!this.estaEnListaNegra(this.getListaNegra(),rut.getNumero()))  {
-									model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ESTADIO SEGURO)</font>");
-									logger.info("HINCHA_REGULAR|"+scan+"-"+entrada.getIdSector()+"-"+this.getIdPartido());
-								} else {
-									model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>ESTADIO SEGURO</font>");
-								}																
-							} else if(value == 1) {
-								model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (ABONADO)</font>");
-							} else {
-								try {
-									itemService.insertarAccesoEstadio(""+rut.getNumero(), this.getIdPartido(), entrada.getIdSector());
-									model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ABONADO)</font>");
-									abonadosSector.put(rut.getNumero(), 1);
-									this.totalEscaneado++;
-								} catch (DuplicateKeyException e) {
-									model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (ABONADO)</font>");
-								}						
-							}
-						} else {
-							model.addAttribute("respuesta", "DATOS NO CARGADOS");	
-						}
-						
-					} else if(value == 1) {
-						model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (NOMINATIVA)</font>");
-					} else {
-						try {
-						    itemService.insertarAccesoEstadio(""+rut.getNumero(), this.getIdPartido(), entrada.getIdSector());
-						    model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (NOMINATIVA)</font>");
-							nominativasSector.put(rut.getNumero(), 1);
-							this.totalEscaneado++;
-						} catch(DuplicateKeyException e) {
-							model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (NOMINATIVA)</font>");
-						}	
-					}
-				} else { 
-					model.addAttribute("respuesta", "DATOS NO CARGADOS");	
+		    // es abonado
+			Integer result = itemService.esAbonadoVigente(user.getIdEquipo(), entrada.getIdEntrada(), rut.getNumero());
+			if(result != null) {
+				//es abonado vigente
+				try {
+					   itemService.insertarAccesoEstadio(user.getIdEquipo(), ""+rut.getNumero(), entrada.getIdPartido(), entrada.getIdSector());
+					   model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ABONADO)</font>"); //abonado ok
+				} catch (DuplicateKeyException e) {
+					model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (ABONADO)</font>"); // acceso no permitido (abonado) - cedula ya utilizada 
 				}
-			
+			} else {
+				//no es abonado, buscar en lista negra
+				if(hinchaService.estaEnListaNegra(rut.getNumero())) {
+					model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>ESTADIO SEGURO</font>"); //acceso no permitido - estadio seguro
+				} else {
+					result = itemService.esTicketNominativo(user.getIdEquipo(), entrada.getIdPartido(), entrada.getIdSector(), rut.getNumero());
+					if(result != null) {
+						try {
+							itemService.insertarAccesoEstadio(user.getIdEquipo(), ""+rut.getNumero(), entrada.getIdPartido(), entrada.getIdSector());
+							model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (NOMINATIVA)</font>"); //nominativa ok
+						} catch (DuplicateKeyException e) {
+							model.addAttribute("respuesta", "<font color=\"red\">ACCESO NO PERMITIDO<br/> "+rut.rutCompleto()+" <br/>CEDULA YA UTILIZADA (NOMINATIVA)</font>"); // acceso no permitido  - cedula ya utilizada 
+						}
+					}else {
+						model.addAttribute("respuesta", "<font color=\"green\">"+rut.rutCompleto()+" <br/>CÉDULA OK! (ESTADIO SEGURO)</font>"); //cedula ok - estadio seguro
+					}
+				}
+			}	
 		} else {
-			model.addAttribute("respuesta", "TEXTO ESCANEADO NO RECONOCIDO");					
+			model.addAttribute("respuesta", "TEXTO ESCANEADO NO RECONOCIDO"); //texto no reconocido				
 		}		
-		model.addAttribute("sectores", this.getSectores());
+		
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));			
 		return "content/control";
 	}
 	
-	private boolean estaEnListaNegra(HashMap<Integer,Integer> listaNegra, int rut) {
-		boolean esta = false;
-		if(listaNegra.get(rut) != null) {
-			esta = true;
-		}
-		return esta;
-	}
 	
 	public ArrayList<Partido> getPartidos() {
 		return partidos;

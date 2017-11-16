@@ -1,7 +1,6 @@
 package cl.rticket.rest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.rticket.controller.ControlAccesoController;
 import cl.rticket.model.Sector;
+import cl.rticket.services.HinchaService;
 import cl.rticket.services.ItemService;
 
 @RestController
@@ -27,107 +27,67 @@ public class AccesoRestController {
 	@Autowired
 	ItemService itemService;
 	
+	@Autowired
+	HinchaService hinchaService;
 	
-	@GetMapping("api/rest/validar-acceso/{input}/sector/{idSector}")
-	public ResponseEntity<Integer> validarAcceso(@PathVariable("input") String input, @PathVariable("idSector") Integer idSector) {
+	
+	@GetMapping("api/rest/validar-acceso/{idEquipo}/{idPartido}/{idSector}/{input}")
+	public ResponseEntity<Integer> validarAcceso(@PathVariable("input") String input, 
+			                                     @PathVariable("idSector") Integer idSector,
+			                                     @PathVariable("idEquipo") Integer idEquipo,
+			                                     @PathVariable("idPartido") Integer idPartido) {
 		
 		
 		String first = input.substring(0, 1);
 		int response = 0; // 0 : acceso no permitido
-		
-		
+			
 		if(first.equals("E")) {
-			
-			HashMap<String,Integer> entradasSector  = controlAcceso.getNormales().get(idSector);
-			
-			if(entradasSector != null) {
-				Integer value = entradasSector.get(input);
-				if(value == null) {					
-					response = 11; // acceso no permitido - ticket invalido
-				} else if(value == 1){					
-					response = 12; // acceso no permitido - ticket ya utilizado
-				} else {					
-					
-					try {
-					    itemService.insertarAccesoEstadio(input, controlAcceso.getIdPartido(), idSector);
-					    response = 10; // ticket ok;
-						entradasSector.put(input, 1);
-						controlAcceso.setTotalEscaneado(controlAcceso.getTotalEscaneado() + 1);						
-					} catch(DuplicateKeyException e) {
-						response = 12; // acceso no permitido - ticket ya utilizado
-					}
-				}
-			} else {
-				response = -1; //datos no cargados
+			//lectura del codigo del ticket
+			try {
+			   Integer existe = itemService.existeTicket(idEquipo, input, idPartido, idSector);
+			   if(existe != null) {
+				   itemService.insertarAccesoEstadio(idEquipo, input, idPartido, idSector);
+				   response = 10; //ticket ok
+			   } else {
+				   response = 11; //ticket invalido
+			   }
+			  
+			} catch (DuplicateKeyException e) {
+				response = 12; // ticket ya utilizado
 			}
 			
 		} else if(input.length() < 9) {
-			//es una cedula nueva
+			//es una cedula 
 			
 			int rut = Integer.parseInt(input);
-
-				//buscar en nominativas
-				HashMap<Integer,Integer> nominativasSector = controlAcceso.getNominativas().get(idSector);
-				if(nominativasSector != null) {
-					Integer value = nominativasSector.get(rut);
-					if(value == null) {		
-						//no esta en nominativas, buscar en abonados
-						HashMap<Integer,Integer> abonadosSector = controlAcceso.getAbonados().get(idSector);
-						
-						if(abonadosSector != null) {
-							value = abonadosSector.get(rut);
-							if(value == null) {							
-								//no esta en abonados, verificar estadio seguro
-								if(!estaEnListaNegra(controlAcceso.getListaNegra(),rut))  {
-									//System.out.println("Estadio Seguro: Cedula OK");
-									response = 23; //cedula ok - estadio seguro
-									logger.info("HINCHA_REGULAR|"+input+"-"+idSector+"-"+controlAcceso.getIdPartido());
-								} else {
-									//System.out.println("Estadio Seguro: Acceso no permitido");
-									response = 0; //acceso no permitido - estadio seguro
-								}								
-							} else if(value == 1) {
-								//System.out.println("Abonado: Cedula ya utilizada");
-								response = 22; //acceso no permitido - cedula ya utilizada
-							} else {
-								//en abonados no verifico lista negra	
-								try {
-								    itemService.insertarAccesoEstadio(""+rut, controlAcceso.getIdPartido(), idSector);
-								    abonadosSector.put(rut, 1);
-									response = 21; // cedula ok - abonado
-									controlAcceso.setTotalEscaneado(controlAcceso.getTotalEscaneado() + 1);									
-								} catch (DuplicateKeyException e)	{
-									//System.out.println("Abonado: Cedula ya utilizada (DuplicateKeyException)");
-									response = 22; //acceso no permitido - cedula ya utilizada
-								}
-								
-								
-							}
-						} else {
-							response = -1; //datos no cargados
-						}
-												
-						//response = 21; // acceso no permitido - cedula sin registro
-					} else if(value == 1) {	
-						//System.out.println("Nominativa: Cedula ya utilizada");
-						response = 22; //acceso no permitido - cedula ya utilizada
-					} else {		
-                        try {
-							itemService.insertarAccesoEstadio(""+rut, controlAcceso.getIdPartido(), idSector);
-							nominativasSector.put(rut, 1);
-							response = 20; // cedula ok - nominativa
-							controlAcceso.setTotalEscaneado(controlAcceso.getTotalEscaneado() + 1);
-                        } catch (DuplicateKeyException e) {
-                        	response = 22; //acceso no permitido - cedula ya utilizada
-                        	//System.out.println("Nominativa: Cedula ya utilizada (DuplicateKeyException)");
-                        }
-						
-						
-					}
-				} else {
-					response = -1; //datos no cargados
+		    // es abonado
+			Integer result = itemService.esAbonadoVigente(idEquipo, idSector, rut);
+			if(result != null) {
+				//es abonado vigente
+				try {
+					   itemService.insertarAccesoEstadio(idEquipo, input, idPartido, idSector);
+					   response = 21; //abonado ok
+				} catch (DuplicateKeyException e) {
+						response = 22; // acceso no permitido (abonado) - cedula ya utilizada 
 				}
-			
+			} else {
+				//no es abonado, buscar en lista negra
+				if(hinchaService.estaEnListaNegra(rut)) {
+					response = 0; //acceso no permitido - estadio seguro
+				} else {
+					result = itemService.esTicketNominativo(idEquipo, idPartido, idSector, rut);
+					if(result != null) {
+						try {
+							itemService.insertarAccesoEstadio(idEquipo, input, idPartido, idSector);
+							response = 20; //nominativa ok
+						} catch (DuplicateKeyException e) {
+							response = 22; // acceso no permitido  - cedula ya utilizada 
+						}
+					}else {
+						response = 23; //cedula ok - estadio seguro
+					}
+				}
+			}	
 		} else {
 			response = 99; //texto no reconocido				
 		}		
@@ -136,17 +96,9 @@ public class AccesoRestController {
 	}
 	
 	
-	@GetMapping("api/rest/validar-acceso/sectores")
-	public ResponseEntity<ArrayList<Sector>> obtenerSectores() {
-		return new ResponseEntity<ArrayList<Sector>>(itemService.obtenerSectores(), HttpStatus.OK);
+	@GetMapping("api/rest/validar-acceso/sectores/{idEquipo}")
+	public ResponseEntity<ArrayList<Sector>> obtenerSectores( @PathVariable("idEquipo") Integer idEquipo) {
+		return new ResponseEntity<ArrayList<Sector>>(itemService.obtenerSectores(idEquipo), HttpStatus.OK);
 	}
 	
-	private boolean estaEnListaNegra(HashMap<Integer,Integer> listaNegra, int rut) {
-		boolean esta = false;
-		if(listaNegra.get(rut) != null) {
-			esta = true;
-		}
-		return esta;
-	}
-
 }

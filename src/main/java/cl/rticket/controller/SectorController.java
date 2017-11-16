@@ -1,5 +1,6 @@
 package cl.rticket.controller;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.rticket.model.Sector;
+import cl.rticket.model.Usuario;
 import cl.rticket.services.ItemService;
 
 @Controller
@@ -21,7 +23,8 @@ public class SectorController {
 	@RequestMapping(value="/carga-pagina-sectores", method=RequestMethod.GET)
 	public String cargaPaginaSectores(Model model) {
 		model.addAttribute("sector", new Sector());
-		model.addAttribute("sectores", itemService.obtenerSectores());
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 		return "content/sectoresListar";
 	}
 	
@@ -36,11 +39,13 @@ public class SectorController {
 	public String insertarSector(Model model, Sector sector, RedirectAttributes flash) {
 		
 		String retorno = "content/sectoresListar";
-			
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		sector.setIdEquipo(user.getIdEquipo());	
+		
 		int res = itemService.insertarSector(sector);
 		if(res < 1) {
 			model.addAttribute("error", "Error: No se pudo insertar el sector especificado");
-			model.addAttribute("sectores", itemService.obtenerSectores());
+			model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 		} else {
 			flash.addFlashAttribute("exito", "Sector ingresado correctamente");
 			retorno = "redirect:/carga-pagina-sectores";
@@ -71,7 +76,8 @@ public class SectorController {
 		int res = itemService.eliminarSector(idSector);
 		if(res < 1) {
 			model.addAttribute("error", "Error: No se pudo eliminar el sector especificado");
-			model.addAttribute("sectores", itemService.obtenerSectores());
+			Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+			model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 		} else {
 			flash.addFlashAttribute("exito", "Sector eliminado correctamente");
 			retorno = "redirect:/carga-pagina-sectores";
