@@ -9,8 +9,10 @@ public class Compra implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8713347487018145144L;
+	private Integer idEquipo;
 	private Integer idCompra;
 	private Integer idPartido;	
+	private Integer idSector;
 	private String descPartido;
 	private String descSector;
 	private Integer idEntrada;
@@ -122,6 +124,18 @@ public class Compra implements Serializable {
 	}
 	public void setAnulada(String anulada) {
 		this.anulada = anulada;
+	}
+	public Integer getIdEquipo() {
+		return idEquipo;
+	}
+	public void setIdEquipo(Integer idEquipo) {
+		this.idEquipo = idEquipo;
+	}
+	public Integer getIdSector() {
+		return idSector;
+	}
+	public void setIdSector(Integer idSector) {
+		this.idSector = idSector;
 	}
 	
 	

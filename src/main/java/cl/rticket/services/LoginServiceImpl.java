@@ -1,5 +1,7 @@
 package cl.rticket.services;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +17,9 @@ public class LoginServiceImpl implements LoginService{
 	public Usuario obtenerUsuario(String username) {
 		
 		return loginMapper.obtenerUsuario(username);
+	}
+	
+	public ArrayList<String> obtenerUsuarioRoles(String username) {
+		return loginMapper.obtenerUsuarioRoles(username);
 	}
 }

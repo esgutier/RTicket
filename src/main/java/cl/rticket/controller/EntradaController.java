@@ -1,5 +1,6 @@
 package cl.rticket.controller;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.rticket.model.Entrada;
+import cl.rticket.model.Usuario;
 import cl.rticket.services.ItemService;
 
 @Controller
@@ -20,19 +22,19 @@ public class EntradaController {
 	
 	@RequestMapping(value="/carga-ingreso-entrada", method=RequestMethod.GET)
 	public String cargaIngresoEntrada(Model model) {
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		model.addAttribute("entrada", new Entrada());
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("sectores", itemService.obtenerSectores());
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 		return "content/entrada";
 	}
 	
 	@RequestMapping(value="/carga-entradas-partido", method={RequestMethod.POST,RequestMethod.GET})
 	public String cargaEntradasPartido(Model model, Entrada entrada) {	
-		
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("sectores", itemService.obtenerSectores());
-		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido(), user.getIdEquipo()));
 		return "content/entrada";
 	}
 	
@@ -40,10 +42,10 @@ public class EntradaController {
 	public String cargaEditarEntrada(Model model, @RequestParam(value="idEntrada")Integer idEntrada,
 			                                      @RequestParam(value="idPartido")Integer idPartido,
 			                                      @RequestParam(value="idSector")Integer idSector) {	
-		
-		Entrada entrada = itemService.obtenerEntrada(idEntrada);
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("sectores", itemService.obtenerSectores());
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		Entrada entrada = itemService.obtenerEntrada(idEntrada, user.getIdEquipo());
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 		model.addAttribute("entrada", entrada);
 		return "content/entradaEditar";
 	}
@@ -65,7 +67,8 @@ public class EntradaController {
 			flagError = 1;
 		}
 			
-					
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");	
+		entrada.setIdEquipo(user.getIdEquipo());
 		if(flagError == 0) {			
 		     itemService.insertarEntrada(entrada);
 		     entrada.setMaximo(null);
@@ -76,8 +79,9 @@ public class EntradaController {
 			 flash.addFlashAttribute("exito", "Entrada ingresada correctamente");
 			 retorno = "redirect:/carga-entradas-partido";
 		} else {
-			model.addAttribute("partidos", itemService.obtenerPartidos());
-			model.addAttribute("sectores", itemService.obtenerSectores());		
+		   
+			model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+			model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));		
 		}
 		return retorno;
 	}
@@ -116,8 +120,9 @@ public class EntradaController {
 			int res = itemService.eliminarEntrada(idEntrada);
 			if(res < 1) {
 				model.addAttribute("error", "Error: No se pudo eliminar la entrada especificada");
-				model.addAttribute("partidos", itemService.obtenerPartidos());
-				model.addAttribute("sectores", itemService.obtenerSectores());	
+				Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+				model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+				model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));	
 			} else {
 				Entrada entrada = new Entrada();
 				entrada.setMaximo(null);

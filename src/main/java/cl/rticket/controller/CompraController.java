@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +20,7 @@ import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Ticket;
 import cl.rticket.model.TotalesEntrada;
+import cl.rticket.model.Usuario;
 import cl.rticket.services.ItemService;
 
 @Controller
@@ -31,9 +31,9 @@ public class CompraController {
 	
 	@RequestMapping(value="/carga-ingreso-compra", method=RequestMethod.GET)
 	public String cargaIngresoCompra(Model model) {
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		model.addAttribute("compra", new Compra());
-		model.addAttribute("partidos", itemService.obtenerPartidos());
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
 		SecurityUtils.getSubject().getSession().removeAttribute("carro");
 		SecurityUtils.getSubject().getSession().removeAttribute("totalCompra");
 		
@@ -76,18 +76,18 @@ public class CompraController {
 
 	@RequestMapping(value="/carga-entradas-disponibles", method=RequestMethod.POST)
 	public String cargaEntradasDisponibles(Model model, Compra compra) {
-		
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 		
 		return "content/compra";
 	}
 	
 	@RequestMapping(value="/obtener-disponibilidad-sector", method=RequestMethod.POST)
 	public String obtenerDisponibilidadSector(Model model, Compra compra) {
-		
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 		TotalesEntrada total = map.get(compra.getIdEntrada());		
 		model.addAttribute("total", total);
@@ -105,18 +105,18 @@ public class CompraController {
 	
 	@RequestMapping(value="/compra-buscar-hincha", method=RequestMethod.POST)
 	public String buscarHinchaCompra(Model model, Compra compra) {
-		
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 		
 		return "content/compra";
 	}
 	
 	@RequestMapping(value="/agregar-entrada-carro", method=RequestMethod.POST)
 	public String agregarEntradaCarro(Model model, Compra compra) {
-
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 		model.addAttribute("total", map.get(compra.getIdEntrada()));
 		
@@ -141,8 +141,9 @@ public class CompraController {
 		    }
 		}
 		SecurityUtils.getSubject().getSession().setAttribute("totalCompra",total);
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(idPartido));
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(idPartido, user.getIdEquipo()));
 		compra.setIdPartido(idPartido);
 		compra.setIdEntrada(idEntrada);
 		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
@@ -153,55 +154,25 @@ public class CompraController {
 	
 	@RequestMapping(value="/confirmar-compra", method=RequestMethod.POST)
 	public String confirmarCompra(Model model, Compra compra,RedirectAttributes flash) {
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<Compra> compraList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
 		
 		//aca se valida la disponibilidad de las entradas
-		Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
+		Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada(), user.getIdEquipo());
 		//System.out.println("BUSCAR HINCHA Entrada     idEntrada="+compra.getIdEntrada()+"   idPartido="+compra.getIdPartido());
 		Integer totalvendidas = itemService.obtenerTotalSectorVendidas(compra.getIdEntrada(), compra.getIdPartido());
 		//System.out.println("BUSCAR HINCHA Entrada     MAXIMO="+entrada.getMaximo()+"   TOTAL="+totalvendidas);
 		if((totalvendidas + compraList.size())  > entrada.getMaximo()){
-			model.addAttribute("partidos", itemService.obtenerPartidos());
-			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+			model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(),user.getIdEquipo()));
 			HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 			model.addAttribute("total", map.get(compra.getIdEntrada()));
 			model.addAttribute("error", "Error: La venta excede el total de entradas disponibles para el sector seleccionado");
 			return "content/compra";
 		}
-		
-		//aca se chequea que este disponible la impresora
-		/*ImpresionNominativa impresora = new ImpresionNominativa();
-		PrintService service = impresora.obtenerImpresoraService();
-	
-		if(service == null) {
-			model.addAttribute("partidos", itemService.obtenerPartidos());
-			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
-			HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
-			model.addAttribute("total", map.get(compra.getIdEntrada()));
-			model.addAttribute("error", "Error: Verifique que la impresora esté conectada y que posea el nombre de ticket");
-			return "content/compra";
-		}*/
-		
-		
+			
 		try {
-			ArrayList<Ticket> listaTicket = itemService.insertarCompra(compraList);	
-			//System.out.println("---->size:"+listaTicket.size());
-			/*for(Ticket ticket: listaTicket) {				
-				try {
-					//System.out.println("id compra="+ticket.getToken());
-					impresora.imprimirTicket(ticket,service);
-				} catch (ImpresoraNoDisponibleException e) {
-					model.addAttribute("partidos", itemService.obtenerPartidos());
-					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
-					HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
-					model.addAttribute("total", map.get(compra.getIdEntrada()));
-					model.addAttribute("error", "Error: Verifique que la impresora esté conectada y que posea el nombre de ticket");
-					return "content/compra";
-				}
-			}*/
-			
-			
+			ArrayList<Ticket> listaTicket = itemService.insertarCompra(compraList, user.getIdEquipo());	
 			
 		} catch (UpdateException e) {
 			model.addAttribute("error", "Error: No se pudo registrar la compra");
@@ -234,12 +205,12 @@ public class CompraController {
                                                                @RequestParam(value="idEntrada")Integer idEntrada) {
 		
 		ArrayList<Compra> compraList= (ArrayList<Compra>) SecurityUtils.getSubject().getSession().getAttribute("carro");
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		System.out.println("idPartido:"+idPartido);
 		System.out.println("idEntrada:"+idEntrada);
 		
 		//aca se valida la disponibilidad de las entradas
-		Entrada entrada =itemService.obtenerEntrada(idEntrada);
+		Entrada entrada =itemService.obtenerEntrada(idEntrada, user.getIdEquipo());
 		//System.out.println("BUSCAR HINCHA Entrada     idEntrada="+compra.getIdEntrada()+"   idPartido="+compra.getIdPartido());
 		Integer totalvendidas = itemService.obtenerTotalSectorVendidas(idEntrada, idPartido);
 		//System.out.println("BUSCAR HINCHA Entrada     MAXIMO="+entrada.getMaximo()+"   TOTAL="+totalvendidas);
@@ -248,7 +219,7 @@ public class CompraController {
 		}
 
 		try {
-			ArrayList<Ticket> listaTicket = itemService.insertarCompra(compraList);	
+			ArrayList<Ticket> listaTicket = itemService.insertarCompra(compraList, user.getIdEquipo());	
 			
 			return new AjaxResponseBody("1","La compra fue registrada correctamente",listaTicket);
 			

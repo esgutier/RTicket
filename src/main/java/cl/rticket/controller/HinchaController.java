@@ -44,19 +44,21 @@ public class HinchaController {
 	@RequestMapping(value="/cargar-hincha-mantenedor", method=RequestMethod.GET)
 	public String cargarHinchaMantenedor(Model model) {
 		model.addAttribute("hincha", new Hincha());
-		model.addAttribute("sectores", itemService.obtenerSectores());
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 		return "content/hinchaMantenedor";
 	}
 	
 	@RequestMapping(value="/buscar-hincha-mantenedor", method=RequestMethod.POST)
 	public String buscarHinchaMantenedor(Model model, Hincha hincha) {
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		if(Util.verificaRUT(hincha.getRutCompleto().trim())) {
 			String[] parts = hincha.getRutCompleto().trim().split("-");
 			String nro = parts[0]; 	
 			String dv = parts[1];
 			Integer rut = Integer.parseInt(nro);
 					
-			Hincha hin = hinchaService.obtenerHincha(rut);
+			Hincha hin = hinchaService.obtenerHincha(rut, user.getIdEquipo());
 			if(hin == null) {
 				model.addAttribute("accion", "INSERTAR");
 				hin = new Hincha();
@@ -74,7 +76,8 @@ public class HinchaController {
 		} else {
 			model.addAttribute("error", "El Rut ingresado no es válido");
 		}
-		model.addAttribute("sectores", itemService.obtenerSectores());
+		
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 		return "content/hinchaMantenedor";
 	}
 	
@@ -82,7 +85,7 @@ public class HinchaController {
 	public String actualizarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
 		//validacion de inputs
 		int error = 0;
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		//valida fecha de nacimiento
 		if(!Util.validaFecha(hincha.getFechaNac(), "dd/mm/yyyy")) {
 			model.addAttribute("error", "Fecha de Nacimiento no es válida");
@@ -103,11 +106,12 @@ public class HinchaController {
 		}
 		if(error == 1) {
 			model.addAttribute("accion", "ACTUALIZAR");
-			model.addAttribute("sectores", itemService.obtenerSectores());
+			model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 			return "content/hinchaMantenedor";
 		}
 				
 		try {
+			hincha.setIdEquipo(user.getIdEquipo());
 			hinchaService.actualizarHincha(hincha);
 			flash.addFlashAttribute("info", "La actualización se realizó correctamente");
 			return "redirect:/cargar-hincha-mantenedor";
@@ -115,7 +119,7 @@ public class HinchaController {
 			model.addAttribute("error", "Error: No se puedo realizar la actualización");
 		}
 		
-		model.addAttribute("sectores", itemService.obtenerSectores());
+		model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 		return "content/hinchaMantenedor";
 	}
 	
@@ -123,7 +127,7 @@ public class HinchaController {
 	public String insertarHinchaMantenedor(Model model, Hincha hincha, RedirectAttributes flash) {
 		//validar inputs
 		int error = 0;
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		//valida fecha de nacimiento
 		if(!Util.validaFecha(hincha.getFechaNac(), "dd/mm/yyyy")) {
 					model.addAttribute("error", "Fecha de Nacimiento no es válida");
@@ -145,16 +149,17 @@ public class HinchaController {
 	  
 		if(error == 1) {
 			model.addAttribute("accion", "INSERTAR");
-			model.addAttribute("sectores", itemService.obtenerSectores());
+			model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 			return "content/hinchaMantenedor";
 		}
 		
 		try {
+			hincha.setIdEquipo(user.getIdEquipo());
 			hinchaService.insertarHincha(hincha);
 			flash.addFlashAttribute("info", "El registro fue agregado correctamente");
 			return "redirect:/cargar-hincha-mantenedor";
 		} catch (UpdateException e) {
-			model.addAttribute("sectores", itemService.obtenerSectores());
+			model.addAttribute("sectores", itemService.obtenerSectores(user.getIdEquipo()));
 			model.addAttribute("error", "Error: No se puedo realizar el ingreso del registro");
 		}
 		
@@ -167,16 +172,17 @@ public class HinchaController {
 //===================================================================================================
 	
 	@RequestMapping(value="/cargar-entidad-lista", method=RequestMethod.GET)
-	public String cargarEntidadLista(Model model) {		
-		model.addAttribute("entidades", hinchaService.obtenerEntidades());
+	public String cargarEntidadLista(Model model) {	
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("entidades", hinchaService.obtenerEntidades(user.getIdEquipo()));
 		return "content/entidadesLista";
 	}
 	
 	@RequestMapping(value="/buscar-entidad", method=RequestMethod.GET)
 	public String buscarEntidad(Model model, Hincha hincha,
 			                    @RequestParam(value="rut")Integer rut) {
-		
-			Hincha hin = hinchaService.obtenerHincha(rut);
+		    Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+			Hincha hin = hinchaService.obtenerHincha(rut, user.getIdEquipo());
 			hin.setRutCompleto(hin.getRut()+"-"+hin.getDv());
 			model.addAttribute("hincha", hin);
 			
@@ -185,9 +191,10 @@ public class HinchaController {
 	
 	@RequestMapping(value="/actualizar-entidad", method=RequestMethod.POST)
 	public String actualizarEntidad(Model model, Hincha hincha, RedirectAttributes flash) {
-		//validacion de inputs
-
+		
 		try {
+			Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+			hincha.setIdEquipo(user.getIdEquipo());
 			hinchaService.actualizarHincha(hincha);
 			flash.addFlashAttribute("exito", "La actualización se realizó correctamente");
 			return "redirect:/cargar-entidad-lista";
@@ -212,8 +219,10 @@ public class HinchaController {
 			String nro = parts[0]; 	
 			String dv = parts[1];
 			hincha.setRut(Integer.parseInt(nro));
-			hincha.setDv(dv);					
+			hincha.setDv(dv);	
+			Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 			try {
+				hincha.setIdEquipo(user.getIdEquipo());
 				hinchaService.insertarHincha(hincha);
 				flash.addFlashAttribute("exito", "El registro fue agregado correctamente");
 				return "redirect:/cargar-entidad-lista";
@@ -238,13 +247,13 @@ public class HinchaController {
 		
 		//System.out.println("rut escaneado ="+compra.getRutEscaneado());
 		RUT rut = null;
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		if(compra.getRutEscaneado() != null && !compra.getRutEscaneado().isEmpty()) {
 			rut = Util.obtieneRUT(compra.getRutEscaneado());
 		} else {
 			model.addAttribute("error", "Debe ingresar el RUT del Hincha");
-			model.addAttribute("partidos", itemService.obtenerPartidos());
-			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+			model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+			model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 			HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 			model.addAttribute("total", map.get(compra.getIdEntrada()));
 			return "content/compra";
@@ -257,8 +266,8 @@ public class HinchaController {
 				//verificar en lista negra
 				if(hinchaService.estaEnListaNegra(rut.getNumero())) {
 					model.addAttribute("error", "El Hincha se encuentra en Lista Negra");
-					model.addAttribute("partidos", itemService.obtenerPartidos());
-					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+					model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 					HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 					model.addAttribute("total", map.get(compra.getIdEntrada()));
 					return "content/compra";
@@ -266,7 +275,7 @@ public class HinchaController {
 				
 				//validar rut
 				
-				Hincha hincha = hinchaService.obtenerHincha(rut.getNumero());
+				Hincha hincha = hinchaService.obtenerHincha(rut.getNumero(), user.getIdEquipo());
 				if(hincha == null) {
 					//hincha no está redireccionar a formulario de ingreso de hincha				
 					model.addAttribute("compra", compra);
@@ -278,8 +287,8 @@ public class HinchaController {
 					//validar si un hincha ya tiene una entrada para el partido
 					if(hinchaService.tieneEntradaPartido(compra.getIdPartido(), rut.getNumero())) {
 						model.addAttribute("error", "El Hincha ya posee un ticket para el partido seleccionado");
-						model.addAttribute("partidos", itemService.obtenerPartidos());
-						model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+						model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+						model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 						HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 						model.addAttribute("total", map.get(compra.getIdEntrada()));
 						return "content/compra";
@@ -287,7 +296,7 @@ public class HinchaController {
 					
 				   compra.setNombreHincha(hincha.getNombres()+" "+hincha.getApellidos());
 				    //agregar la entrada al carro
-					Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
+					Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada(), user.getIdEquipo());
 					Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 					Compra ticket = new Compra();
 					ticket.setIdPartido(entrada.getIdPartido());
@@ -315,8 +324,8 @@ public class HinchaController {
 						}
 					} else {
 						model.addAttribute("error", "El Hincha ya se encuentra agregado al carro de compras");
-						model.addAttribute("partidos", itemService.obtenerPartidos());
-						model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+						model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+						model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 						HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 						model.addAttribute("total", map.get(compra.getIdEntrada()));
 						return "content/compra";
@@ -334,8 +343,8 @@ public class HinchaController {
 			}
 	
 			
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 		model.addAttribute("total", map.get(compra.getIdEntrada()));
 		
@@ -374,16 +383,17 @@ public class HinchaController {
 		String[] parts = hincha.getRutCompleto().split("-");
 		String nro = parts[0]; 	
 		String dv = parts[1]; 
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		Integer rut = Integer.parseInt(nro);
 		hincha.setRut(rut);
 		hincha.setDv(dv);
 		try {
+			hincha.setIdEquipo(user.getIdEquipo());
 			hinchaService.insertarHincha(hincha);
-			Hincha tmp = hinchaService.obtenerHincha(rut);
+			Hincha tmp = hinchaService.obtenerHincha(rut, user.getIdEquipo());
 			compra.setNombreHincha(tmp.getNombres()+" "+tmp.getApellidos());
 			 //agregar la entrada al carro
-			Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada());
+			Entrada entrada =itemService.obtenerEntrada(compra.getIdEntrada(), user.getIdEquipo());
 			
 			Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 			Compra ticket = new Compra();
@@ -418,8 +428,8 @@ public class HinchaController {
 		}
 		
 		model.addAttribute("compra", compra);
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido()));
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
 		HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
 		model.addAttribute("total", map.get(compra.getIdEntrada()));
 		

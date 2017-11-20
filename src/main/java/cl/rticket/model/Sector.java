@@ -9,7 +9,7 @@ public class Sector implements Serializable{
 	 */
 	private static final long serialVersionUID = 8222184296659798446L;
 	
-	
+	private Integer idEquipo;
 	private Integer idSector;
 	private String descripcion;
 	
@@ -24,6 +24,12 @@ public class Sector implements Serializable{
 	}
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+	public Integer getIdEquipo() {
+		return idEquipo;
+	}
+	public void setIdEquipo(Integer idEquipo) {
+		this.idEquipo = idEquipo;
 	}
 	
 

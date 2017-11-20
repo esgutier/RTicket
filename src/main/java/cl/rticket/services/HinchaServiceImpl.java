@@ -21,10 +21,10 @@ public class HinchaServiceImpl implements HinchaService{
 	@Autowired
 	HinchaMapper hinchaMapper ;
 	
-	public Hincha obtenerHincha(Integer rut) {
-		Hincha hin = hinchaMapper.obtenerHincha(rut);
+	public Hincha obtenerHincha(Integer rut , Integer idEquipo) {
+		Hincha hin = hinchaMapper.obtenerHincha(rut, idEquipo);
 		if(hin != null && hin.getCategoria().equals("A")) {
-			Hincha datos = hinchaMapper.obtenerDatosAbonado(rut);
+			Hincha datos = hinchaMapper.obtenerDatosAbonado(rut, idEquipo);
 			hin.setMesVigencia(datos.getMesVigencia());
 			hin.setAnioVigencia(datos.getAnioVigencia());
 			hin.setIdSector(datos.getIdSector());
@@ -108,8 +108,8 @@ public class HinchaServiceImpl implements HinchaService{
 		
 	}
 	
-	public ArrayList<Hincha> obtenerEntidades() {
-		return hinchaMapper.obtenerEntidades();
+	public ArrayList<Hincha> obtenerEntidades(Integer idEquipo) {
+		return hinchaMapper.obtenerEntidades(idEquipo);
 	}
 	
 	public Integer[] ingresarListaNegra(ArrayList<Hincha> impedidos) {
@@ -180,8 +180,8 @@ public class HinchaServiceImpl implements HinchaService{
 		}
 	}
 	
-	public Hincha obtenerDatosAbonado(Integer rut) {
-		return hinchaMapper.obtenerDatosAbonado(rut);
+	public Hincha obtenerDatosAbonado(Integer rut, Integer idEquipo) {
+		return hinchaMapper.obtenerDatosAbonado(rut, idEquipo);
 	}
 	
 	public boolean tieneEntradaPartido(Integer idPartido, Integer rut) {

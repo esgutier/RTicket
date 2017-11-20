@@ -38,10 +38,10 @@ public class CortesiaController {
 	
 	@RequestMapping(value="/carga-pagina-cortesia", method=RequestMethod.GET)
 	public String cargaPaginaCortesia(Model model) {
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		model.addAttribute("entrada", new Entrada());
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entidades", hinchaService.obtenerEntidades());
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entidades", hinchaService.obtenerEntidades(user.getIdEquipo()));
 		
 		return "content/cortesia";
 	}
@@ -49,10 +49,10 @@ public class CortesiaController {
 	
 	@RequestMapping(value="/carga-entradas-cortesia", method=RequestMethod.POST)
 	public String cargaEntradasCortesia(Model model, Entrada entrada) {
-		
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
-		model.addAttribute("entidades", hinchaService.obtenerEntidades());
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido(), user.getIdEquipo()));
+		model.addAttribute("entidades", hinchaService.obtenerEntidades(user.getIdEquipo()));
 		return "content/cortesia";
 	}
 	
@@ -60,7 +60,7 @@ public class CortesiaController {
 	
 	@RequestMapping(value="/obtener-totales-entidad-cortesia", method={RequestMethod.POST,RequestMethod.GET})
 	public String obtenerTotalesEntidadCortesia(Model model, Entrada entrada) {
-		
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TotalesEntrada> totales = new ArrayList<TotalesEntrada>();
 		//validar que el idPartido no sea 0
 		if(entrada.getIdPartido() == null && entrada.getIdEntrada().toString().equals("0")) {
@@ -70,9 +70,9 @@ public class CortesiaController {
 			totales = itemService.obtenerTotalesCortesiaPorEntidad(entrada.getIdPartido(), entrada.getRut());
 		}		
 		model.addAttribute("totales", totales);	
-		model.addAttribute("partidos", itemService.obtenerPartidos());
-		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido()));
-		model.addAttribute("entidades", hinchaService.obtenerEntidades());
+		model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+		model.addAttribute("entradas", itemService.obtenerEntradas(entrada.getIdPartido(), user.getIdEquipo()));
+		model.addAttribute("entidades", hinchaService.obtenerEntidades(user.getIdEquipo()));
 		return "content/cortesia";
 	}
 	
@@ -80,7 +80,7 @@ public class CortesiaController {
 	public String generarEntradasCortesia(Model model, Entrada entrada, RedirectAttributes flash) {
 		
 		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		Entrada ent =itemService.obtenerEntrada(entrada.getIdEntrada());
+		Entrada ent =itemService.obtenerEntrada(entrada.getIdEntrada(), usuario.getIdEquipo());
 		//validar numero ingresado
 		Integer totalvendidas = itemService.obtenerTotalSectorVendidas(entrada.getIdEntrada(), entrada.getIdPartido());
 		System.out.println("-->totalvendidas:"+totalvendidas);
@@ -97,6 +97,8 @@ public class CortesiaController {
 		for(int i = 0 ; i < entrada.getMaximo().intValue(); i++) {
 			//generar el objeto compra
 			Compra compra = new Compra();
+			compra.setIdPartido(entrada.getIdPartido());
+			compra.setIdEquipo(usuario.getIdEquipo());
 			compra.setIdEntrada(entrada.getIdEntrada());			
 			compra.setRut(entrada.getRut());			
 			compra.setUsername(usuario.getUsername());

@@ -1,11 +1,14 @@
 package cl.rticket.utils;
 
+import java.util.ArrayList;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -18,20 +21,21 @@ public class AccesoRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(
 			PrincipalCollection principals) {
-	/*	SimpleAuthorizationInfo sai = new SimpleAuthorizationInfo();
+		SimpleAuthorizationInfo sai = new SimpleAuthorizationInfo();
 		ApplicationContextProvider appContext = new ApplicationContextProvider();
 		LoginService service = appContext.getApplicationContext().getBean("loginService", LoginService.class);
 		String username = (String) principals.getPrimaryPrincipal();
-        ArrayList<String> roles = service.obtenerRoles(username);
+        ArrayList<String> roles = service.obtenerUsuarioRoles(username);
         System.out.println(">>>>> Cargando Roles  ");
 		//cargar los roles del usuario
 		for(String s : roles) {
 			System.out.println("--->"+s);
 			sai.addRole(s);
 		}
+	
+		return sai;
 		
-		return sai;*/
-		return null;
+	
 	}
 	
 	@Override

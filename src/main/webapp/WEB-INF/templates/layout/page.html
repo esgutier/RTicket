@@ -20,7 +20,8 @@
 <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 <link href="assets/css/main.min.css" rel="stylesheet" type="text/css"/>
-<link href="assets/css/skins/red.css" rel="stylesheet" type="text/css"/>
+
+<!--<link href="assets/css/skins/fulldark.css" rel="stylesheet" type="text/css"/>-->
 <link rel="shortcut icon" type="image/png" href="assets/img/favicon.ico"/>
 <script src="assets/js/jquery/jquery-2.1.0.min.js"></script>		
 <script src="assets/js/bootstrap/bootstrap.min.js"></script>
@@ -62,8 +63,7 @@
 					</button>
 					<!-- logo -->
 					<div class="pull-left left logo">
-						
-						
+						<!--  <span class="name" th:text="${session.usuario.nombreEquipo}">Equipo</span> 		 -->				
 					</div>
 					<!-- end logo -->
 					<!--  <div class="pull-right right">-->
@@ -102,11 +102,11 @@
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true"></i> Administración  <i class="fa fa-caret-down"></i></a>
 								<ul class="dropdown-menu">
-									<li >
+									<!--  <li >
 										<a href="#" th:href="@{/carga-pagina-control}">
 										   <span class="text">Control Acceso</span>
 										</a>									
-								    </li>
+								    </li> -->
 								   
 									<li >
 										<a href="#" th:href="@{/carga-ingreso-entrada}">
@@ -145,9 +145,6 @@
 								         
 								</ul>
 							</li>
-							
-							
-							
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									
@@ -164,151 +161,15 @@
 								</ul>
 							</li>
 						</ul>
-					</div>	
-						   									
-							<!-- logged user and the menu -->
-							<!-- <div class="logged-user">
-								<div class="btn-group">
-									<a href="#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">										
-										<i class="fa fa-user" aria-hidden="true"></i>
-										    <span class="name" th:text="${session.usuario.nombre}+' '+${session.usuario.apellidos}">USUARIO</span> 
-										    <span class="caret"></span>
-									</a>
-									<ul class="dropdown-menu" role="menu">	
-											
-										<li>
-											<a href="#" th:href="@{/logout}">
-												<i class="fa fa-power-off"></i>
-												<span class="text">Salir</span>
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div> -->
-							<!-- end logged user and the menu -->
+					</div>							   																
 						</div>
 						<!-- end top-bar-right -->
 					<!-- </div> -->
 				</div>
 			</div>
 			<!-- /container -->
-        </div>
-	       
+        </div>    
 	    </div>
-		
-		<!--  <div id="left-sidebar" class="left-sidebar "> 
-		
-		<div align="center"><img src="assets/img/logo_png.png" height="80" width="80" /></div>
-		
-		<div class="sidebar-scroll">
-				<nav class="main-nav">
-					<ul class="main-menu">
-					    <li>
-							<a href="#" class="js-sub-menu-toggle">
-								<span class="text">TICKET</span>
-								<i class="toggle-icon fa fa-angle-left"></i>
-							</a>
-							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/carga-ingreso-compra}">
-									   <span class="text">Venta Nominativo</span></a>
-									
-								</li>
-								
-							</ul>
-							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/carga-pagina-masivo}"><span class="text">Generación Masiva</span></a>								
-								</li>
-								
-							</ul>
-							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/carga-pagina-cortesia}">
-									   <span class="text">Cortesía</span></a>								
-								</li>
-								
-							</ul>
-							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/carga-anular-ticket}">
-									   <span class="text">Anular</span></a>								
-								</li>
-								
-							</ul>
-						</li>
-
-						<li>
-							<a href="#" class="js-sub-menu-toggle">
-								<span class="text">ADMINISTRACIÓN</span>
-								<i class="toggle-icon fa fa-angle-left"></i>
-							</a>
-							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/carga-pagina-control}">
-									   <span class="text">Control Acceso</span>
-									 </a>									
-								</li>								
-							</ul>
-							<ul class="sub-menu">
-								<li>
-									<a href="#" class="js-sub-menu-toggle" >
-									   <span class="text">Hinchas</span>
-									   <i class="toggle-icon fa fa-angle-left"></i>
-									 </a>	
-									 
-									 <ul class="sub-menu">
-								         <li>
-											<a href="#" th:href="@{/cargar-hincha-mantenedor}">
-												<span class="text">Normal y Abonados</span>												
-											</a>
-								         </li>
-								         <li>
-											<a href="#" th:href="@{/cargar-entidad-lista}">
-												<span class="text">Entidades</span>												
-											</a>
-								         </li>
-								        
-								     </ul> 
-								
-								</li>																	
-							</ul>
-							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/carga-ingreso-entrada}">
-									   <span class="text">Entradas</span>
-									 </a>									
-								</li>								
-							</ul>							
-							<ul class="sub-menu" >
-								<li >
-									<a href="#" th:href="@{/carga-pagina-partidos}">
-									   <span class="text">Partidos</span>
-									 </a>									
-								</li>								
-							</ul>
-							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/carga-pagina-sectores}">
-									   <span class="text">Sectores</span>
-									 </a>									
-								</li>								
-							</ul>
-							<ul class="sub-menu">
-								<li >
-									<a href="#" th:href="@{/carga-pagina-lista-negra}">
-									   <span class="text">Lista Negra</span>
-									 </a>									
-								</li>								
-							</ul>
-						</li>
-					</ul>
-				</nav>
-				
-				
-			</div>
-			
-	  	</div>-->
 		
 		<!-- MAIN CONTENT WRAPPER -->
 		<div id="main-content-wrapper" class="content-wrapper expanded-full">

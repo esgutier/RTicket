@@ -7,17 +7,17 @@ import cl.rticket.model.Hincha;
 
 public interface HinchaService {
 
-	public Hincha obtenerHincha(Integer rut);
+	public Hincha obtenerHincha(Integer rut, Integer idEquipo);
 	public void insertarHincha(Hincha hincha) throws UpdateException;
 	public void actualizarHincha(Hincha hincha) throws UpdateException;
-	public ArrayList<Hincha> obtenerEntidades();
+	public ArrayList<Hincha> obtenerEntidades(Integer idEquipo);
 	public Integer[] ingresarListaNegra(ArrayList<Hincha> impedidos);
 	public Integer totalListaNegra();
 	public boolean estaEnListaNegra(Integer rut);
 	public Hincha obtenerHinchaAbonado(Integer rut);
 	public void insertarAbonado(Hincha hincha)throws UpdateException;
 	public void actualizarAbonado(Hincha hincha)throws UpdateException;
-	public Hincha obtenerDatosAbonado(Integer rut);
+	public Hincha obtenerDatosAbonado(Integer rut, Integer idEquipo);
 	public boolean tieneEntradaPartido(Integer idPartido, Integer rut);
 	
 }
