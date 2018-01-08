@@ -189,6 +189,10 @@ public class ItemServiceImpl implements ItemService{
 		return itemMapper.obtenerDatosTicketRut(idEntrada, rut, tipo);
 	}
 	
+	public ArrayList<Ticket> obtenerDatosTicketCortesia(Integer idPartido, Integer rut, String tipo) {
+		return itemMapper.obtenerDatosTicketCortesia(idPartido, rut, tipo);
+	}
+	
 	//Mantenedor de Partidos -----------------------------------------------------------------------------
 	public int actualizarPartido(Partido partido) {
 		return itemMapper.actualizarPartido(partido);
