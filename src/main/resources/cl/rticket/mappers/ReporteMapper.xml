@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cl.rticket.mappers.ReporteMapper">
+
+<select id="obtenerListaDePartidos" parameterType="int" resultType="Partidos" >
+ select 
+          equ_id idEquipo,
+          par_id idPartido,
+          PARTIDO partido 
+    from TABLON_TICKET_LISTA_PARTIDOS
+    where equ_id = #{idEquipo}
+</select>
+<select id="obtenerListaTicketPartido" parameterType="int" resultType="TicketPorPartido" >
+ select 
+          EQUIPO equipo,
+          PARTIDO rival,
+          FECHA_PARTIDO fecha,
+          CANT_ENTRADAS cantidadEntradas,
+          MONTO monto 
+    from TABLON_TICKET_POR_PARTIDO 
+    where equ_id = #{idEquipo}
+    
+</select>
+<select id="obtenerListaTicketPartidoPorSector" parameterType="int" resultType="TicketPartioPorSector" >
+ select 
+          equ_id idEquipo,
+          EQUIPO equipo,
+          PARTIDO rival,
+          date_format(FECHA_PARTIDO,'%d-%m-%Y %H:%i') fecha,
+          SECTOR sector,
+          CANT_ENTRADAS cantidadEntradas,
+          MONTO monto 
+    from TABLON_TICKET_POR_PARTIDO_SECTOR 
+    where equ_id = #{idEquipo}
+    
+</select>
+<select id="obtenerListaAccesoPorPartido" parameterType="int" resultType="AccesoPorPartido" >
+ select 
+          equ_id idEquipo,
+          EQUIPO equipo,
+          par_id idPartido,
+          PARTIDO rival,
+          date_format(FECHA_ACCESO,'%d-%m-%Y') fecha,
+          Cantidad cantidad
+    from TABLON_ACCESO_POR_PARTIDO
+    where equ_id = #{idEquipo}
+    
+</select>
+
+<select id="obtenerListaTicketSector" parameterType="int" resultType="TicketListaSector" >
+ select 
+          equ_id idEquipo,
+          sec_id idSector,
+          SECTOR nombreSector
+    from TABLON_TICKET_LISTA_SECTOR
+    where equ_id = #{idEquipo}
+    
+</select>
+<select id="obtenerListaTicketPorDia" parameterType="int" resultType="TicketPorDia" >
+ select 
+          equ_id idEquipo,
+          EQUIPO equipo,
+          par_id idPartido,
+          PARTIDO rival,
+          date_format(FECHA_COMPRA,'%d-%m-%Y') fechaCompra,
+          CANT_ENTRADAS cantidadEntrada,
+          MONTO monto
+          
+    from TABLON_TICKET_POR_DIA
+    where equ_id = #{idEquipo}
+    
+</select>
+
+<select id="obtenerListaTicketEntradasPorMesSector" parameterType="int" resultType="TicketEntradasPorMesSector" >
+ select 
+          equ_id idEquipo,
+          EQUIPO equipo,
+          ANO anio,
+          MES mes,
+          SECTOR sector,
+          CANT_ENTRADAS cantidadEntradas,
+          MONTO Monto
+          
+    from TABLON_TICKET_POR_MES
+    where equ_id = #{idEquipo}
+    
+</select>
+</mapper>

@@ -95,10 +95,7 @@ public class CompraController {
 				model.addAttribute("agotadas", "agotadas");
 				model.addAttribute("error", "Entradas agotadas para el sector especificado");
 		}	
-	
-		
-		
-		
+
 		return "content/compra";
 	}
 	

@@ -1,233 +1,515 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
- 
-  <div th:fragment="content"> 
-    <script type="text/javascript">
-	   
-	         $(document).ready(function (){	
-	        	 
-	        	 $('#formHincha').on('submit', function(e){
-	                 e.preventDefault();
-	                 var inputRut = $("#inputRut").val();
-	                 if(inputRut == '') {
-	                 	alert('Error: Debe ingresar un RUT');
-	                 }  else {
-	                 	this.submit();
-	                 }               
-	             });
-	        	 
-	        	 $("#btnBuscarHincha").click(function(){
-	        		var inputRut = $("#inputRut").val();
-	        		if(inputRut == '') {
-	        			alert('Error - Debe ingresar un RUT');
-	        		} else {
-	        			document.forms[0].action = "buscar-hincha-mantenedor";      		
-		         		document.forms[0].submit();
-	        		}
-	         		
-	         	 });
-	        	 
-	        	 $("#btnActualizarHincha").click(function(){	         		
-		         		document.forms[0].action = "actualizar-hincha-mantenedor";      		
-		         		//document.forms[0].submit();
-		         		ckeckFormValid();
-		         });
-	        	 
-	        	 $("#btnInsertarHincha").click(function(){	         		
-		         		document.forms[0].action = "insertar-hincha-mantenedor";      		
-		         		//document.forms[0].submit();
-		         		ckeckFormValid();
-		         });
-	        	 
-	        	 if($('select[name=categoria]').val() == 'A') {	        			
-	        			 $("#divDatosAbonado").show();
-	        			
-	        		 } else {
-	        			 $("#divDatosAbonado").hide();
-	             }
-	        	 
-	        	 $("#selectCategoria").change(function(){	
-	        		 console.log('categoria: '+$('select[name=categoria]').val())
-	        		 if($('select[name=categoria]').val() == 'A') {
-	        			 console.log('show');
-	        			 $("#divDatosAbonado").show();
-	        		 } else {
-	        			 $("#divDatosAbonado").hide();
-	        		 }
-	        		 
-	        	 });
-	        	 
-	         })
-	         
-	         function ckeckFormValid() {
-			  var f = document.forms[0];
-			  if(f.checkValidity()) {
-			    f.submit();
-			  } else {
-			    alert('Algunos datos en el formulario no están correctos, favor verifique');
-			  }
+	xmlns:th="http://www.thymeleaf.org" lang="es"
+	th:include="layout/page :: page">
+
+<div th:fragment="content">
+	<script type="text/javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			$('#formHincha').on('submit', function(e) {
+				e.preventDefault();
+				var inputRut = $("#inputRut").val();
+				if (inputRut == '') {
+					alert('Error: Debe ingresar un RUT');
+				} else {
+					this.submit();
+				}
+			});
+
+			$("#btnBuscarHincha").click(function() {
+				var inputRut = $("#inputRut").val();
+				if (inputRut == '') {
+					alert('Error - Debe ingresar un RUT');
+				} else {
+					document.forms[0].action = "buscar-hincha-mantenedor";
+					document.forms[0].submit();
+				}
+
+			});
+			$("#btnActualizarHincha").click(function() {
+				document.forms[0].action = "actualizar-hincha-mantenedor";
+				//document.forms[0].submit();
+				ckeckFormValid();
+			});
+
+			$("#btnInsertarHincha").click(function() {
+				document.forms[0].action = "insertar-hincha-mantenedor";
+				//document.forms[0].submit();
+				ckeckFormValid();
+			});
+
+			if ($('select[name=categoria]').val() == 'A') {
+				$("#divDatosAbonado").show();
+
+			} else {
+				$("#divDatosAbonado").hide();
 			}
-	     
-    </script>
-  
-  <div class="row">
-      <div class="col-md-1"></div>
-      <div class="col-md-10">
-      <div class="widget">
-			 <div class="widget-header">
-				<h3><i class="fa fa-edit"></i> Actualización e Ingreso de Hincha</h3>
-		     </div>
-			 <div class="widget-content">
-			     <div class="form-horizontal">
-			     <form action="#" th:action="@{/buscar-hincha-mantenedor}"  th:object="${hincha}" method="POST" id="formHincha">
-			              <div  th:if="${error != null}" >
-				      		<div class="alert alert-danger " th:text="${error}">
-								Aqui van los mensajes de error																	
-					  		</div>
-						  </div>	
-						   <div  th:if="${info != null}" >
-				      		<div class="alert alert-info " th:text="${info}">
-								Aqui van los mensajes de info																
-					  		</div>
-						  </div>
-			              <input type="hidden" th:name="rut" th:value="*{rut}" />
-			              <input type="hidden" th:name="dv" th:value="*{dv}" />
-			            
-													<div class="form-group">														
-														
-													        <label class="col-md-2 control-label">RUT (digite)</label>
-													        <div class="col-md-3">
-															    <input th:field="*{rutCompleto}"  maxlength="12" type="text" class="form-control input-sm"  placeholder="12345678-K" id="inputRut"/>
-															</div>											    
-															
-															<div class="col-md-2"><button type="button"  class="btn btn-primary" id="btnBuscarHincha">Buscar Hincha</button></div>
-															<div class="col-md-5"></div>
-													     
-													</div>
-										<div th:if="${accion == 'INSERTAR' or accion == 'ACTUALIZAR'}">	
+
+			$("#selectCategoria").change(function() {
+				console.log('categoria: ' + $('select[name=categoria]').val())
+				if ($('select[name=categoria]').val() == 'A') {
+					console.log('show');
+					$("#divDatosAbonado").show();
+				} else {
+					$("#divDatosAbonado").hide();
+				}
+
+			});
+			$("#selectVip").change(function() {
+				console.log('categoria: ' + $('select[name=categoria]').val())
+				if ($('select[name=categoria]').val() == '') {
+					console.log('show');
+					$("#divDatosAbonado").show();
+				} else {
+					$("#divDatosAbonado").hide();
+				}
+
+			});
+			
+			$(function() {
+				var strAsientitos = document
+				.getElementById('asientosString').value;
+				var arrAsientos = strAsientitos.split("//");
+				var settings = {
+					rows : 8,
+					cols : 29,
+					rowCssPrefix : 'row-',
+					colCssPrefix : 'col-',
+					seatWidth : 35,
+					seatHeight : 35,
+					seatCss : 'seat',
+					selectedSeatCss : 'selectedSeat',
+					selectingSeatCss : 'selectingSeat'
+				};
+
+				var init = function(reservedSeat) {
+					
+					var str = [], seatNo, className;
+					for (i = 0; i < settings.rows; i++) {
+						for (j = 0; j < settings.cols; j++) {
+							// aqui va los numeros de la fila 
+							//seatNo = (i + j * settings.rows + 1);
+							seatNo = (i + 1) + '-' + (j + 1);
+							className = settings.seatCss + ' '
+									+ settings.rowCssPrefix + i.toString() + ' '
+									+ settings.colCssPrefix + j.toString();
+							if ($.isArray(reservedSeat)
+									&& $.inArray(seatNo, reservedSeat) != -1) {
+								alert("jooooo");
+								className += ' ' + settings.selectedSeatCss;
+							}
+							str
+									.push('<li class="'
+											+ className
+											+ '"'
+											+ 'style="top:'
+											+ (i * settings.seatHeight).toString()
+											+ 'px;left:'
+											+ (j * settings.seatWidth).toString()
+											+ 'px">'
+											+ '<a style="color:black;" title="' + seatNo + '">'
+											+ seatNo + '</a>' + '</li>');
+						}
+					}
+					$('#place').html(str.join(''));
+				};
+
+				//case I: Show from starting
+				//init();
+
+				//Case II: If already booked
+				var bookedSeats = [ ];
+				for (var index = 0; index < arrAsientos.length-1 ; index++) {
+					bookedSeats.push(arrAsientos[index]);
+				}
+				//--------------------------------Mirar aqui---------------------------
+				init(bookedSeats);
+
+				$('.' + settings.seatCss)
+						.click(
+								function() {
+									if ($(this).hasClass(settings.selectedSeatCss)) {
+										alert('Este asiento ya esta reservado');
+									} else {
+										//aqui lo selecciono
+										$(this).toggleClass(
+												settings.selectingSeatCss);
+										var arr = [], item;
+										$.each(
+												$('#place li.'
+														+ settings.selectingSeatCss
+														+ ' a'), function(index,
+														value) {
+													item = $(this).attr('title');
+													arr.push(item);
+												});
+										if (arr[arr.length - 1] == undefined) {
+											document.getElementById("inputButacas").value = 0;
+										} else {
+											document.getElementById("inputButacas").value = arr[arr.length - 1];
+										}
+									}
+								});
+
+				$('#btnShow').click(
+						function() {
+							var str = [];
+							$.each($('#place li.' + settings.selectedSeatCss
+									+ ' a, #place li.' + settings.selectingSeatCss
+									+ ' a'), function(index, value) {
+								str.push($(this).attr('title'));
+							});
+							alert(str.join(','));
+							alert(str[str.length - 1]);
+						})
+
+				$('#btnShowNew').click(
+						function() {
+							var str = [], item;
+							$.each($('#place li.' + settings.selectingSeatCss
+									+ ' a'), function(index, value) {
+								item = $(this).attr('title');
+								str.push(item);
+							});
+							alert(str.join(','));
+						})
+			});
+		})
+	
+		function ckeckFormValid() {
+			var f = document.forms[0];
+			if (f.checkValidity()) {
+				f.submit();
+			} else {
+				alert('Algunos datos en el formulario no están correctos, favor verifique');
+			}
+		}
+		/*]]>*/
+	</script>
+
+	<script th:inline="javascript" type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							$('#sectorVip')
+									.on(
+											'click',
+											function(e) {
+												alert('Algunos datos en el formulario no están correctos, favor verifique');
+											
+											})
 										
-											        <div class="form-group">
-													    <label class="col-md-2 control-label">Categoría</label>
-														<div class="col-md-10">
-															<select th:field="*{categoria}"  class="form-control input-sm" required="required" id="selectCategoria">
-															    <option value="" >Seleccione...</option>	
-															    <option value="P">NORMAL</option>
-															    <option value="A">ABONADO</option>															    													    												
-															</select>
-														</div>
-												    </div>	
-												 
-												 <div  id="divDatosAbonado">   
-												    <div class="form-group">
-														    <label class="col-md-2 control-label">Sector</label>
-															<div class="col-md-10">
-																<select th:field="*{idSector}"  class="form-control input-sm" >
-																    <option value="" >Seleccione...</option>	
-																    <option th:each="sector : ${sectores}" th:value="${sector.idSector}" th:text="${sector.descripcion}" >partido</option>													
-																</select>
-															</div>
+						});
+		
+	</script>
+	<script type="text/javascript">
+
+		
+
+	</script>
+	<style type="text/css">
+#holder {
+	height: 325px;
+	width: 1036px;
+	background-color: #F5F5F5;
+	border: 1px solid #A4A4A4;
+	margin-left: 10px;
+}
+
+#place {
+	position: relative;
+	margin: 7px;
+}
+
+#place a {
+	font-size: 0.7em;
+	font-weight: bold;
+}
+
+#place li {
+	list-style: none outside none;
+	position: absolute;
+}
+
+#place li:hover {
+	background-color: yellow;
+}
+
+#place .seat {
+	background: url("assets/img/available_seat_img.png") no-repeat scroll 0 0
+		transparent;
+	height: 33px;
+	width: 33px;
+	display: block;
+}
+
+#place .selectedSeat {
+	background-image: url("assets/img/booked_seat_img.png");
+}
+
+#place .selectingSeat {
+	background-image: url("assets/img/selected_seat_img.png");
+}
+
+#place .row-3, #place .row-4 {
+	margin-top: 10px;
+}
+
+#seatDescription {
+	padding: 0px;
+}
+
+#seatDescription li {
+	verticle-align: middle;
+	list-style: none outside none;
+	padding-left: 35px;
+	height: 35px;
+	float: left;
+}
+</style>
+<input id="asientosString" type="hidden" th:name="asientosStr"
+		th:value="*{asientos}" />
+	<div class="row">
+		<div class="col-md-1"></div>
+		<div class="col-md-10">
+			<div class="widget">
+				<div class="widget-header">
+					<h3>
+						<i class="fa fa-edit"></i> Actualización e Ingreso de Hincha
+					</h3>
+				</div>
+				<div class="widget-content">
+					<div class="form-horizontal">
+						<form action="#" th:action="@{/buscar-hincha-mantenedor}"
+							th:object="${hincha}" method="POST" id="formHincha">
+							<div th:if="${error != null}">
+								<div class="alert alert-danger " th:text="${error}">Aqui
+									van los mensajes de error</div>
+							</div>
+							<div th:if="${info != null}">
+								<div class="alert alert-info " th:text="${info}">Aqui van
+									los mensajes de info</div>
+							</div>
+							<input type="hidden" th:name="rut" th:value="*{rut}" /> <input
+								type="hidden" th:name="dv" th:value="*{dv}" />
+
+							<div class="form-group">
+
+								<label class="col-md-2 control-label">RUT (digite)</label>
+								<div class="col-md-3">
+									<input th:field="*{rutCompleto}" maxlength="12" type="text"
+										class="form-control input-sm" placeholder="12345678-K"
+										id="inputRut" />
+								</div>
+
+								<div class="col-md-2">
+									<button type="button" class="btn btn-primary"
+										id="btnBuscarHincha">Buscar Hincha</button>
+								</div>
+								<div class="col-md-5"></div>
+
+							</div>
+							<div th:if="${accion == 'INSERTAR' or accion == 'ACTUALIZAR'}">
+
+								<div class="form-group">
+									<label class="col-md-2 control-label">Categoría</label>
+									<div class="col-md-10">
+										<select th:field="*{categoria}" class="form-control input-sm"
+											required="required" id="selectCategoria">
+											<option value="">Seleccione...</option>
+											<option value="P">NORMAL</option>
+											<option value="A">ABONADO</option>
+										</select>
+									</div>
+								</div>
+
+								<div id="divDatosAbonado">
+									<div class="form-group">
+										<label class="col-md-2 control-label">Sector</label>
+										<div class="col-md-10">
+											<select th:field="*{idSector}" class="form-control input-sm">
+												<option value="">Seleccione...</option>
+												<option th:each="sector : ${sectores}"
+													th:value="${sector.idSector}"
+													th:text="${sector.descripcion}">partido</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Valido Hasta</label>
+										<div class="col-md-10">
+											<div class="row">
+												<div class="col-md-3">
+													<select th:field="*{mesVigencia}"
+														class="form-control input-sm">
+														<option value="">Seleccione...</option>
+														<option value="01">ENERO</option>
+														<option value="02">FEBRERO</option>
+														<option value="03">MARZO</option>
+														<option value="04">ABRIL</option>
+														<option value="05">MAYO</option>
+														<option value="06">JUNIO</option>
+														<option value="07">JULIO</option>
+														<option value="08">AGOSTO</option>
+														<option value="09">SEPTIEMBRE</option>
+														<option value="10">OCTUBRE</option>
+														<option value="11">NOVIEMBRE</option>
+														<option value="12">DICIEMBRE</option>
+
+													</select>
+												</div>
+												<div class="col-md-2">
+													<input type="text" th:field="*{anioVigencia}" maxlength="4"
+														pattern="\d{4}" title="Ingrese número de 4 digitos"
+														class="form-control input-sm" placeholder="Año(4 digitos)" />
+												</div>
+												<div id="divButacas" class="col-md-7">
+													<input id="inputButacas" th:field="*{asiento}" maxlength="5"
+														title="Butacas mal ingresadas"
+														class="form-control input-sm" placeholder="H08" />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="form-group">
+									<label class="col-md-2 control-label">Nombre</label>
+									<div class="col-md-10">
+										<input type="text" th:field="*{nombres}" maxlength="50"
+											required="required" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
+											title="Ingrese solo letras" class="form-control input-sm"
+											placeholder="" />
+									</div>
+								</div>
+								<div class="form-group" id="divApellidos">
+									<label class="col-md-2 control-label">Apellidos</label>
+									<div class="col-md-10">
+										<input type="text" th:field="*{apellidos}" maxlength="70"
+											required="required" pattern="[a-zA-ZñÑ\s]+"
+											title="Ingrese solo letras" class="form-control input-sm"
+											placeholder="" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-2 control-label">Dirección</label>
+									<div class="col-md-10">
+										<input type="text" th:field="*{direccion}" maxlength="100"
+											required="required" class="form-control input-sm"
+											placeholder="" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-2 control-label">Teléfono</label>
+									<div class="col-md-10">
+										<input type="text" th:field="*{telefono}" maxlength="9"
+											class="form-control input-sm" placeholder="" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-2 control-label">Email</label>
+									<div class="col-md-10">
+										<input type="email" th:field="*{email}" maxlength="100"
+											class="form-control input-sm" placeholder="" />
+									</div>
+								</div>
+								<div class="form-group" id="divFechaNacimiento">
+									<label class="col-md-2 control-label">Fecha Nacimiento
+										(dd/mm/aaaa)</label>
+									<div class="col-md-10">
+										<input type="text" th:field="*{fechaNac}" maxlength="10"
+											required="required" pattern="\d{1,2}/\d{1,2}/\d{4}"
+											title="Ingrese el formato solicitado"
+											class="form-control input-sm" placeholder="" />
+									</div>
+								</div>
+
+								<div class="form-group" id="divGenero">
+									<label class="col-md-2 control-label">Género</label>
+									<div class="col-md-10">
+										<div class="radio">
+											<label> <input type="radio" th:field="*{genero}"
+												value="M" required="required" /> Masculino
+											</label>
+										</div>
+										<div class="radio">
+											<label> <input type="radio" th:field="*{genero}"
+												value="F" /> Femenino
+											</label>
+										</div>
+
+									</div>
+								</div>
+
+								<div align="center">
+									<button type="submit" class="btn btn-primary"
+										id="btnInsertarHincha" th:if="${accion == 'INSERTAR'}">Ingresar
+										Hincha</button>
+									<!--  <a id="sectorVip" class="btn btn-secondary btn-lg">sector vip</a>-->
+
+									<button type="submit" class="btn btn-primary"
+										id="btnActualizarHincha" th:if="${accion == 'ACTUALIZAR'}">Actualizar
+										Hincha</button>
+
+									<button type="button" class="btn btn-secondary"
+										data-toggle="modal" data-target="#myModal">Seleccionar
+										Asiento</button>
+									<!-- Modal -->
+									<div id="myModal" class="modal fade" role="dialog">
+										<div class="modal-dialog modal-lg" style="width: 80%">
+
+											<!-- Modal content-->
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title">Seleccion de asientos vip</h4>
+												</div>
+												<div class="modal-body"
+													style="width: 1086px; text-align: center; overflow: auto">
+													<div id="holder">
+														<ul id="place">
+														</ul>
 													</div>
-													<div class="form-group"  >
-														<label class="col-md-2 control-label">Valido Hasta</label>
-														<div class="col-md-10">
-															  <div class="row">
-															    <div class="col-md-3">
-																    <select th:field="*{mesVigencia}"  class="form-control input-sm" >
-																		    <option value="" >Seleccione...</option>
-																		    <option value="01" >ENERO</option>
-																		    <option value="02" >FEBRERO</option>
-																		    <option value="03" >MARZO</option>
-																		    <option value="04" >ABRIL</option>
-																		    <option value="05" >MAYO</option>
-																		    <option value="06" >JUNIO</option>
-																		    <option value="07" >JULIO</option>
-																		    <option value="08" >AGOSTO</option>
-																		    <option value="09" >SEPTIEMBRE</option>
-																		    <option value="10" >OCTUBRE</option>
-																		    <option value="11" >NOVIEMBRE</option>
-																		    <option value="12" >DICIEMBRE</option>	
-																		    													
-																    </select>
-															    </div>
-															    <div class="col-md-2">
-																  <input type="text" th:field="*{anioVigencia}" maxlength="4"  pattern="\d{4}" title="Ingrese número de 4 digitos"  class="form-control input-sm" placeholder="Año(4 digitos)" />
-																</div>
-																<div class="col-md-7"></div>
-															</div>
-														</div>
-													</div>
-												  </div> 
-												    
-													<div class="form-group">
-														<label class="col-md-2 control-label">Nombre</label>
-														<div class="col-md-10">
-															<input type="text" th:field="*{nombres}" maxlength="50" required="required" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
-														</div>
-													</div>
-													<div class="form-group" id="divApellidos" >
-														<label class="col-md-2 control-label">Apellidos</label>
-														<div class="col-md-10">
-															<input type="text" th:field="*{apellidos}" maxlength="70"  required="required" pattern="[a-zA-ZñÑ\s]+" title="Ingrese solo letras" class="form-control input-sm" placeholder="" />
-														</div>
-													</div>
-													<div class="form-group">
-														<label class="col-md-2 control-label">Dirección</label>
-														<div class="col-md-10">
-															<input type="text" th:field="*{direccion}" maxlength="100" required="required" class="form-control input-sm" placeholder="" />
-														</div>
-													</div>
-													<div class="form-group">
-														<label class="col-md-2 control-label">Teléfono</label>
-														<div class="col-md-10">
-															<input type="text" th:field="*{telefono}" maxlength="9" required="required" pattern="[0-9]+" title="Ingrese solo numeros" class="form-control input-sm" placeholder="" />
-														</div>
-													</div>
-													<div class="form-group">
-														<label class="col-md-2 control-label">Email</label>
-														<div class="col-md-10">
-															<input type="email" th:field="*{email}" maxlength="100" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" title="Ingrese email valido" class="form-control input-sm" placeholder="" />
-														</div>
-													</div>
-													<div class="form-group" id="divFechaNacimiento" >
-														<label class="col-md-2 control-label">Fecha Nacimiento (dd/mm/aaaa)</label>
-														<div class="col-md-10">
-															<input type="text" th:field="*{fechaNac}" maxlength="10" required="required" pattern="\d{1,2}/\d{1,2}/\d{4}" title="Ingrese el formato solicitado"  class="form-control input-sm" placeholder="" />
-														</div>
+													<div align="center">
+														<ul id="seatDescription">
+
+															<li
+																style="color: black; background: url('assets/img/available_seat_img.png') no-repeat scroll 0 0 transparent;">Disponible</li>
+															<li
+																style="color: black; background: url('assets/img/booked_seat_img.png') no-repeat scroll 0 0 transparent;">Reservado</li>
+															<li
+																style="color: black; background: url('assets/img/selected_seat_img.png') no-repeat scroll 0 0 transparent;">Seleccionado</li>
+
+														</ul>
 													</div>
 
-													<div class="form-group" id="divGenero" >
-														<label class="col-md-2 control-label">Género</label>
-														<div class="col-md-10">
-															<div class="radio">
-																<label>
-																	<input type="radio" th:field="*{genero}" value="M" required="required" /> Masculino
-																</label>
-															</div>
-															<div class="radio">
-																<label>
-																	<input type="radio" th:field="*{genero}" value="F" /> Femenino
-																</label>
-															</div>
-															
-														</div>
-													</div>
-												
-													<div align="center">
-													<button type="submit" class="btn btn-primary" id="btnInsertarHincha" th:if="${accion == 'INSERTAR'}">Ingresar Hincha</button>
-													<button type="submit" class="btn btn-primary" id="btnActualizarHincha" th:if="${accion == 'ACTUALIZAR'}">Actualizar Hincha</button>
-													</div>
-													
-									</div>				
-												</form>	
-						</div>
-			 </div>
-	   </div>
-	   </div>
-	   <div class="col-md-1"></div>
-	   </div>
-	   
-	   
-          
-  </div>
- </html>
+												</div>
+
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Ok</button>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+
+
+
+</div>
+
+
+
+</html>

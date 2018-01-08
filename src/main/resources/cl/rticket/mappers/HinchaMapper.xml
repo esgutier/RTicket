@@ -6,19 +6,24 @@
 <mapper namespace="cl.rticket.mappers.HinchaMapper">
 
 <insert id="insertarAbonado"  parameterType="Hincha">
-insert into abonados_sector (equ_id, hin_rut, sec_id, abs_vigencia) 
-values (#{idEquipo}, #{rut},#{idSector},STR_TO_DATE(#{vigencia}, '%d/%m/%Y'))
+insert into abonados_sector (equ_id, hin_rut, sec_id, abs_vigencia, asiento) 
+values (#{idEquipo}, #{rut},#{idSector},STR_TO_DATE(#{vigencia}, '%d/%m/%Y'),#{asiento})
 </insert>
 
 <update id="actualizarAbonado" parameterType="Hincha">
    update abonados_sector 
-       set sec_id = #{idSector}, abs_vigencia= STR_TO_DATE(#{vigencia}, '%d/%m/%Y')
+       set sec_id = #{idSector}, abs_vigencia= STR_TO_DATE(#{vigencia}, '%d/%m/%Y'), asiento=#{asiento}
    where
      hin_rut = #{rut} and equ_id = #{idEquipo}
 </update>
-
+<select id="obtenerListaAbonados"  resultType="Hincha" parameterType="map">
+select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia, a.asiento asiento
+	from abonados_sector a
+	where equ_id=#{idEquipo}
+	     
+</select>
 <select id="obtenerDatosAbonado"  resultType="Hincha" parameterType="map">
-select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia
+select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia, a.asiento asiento
 	from abonados_sector a
 	where a.hin_rut = #{rut} and equ_id=#{idEquipo}
 	     

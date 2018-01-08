@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="es"
+	th:include="layout/page :: page">
+
+<div th:fragment="content">
+
+
+	<script type="text/javascript">
+		/*<![CDATA[*/
+
+		$(document)
+				.ready(
+						function() {
+							var procesoID;
+							var arrCantidadEntradas = [];
+							var arrSectorAGrafico = [];
+							var arrSectorMonto = [];
+							var arrTicketPorDiaARRDia = [];
+							var arrCantidadTicketPorDia = [];
+							var arrCantidadMontoTicketPorDia = [];
+							
+							var arrCantidadTicketMesSector = [];
+							var arrMesesTicketMesSector = [];
+							var arrDineroTMesSectorL = [];
+							var elementosSelect = document
+									.getElementsByTagName('select');
+							for (var i = 0; i < elementosSelect.length; i++) {
+								elementosSelect[i].addEventListener("change",
+										actualizarDatos);
+							}
+
+							function actualizarDatos() {
+								arrCantidadEntradas.length = 0;
+								arrSectorAGrafico.length = 0;
+								arrSectorMonto.length = 0;
+								arrTicketPorDiaARRDia.length=0;
+								arrCantidadTicketPorDia.length=0;
+								arrCantidadMontoTicketPorDia.length=0;
+								arrMesesTicketMesSector.length=0;
+								arrCantidadTicketMesSector.length=0;
+								arrDineroTMesSectorL.length=0;
+								//Aqui va lo que se necesito para el partido sector
+								var stSectorMonto = document
+										.getElementById('pruebaMuestraSectorPartidoMonto').value;
+								var arrSectorMontoF = stSectorMonto.split(",");
+								var stSectorL = document
+										.getElementById('pruebaListaSectores').value;
+								var arrSectorL = stSectorL.split(",");
+								var stCantEnt = document
+										.getElementById('pruebaMuestraCantidadEntradas').value;
+								var arrCantEnt = stCantEnt.split(",");
+								var st = document
+										.getElementById('pruebaPartidos').value;
+								var stMuestraSP = document
+										.getElementById('pruebaMuestraSectorPartido').value;
+								var arrMuestraSP = stMuestraSP.split(",");
+								var stPSector = document
+										.getElementById('pruebaPartidosPorSector').value;
+								var arrPSect = stPSector.split(",");
+								var arrPar = st.split(",");
+								var elementoCiudad = document
+										.getElementById('seleccionPartido');
+								
+								/* aqui lo del ticket por dia **/
+								var elementoPartidos2 = document
+								.getElementById('seleccionPartido2');
+								var stTicketPorDia = document
+										.getElementById('pruebaticketDiasDias').value;
+								var arrTPorDiaSplit = stTicketPorDia.split(",");
+								var stTicketPorDiaCant = document.getElementById('pruebaticketDiasCantidad').value;
+								var arrTPorDiaCantSplit = stTicketPorDiaCant.split(",");
+								var stTicketPorDiaPart = document.getElementById('pruebaticketDiasPartidos').value;
+								var arrTPorDiaPartSplit = stTicketPorDiaPart.split(",");
+								var stTicketPorDiaMonto = document.getElementById('pruebaticketDiasPartidosMonto').value;
+								var arrTPorDiaMontotSplit = stTicketPorDiaMonto.split(",");
+								
+								/* aqui va lo que se necesita para los mes vs sector */
+								var elementoMesSector = document.getElementById('seleccionMesSector');
+								var stTicketSectorMesSector = document.getElementById('pruebaticketMesPorSectorArrSector').value;
+								var arrTPorMesSectorplit = stTicketSectorMesSector.split(",");
+								var stTicketCantidadMesSector = document.getElementById('pruebaticketMesPorSectorArrCantidad').value;
+								var arrTPorMesCantidadSplit = stTicketCantidadMesSector.split(",");
+								var stTicketDineroMesSector = document.getElementById('pruebaticketMesPorSectorArrDinero').value;
+								var arrTPorMesDineroSplit = stTicketDineroMesSector.split(",");
+								var stTicketMesMesSector = document.getElementById('pruebaticketMesPorSectorArrMesAnio').value;
+								var arrTPorMesMesSplit = stTicketMesMesSector.split(",");
+								/*Aca ya entro con los sectores*/
+								for (var index = 0; index < arrPSect.length - 1; index++) {
+									if ((elementoCiudad.options[elementoCiudad.selectedIndex].text)
+											.trim() == arrPSect[index].trim()) {
+										//alert("hola1"+arrPSect[index]+" El elemento es "+elementoCiudad.options[elementoCiudad.selectedIndex].text);
+										for (var ind = 0; ind < arrSectorL.length - 1; ind++) {
+
+											if (arrSectorL[ind] == arrMuestraSP[index]) {
+												// aqui insertar la cantidad a el arr
+
+												arrCantidadEntradas
+														.push(arrCantEnt[index]);
+												arrSectorAGrafico
+														.push(arrSectorL[ind]);
+												arrSectorMonto
+														.push(arrSectorMontoF[index]);
+
+											}
+										}
+
+									}
+
+								}
+								/*Aqui vamos a realizar los arr para sector vs mes*/
+								for (var index = 0; index < arrTPorMesSectorplit.length - 1; index++) {
+									
+									if ((elementoMesSector.options[elementoMesSector.selectedIndex].text).trim() == arrTPorMesSectorplit[index]){
+										arrCantidadTicketMesSector.push(arrTPorMesCantidadSplit[index]);
+										arrMesesTicketMesSector.push(arrTPorMesMesSplit[index]);
+										//alert("Esto Trae el mes "+stTicketMesMesSector[index]);
+										arrDineroTMesSectorL.push(arrTPorMesDineroSplit[index]);
+									
+										
+									}
+								}
+								/*Aca ya entro con los partidos*/
+								for (var index = 0; index < arrTPorDiaPartSplit.length-1; index++) {
+									
+									if ((elementoPartidos2.options[elementoPartidos2.selectedIndex].value).trim() == arrTPorDiaPartSplit[index].trim()) {
+										arrCantidadMontoTicketPorDia.push(arrTPorDiaMontotSplit[index]);
+										arrTicketPorDiaARRDia.push(arrTPorDiaSplit[index]);
+										arrCantidadTicketPorDia.push(arrTPorDiaCantSplit[index]);
+									
+									}
+									
+								}
+								graficoVentasPorMesDiner();
+								dibujarGraficoVentaPorMes();
+								graficoVentasPorDiaTicket();
+								dibujarGraficoVentaPorDia();
+								dibujarGraficoSector();
+								drawChart2();
+							}
+							////////////////////////////////
+							//Grafico Sector Por Partido ///
+							////////////////////////////////
+							google.load("visualization", "1", {
+								packages : [ "corechart" ]
+							});
+							google.setOnLoadCallback(dibujarGraficoSector);
+
+							function dibujarGraficoSector() {
+
+								var st = document
+										.getElementById('pruebaListaSectores').value;
+								var num = document
+										.getElementById('pruebaNumerica').value;
+								var objetoString = st.split(",");
+								var objetoNum = num.split(",");
+								var b = [];
+								var cant = [];
+								for (var i = 0; i < arrCantidadEntradas.length; i++) {
+									var dat = [ '' + arrSectorAGrafico[i],
+											parseInt(arrCantidadEntradas[i]) ];
+									b.push(dat);
+								}
+								console.log(b);
+
+								// Tabla de datos: valores y etiquetas de la gráfica
+								var data = new google.visualization.DataTable();
+								data.addColumn('string', 'Topping');
+								data.addColumn('number', 'Entradas');
+								data.addRows(b);
+								var options = {
+
+									'title' : 'Venta de Entradas por Sector y Partido',
+									'width' : 700,
+									'height' : 500,
+									animation : {
+										"startup" : true,
+										duration : 1500,
+										easing : 'out',
+									},
+
+								};
+
+								// Dibujar el gráfico
+								new google.visualization.ColumnChart(
+								//ColumnChart sería el tipo de gráfico a dibujar
+								document.getElementById('graficoSector')).draw(
+										data, options);
+							}
+							////////////////////////////////////
+							////Grafico venta por dia //////////
+							////////////////////////////////////
+							
+							google.setOnLoadCallback(dibujarGraficoVentaPorDia);
+
+							function dibujarGraficoVentaPorDia() {
+								
+								var b = [];
+								for (var i = 0; i < arrTicketPorDiaARRDia.length; i++) {
+									
+									var dat = [ '' + arrTicketPorDiaARRDia[i],
+											parseInt(arrCantidadTicketPorDia[i]) ];
+								
+									b.push(dat);
+								}
+								//console.log(b);
+
+								// Tabla de datos: valores y etiquetas de la gráfica
+								var data = new google.visualization.DataTable();
+								data.addColumn('string', 'Topping');
+								data.addColumn('number', 'Ventas');
+								data.addRows(b);
+								var options = {
+
+									'title' : 'Venta de Entradas por dia y Partido',
+									'width' : 700,
+									'height' : 500,
+									animation : {
+										"startup" : true,
+										duration : 1500,
+										easing : 'out',
+									},
+
+								};
+
+								// Dibujar el gráfico
+								new google.visualization.ColumnChart(
+								//ColumnChart sería el tipo de gráfico a dibujar
+								document.getElementById('graficoVentaPorDia')).draw(
+										data, options);
+							}
+							google.charts.load('current', {
+								'packages' : [ 'corechart' ]
+							});
+							google.charts.setOnLoadCallback(graficoVentasPorDiaTicket);
+
+							function graficoVentasPorDiaTicket() {
+								
+								var ps = [ [ 'datos', 'Dinero' ] ];
+								for (var i = 0; i < arrTicketPorDiaARRDia.length; i++) {
+									var dat = [ '' + arrTicketPorDiaARRDia[i],
+											parseInt(arrCantidadMontoTicketPorDia[i]) ];
+									ps.push(dat);
+								}
+								var data = google.visualization
+										.arrayToDataTable(ps);
+
+								var options = {
+									'is3D' : true,
+									title : 'Ingresos por dia y partido',
+									'width' : 500,
+									'height' : 500
+								};
+
+								var chart = new google.visualization.PieChart(
+										document.getElementById('GraficoPieTicketPorDia'));
+
+								chart.draw(data, options);
+							}
+							/////////////////////////////////////
+							//Grafico de entradas por partido ///
+							/////////////////////////////////////
+							google.load("visualization", "1", {
+								packages : [ "corechart" ]
+							});
+
+							google
+									.setOnLoadCallback(
+
+									function dibujarGrafico() {
+
+										var st = document
+												.getElementById('pruebaString').value;
+										var num = document
+												.getElementById('pruebaNumerica').value;
+										var objetoString = st.split(",");
+										var objetoNum = num.split(",");
+
+										console.log(objetoString);
+										console.log(objetoNum);
+										var b = [];
+										for (var i = 0; i < objetoString.length - 1; i++) {
+											var dat = [ '' + objetoString[i],
+													parseInt(objetoNum[i]) ];
+											b.push(dat);
+										}
+										console.log(b);
+
+										// Tabla de datos: valores y etiquetas de la gráfica
+										var data = new google.visualization.DataTable();
+										data.addColumn('string', 'Topping');
+										data.addColumn('number', 'Entradas');
+										data.addRows(b);
+										var options = {
+
+											'title' : 'Venta de Entradas Por Partido',
+											'width' : 700,
+											'height' : 500,
+											animation : {
+												"startup" : true,
+												duration : 1500,
+												easing : 'out',
+											},
+
+										};
+
+										// Dibujar el gráfico
+										new google.visualization.ColumnChart(
+										//ColumnChart sería el tipo de gráfico a dibujar
+										document.getElementById('grafico-1'))
+												.draw(data, options);
+									});
+							////////////////////////////////////
+							//Grafico Ventas por Partido PIE ///
+							////////////////////////////////////
+
+							
+							google.charts.setOnLoadCallback(drawChart);
+
+							function drawChart() {
+								var st = document
+										.getElementById('pruebaString').value;
+								var dinero = document
+										.getElementById('pruebaDinero').value;
+								var dineroARR = dinero.split(",");
+								var stringARR = st.split(",");
+								var ll = [ [ 'datos', 'cantidad' ] ];
+								for (var i = 0; i < dineroARR.length - 1; i++) {
+									var dat = [ '' + stringARR[i],
+											parseInt(dineroARR[i]) ];
+									ll.push(dat);
+								}
+								var data = google.visualization
+										.arrayToDataTable(ll);
+
+								var options = {
+									'is3D' : true,
+									title : 'Ingresos por partido',
+									'width' : 500,
+									'height' : 500
+								};
+
+								var chart = new google.visualization.PieChart(
+										document.getElementById('piechart'));
+
+								chart.draw(data, options);
+							}
+							////////////////////////////////////
+							//Grafico Sector Por Partido PIE ///
+							////////////////////////////////////
+							google.charts.load('current', {
+								'packages' : [ 'corechart' ]
+							});
+							google.charts.setOnLoadCallback(drawChart2);
+
+							function drawChart2() {
+								var st = document
+										.getElementById('pruebaString').value;
+								var dinero = document
+										.getElementById('pruebaDinero').value;
+								var dineroARR = dinero.split(",");
+								var stringARR = st.split(",");
+								var ll = [ [ 'datos', 'cantidad' ] ];
+								for (var i = 0; i < arrCantidadEntradas.length; i++) {
+									var dat = [ '' + arrSectorAGrafico[i],
+											parseInt(arrSectorMonto[i]) ];
+									ll.push(dat);
+								}
+								var data = google.visualization
+										.arrayToDataTable(ll);
+
+								var options = {
+									'is3D' : true,
+									title : 'Ingresos por partido',
+									'width' : 500,
+									'height' : 500
+								};
+
+								var chart = new google.visualization.PieChart(
+										document
+												.getElementById('graficoSectorPie'));
+
+								chart.draw(data, options);
+							}
+							////////////////////////////////
+							//Grafico mes vs Sector      ///
+							////////////////////////////////
+							google.setOnLoadCallback(dibujarGraficoVentaPorMes);
+
+							function dibujarGraficoVentaPorMes() {
+								
+								var bas = [];
+								for (var i = 0; i < arrMesesTicketMesSector.length; i++) {
+									
+									var dat = [ '' + arrMesesTicketMesSector[i],
+											parseInt(arrCantidadTicketMesSector[i]) ];
+								
+									bas.push(dat);
+								}
+								//console.log(b);
+
+								// Tabla de datos: valores y etiquetas de la gráfica
+								var data = new google.visualization.DataTable();
+								data.addColumn('string', 'Topping');
+								data.addColumn('number', 'Ventas por Sector');
+								data.addRows(bas);
+								var options = {
+
+									'title' : 'Venta de Entradas por Mes y Sector',
+									'width' : 700,
+									'height' : 500,
+									animation : {
+										"startup" : true,
+										duration : 1500,
+										easing : 'out',
+									},
+
+								};
+
+								// Dibujar el gráfico
+								new google.visualization.ColumnChart(
+								//ColumnChart sería el tipo de gráfico a dibujar
+								document.getElementById('graficoVentaMesSector')).draw(
+										data, options);
+							}
+							google.charts.setOnLoadCallback(graficoVentasPorMesDiner);
+
+							function graficoVentasPorMesDiner() {
+								
+								var ps = [ [ 'datos', 'Dinero' ] ];
+								for (var i = 0; i < arrMesesTicketMesSector.length; i++) {
+									var dat = [ '' + arrMesesTicketMesSector[i],
+											parseInt(arrDineroTMesSectorL[i]) ];
+									ps.push(dat);
+								}
+								var data = google.visualization
+										.arrayToDataTable(ps);
+
+								var options = {
+									'is3D' : true,
+									title : 'Ingresos por Mes y Sector',
+									'width' : 500,
+									'height' : 500
+								};
+
+								var chart = new google.visualization.PieChart(
+										document.getElementById('graficoMesVsSectorPie'));
+
+								chart.draw(data, options);
+							}
+							function detenerActualizacion() {
+								clearInterval(procesoID);
+							}
+						});
+
+		/*]]>*/
+	</script>
+
+	<script>
+		google.load("visualization", "1", {
+			packages : [ "corechart" ]
+		});
+		google.setOnLoadCallback(dibujarGrafico);
+
+		function dibujarGrafico() {
+			var name = [ 'febrero', 5 ];
+			// Tabla de datos: valores y etiquetas de la gráfica
+			var data = google.visualization.arrayToDataTable([
+					[ 'Mes', 'Ventas' ], [ 'enero', 23 ], name, [ 'marzo', 0 ],
+					[ 'abril', 15 ], [ 'mayo', 0 ], [ 'junio', 8 ],
+					[ 'julio', 14 ], [ 'agosto', 0 ], [ 'septiembre', 0 ],
+					[ 'octubre', 4 ], [ 'noviembre', 0 ], [ 'diciembre', 3 ] ]);
+			var options = {
+
+				'title' : 'Cantidad de venta vs Mes',
+				'width' : 700,
+				'height' : 500,
+				animation : {
+					"startup" : true,
+					duration : 1500,
+					easing : 'out',
+				},
+
+			};
+
+			// Dibujar el gráfico
+			new google.visualization.ColumnChart(
+			//ColumnChart sería el tipo de gráfico a dibujar
+			document.getElementById('grafico12')).draw(data, options);
+		}
+	</script>
+
+	<script>
+		function Ocultar(muestra) {
+			vista = document.getElementById(muestra).style.display;
+			vista2 = document.getElementById('ejemplo').style.display;
+			if (vista == 'none') {
+				vista = 'block';
+				vista2 = 'none';
+			} else {
+				vista = 'none';
+				vista2 = 'block';
+			}
+			document.getElementById(muestra).style.display = vista;
+			document.getElementById('ejemplo').style.display = vista2;
+		}
+	</script>
+	<input id="pruebaString" type="hidden" th:name="prueba"
+		th:value="*{arrString}" /> <input id="pruebaNumerica" type="hidden"
+		th:name="prueba" th:value="*{arrNum}" /> <input id="pruebaDinero"
+		type="hidden" th:name="prueba" th:value="*{arrDinero}" /> <input
+		id="pruebaPartidos" type="hidden" th:name="prueba"
+		th:value="*{listaPartidosFor}" /> <input id="pruebaPartidosPorSector"
+		type="hidden" th:name="prueba" th:value="*{arrPartidosPorSector}" />
+	<input id="pruebaMuestraSectorPartido" type="hidden" th:name="prueba"
+		th:value="*{arrPartidosPorSectorMuestraSector}" /> <input
+		id="pruebaMuestraSectorPartidoMonto" type="hidden" th:name="prueba"
+		th:value="*{arrPartidosPorSectorMonto}" /> <input
+		id="pruebaMuestraCantidadEntradas" type="hidden" th:name="prueba"
+		th:value="*{arrCantidadDeEntradas}" /> <input
+		id="pruebaListaSectores" type="hidden" th:name="prueba"
+		th:value="*{arrListaSectorString}" />
+		<!-- Aqui va arr de reporte ticket por dia  -->
+		<input
+		id="pruebaticketDiasDias" type="hidden" th:name="prueba"
+		th:value="*{arrTicketPorDiaDias}" />
+		<input
+		id="pruebaticketDiasCantidad" type="hidden" th:name="prueba"
+		th:value="*{arrTicketPorDiaCantidad}" />
+		<input
+		id="pruebaticketDiasPartidos" type="hidden" th:name="prueba"
+		th:value="*{arrTicketPorDiaPartidos}" />
+		<input
+		id="pruebaticketDiasPartidosMonto" type="hidden" th:name="prueba"
+		th:value="*{arrTicketCantidadDinerPorDia}" />
+		<!-- Aqui va arr ticket mes y sector   -->	
+		<input
+		id="pruebaticketMesPorSectorArrMesAnio" type="hidden" th:name="prueba"
+		th:value="*{arrTicketMesAnioSector}" />
+		<input
+		id="pruebaticketMesPorSectorArrCantidad" type="hidden" th:name="prueba"
+		th:value="*{arrTicketCantidadMesAnioSector}" />
+		<input
+		id="pruebaticketMesPorSectorArrDinero" type="hidden" th:name="prueba"
+		th:value="*{arrTicketDineroMesAnioSector}" />
+		<input
+		id="pruebaticketMesPorSectorArrSector" type="hidden" th:name="prueba"
+		th:value="*{arrTicketSectorMesAnioSector}" />
+	<div class="row">
+
+		<div class="col-md-1" align="center"></div>
+		<h3 class="box-title" align="center"
+			style="margin-right: 200px; color: Black;">Reporte Entradas por
+			partidos</h3>
+		<br /> <br />
+
+		<!-- /.col (LEFT) -->
+		<div id="muestra" style="display: block;" class="col-md-5"
+			align="left">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="left"
+					style="width: 600px; height: 500px">
+					<div id="grafico-1" align="left"></div>
+
+				</div>
+
+				<!-- /.box-body -->
+			</div>
+
+		</div>
+		<div id="ejemplo" style="display: none;" class="col-md-5" align="left">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="left"
+					style="width: 600px; height: 500px">
+					<div id="grafico" align="left"></div>
+
+				</div>
+
+				<!-- /.box-body -->
+			</div>
+
+		</div>
+
+		<div class="col-md-6" align="center">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="center"
+					style="width: 600px; height: 500px">
+					<div id="piechart" align="center"></div>
+
+				</div>
+
+
+				<!-- /.box-body -->
+			</div>
+
+		</div>
+	</div>
+	<div class="row">
+
+		<div class="col">
+			<br /> <br /> <br /> <br />
+			<h3 class="box-title" align="center"
+				style="margin-right: 200px; color: Black;">Reporte entradas por
+				partido y sector</h3>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<br /> <br /> <br />
+		<div class="col-md-3"></div>
+		<div Class="col-md-6">
+
+			<select id="seleccionPartido" class="form-control input-sm col-md-3">
+				<option value="">Seleccione..</option>
+				<option th:each="partido : ${ListaPartidos}"
+					th:value="${partido.partido}" th:text="${partido.partido}"></option>
+			</select>
+
+		</div>
+
+		<div class="col-md-3"></div>
+	</div>
+	<div class="row">
+		<br /> <br /> <br /> <br />
+		<!-- /.col (LEFT) -->
+		<div id="m" style="display: block;" class="col-md-5" align="left">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="left"
+					style="width: 600px; height: 500px">
+					<div id="graficoSector" align="left"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+		<div class="col-md-6" align="center">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="center"
+					style="width: 600px; height: 500px">
+					<div id="graficoSectorPie" align="center"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+	<div class="row">
+
+		<div class="col">
+			<br /> <br /> <br /> <br />
+			<h3 class="box-title" align="center"
+				style="margin-right: 200px; color: Black;">Reporte entradas por
+				partido y dia</h3>
+		</div>
+	</div>
+	<div class="row">
+		<br /> <br /> <br />
+		<div class="col-md-3"></div>
+		<div Class="col-md-6">
+
+			<select id="seleccionPartido2" class="form-control input-sm col-md-3">
+				<option value="">Seleccione..</option>
+				<option th:each="partido : ${ListaPartidos}"
+					th:value="${partido.idPartido}" th:text="${partido.partido}"></option>
+			</select>
+
+		</div>
+
+		<div class="col-md-3"></div>
+	</div>
+	<div class="row">
+		<br /> <br /> <br /> <br />
+		<!-- /.col (LEFT) -->
+		<div  style="display: block;" class="col-md-5" align="left">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="left"
+					style="width: 600px; height: 500px">
+					<div id="graficoVentaPorDia" align="left"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+		<div class="col-md-6" align="center">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="center"
+					style="width: 600px; height: 500px">
+					<div id="GraficoPieTicketPorDia" align="center"></div>
+
+				</div>
+
+
+				<!-- /.box-body -->
+			</div>
+
+		</div>
+	</div>
+	<div class="row">
+
+		<div class="col">
+			<br /> <br /> <br /> <br />
+			<h3 class="box-title" align="center"
+				style="margin-right: 200px; color: Black;">Reporte entradas por
+				Mes y Sector</h3>
+		</div>
+	</div>
+	<div class="row">
+		<br /> <br /> <br />
+		<div class="col-md-3"></div>
+		<div Class="col-md-6">
+
+			<select id="seleccionMesSector" class="form-control input-sm col-md-3">
+				<option value="">Seleccione..</option>
+				<option th:each="sector : ${listaDeSectores}"
+					th:value="${sector.nombreSector}" th:text="${sector.nombreSector}"></option>
+			</select>
+
+		</div>
+
+		<div class="col-md-3"></div>
+	</div>
+	<div class="row">
+		<br /> <br /> <br /> <br />
+		<!-- /.col (LEFT) -->
+		<div  style="display: block;" class="col-md-5" align="left">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="left"
+					style="width: 600px; height: 500px">
+					<div id="graficoVentaMesSector" align="left"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+		<div class="col-md-6" align="center">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="center"
+					style="width: 600px; height: 500px">
+					<div id="graficoMesVsSectorPie" align="center"></div>
+
+				</div>
+
+
+				<!-- /.box-body -->
+			</div>
+
+		</div>
+	</div>
+</div>
+</html>

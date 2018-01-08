@@ -16,6 +16,7 @@ public interface HinchaMapper {
 	public int actualizarHincha(Hincha hincha);
 	public int actualizarHinchaEntidad(Hincha hincha);
 	public ArrayList<Hincha> obtenerEntidades(@Param("idEquipo") Integer idEquipo);
+	public ArrayList<Hincha> obtenerListaAbonados(Integer idEquipo);
 	public int borrarListaNegra();
 	public int insertarImpedido(Hincha hincha) throws DuplicateKeyException;
 	public int totalListaNegra();

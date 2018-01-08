@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cl.rticket.mappers.VentaEstadioMapper">
+
+<insert id="insertarVentaEstadio"  parameterType="VentaEstadio">
+insert into TICKET_ESTADIO (equ_id, RUT, com_token, USUARIO, FECHA) 
+values (#{idEquipo}, #{rut},#{entrada},#{usuario},STR_TO_DATE(#{fecha}, '%d/%m/%Y'))
+</insert>
+  
+
+</mapper>

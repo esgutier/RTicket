@@ -55,6 +55,7 @@ public class HinchaServiceImpl implements HinchaService{
 					} catch (ParseException e) {
 						throw new UpdateException();
 					}
+					
 					res = hinchaMapper.insertarAbonado(hincha);
 					if(res < 1) {
 						throw new UpdateException();
@@ -107,7 +108,9 @@ public class HinchaServiceImpl implements HinchaService{
 		   }
 		
 	}
-	
+	public ArrayList<Hincha> obtenerListaAbonados(Integer idEquipo){
+		return hinchaMapper.obtenerListaAbonados(idEquipo);
+	}
 	public ArrayList<Hincha> obtenerEntidades(Integer idEquipo) {
 		return hinchaMapper.obtenerEntidades(idEquipo);
 	}

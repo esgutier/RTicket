@@ -59,6 +59,7 @@ public class LoginController {
 		UsernamePasswordToken token = new UsernamePasswordToken(usuario.getUsername(), usuario.getPassword());
 		try { 
 		    subject.login(token); 
+		    System.out.println("pase con los token "+usuario.getUsername()+" "+  usuario.getPassword());
 		   
 		} catch (IncorrectCredentialsException ex) {          
 			mv.addObject("error_message", "Credenciales incorrectas");

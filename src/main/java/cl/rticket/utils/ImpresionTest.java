@@ -25,7 +25,7 @@ private static final String PRINTER_NAME = "ticket";
 	
 	public static class MyPrintable implements Printable {	
 
-		@Override
+		
 		 public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {    
             int result = NO_SUCH_PAGE;    
             if (pageIndex == 0) {                    

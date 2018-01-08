@@ -23,6 +23,10 @@
 
 <!--<link href="assets/css/skins/fulldark.css" rel="stylesheet" type="text/css"/>-->
 <link rel="shortcut icon" type="image/png" href="assets/img/favicon.ico"/>
+
+<script type="text/javascript"
+		src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script src="assets/js/jquery/jquery-2.1.0.min.js"></script>		
 <script src="assets/js/bootstrap/bootstrap.min.js"></script>
 <script src="assets/js/plugins/modernizr/modernizr.js"></script>
@@ -30,6 +34,7 @@
 <script src="assets/js/king-common.js"></script>	
 <script src="assets/js/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script type="text/javascript">
+
 
     window.history.forward();
     function noBack() { window.history.forward(); }
@@ -73,34 +78,20 @@
 						<div class="collapse navbar-collapse" id="main-navbar-collapse">
 						<ul class="nav navbar-nav">
 							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket" aria-hidden="true"></i>Tickets <i class="fa fa-caret-down"></i></a>
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket" aria-hidden="true"></i>Venta de Tickets <i class="fa fa-caret-down"></i></a>
 								<ul class="dropdown-menu">
 									<li >
 									   <a href="#" th:href="@{/carga-ingreso-compra}">Venta Nominativo</a>									
 								    </li>
 									<li><a href="#" th:href="@{/carga-pagina-masivo}">Generación Masiva</a></li>
+									<li><a href="#" th:href="@{/venta-estadio}">Venta Estadio</a></li>
 									<li><a href="#" th:href="@{/carga-pagina-cortesia}">Cortesía</a></li>	
 									<li><a href="#" th:href="@{/carga-anular-ticket}">Anular</a></li>
 									<li></li>
 								</ul>
 							</li>
 							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-users" aria-hidden="true"></i> Hinchas  <i class="fa fa-caret-down"></i></a>
-								<ul class="dropdown-menu">
-									<li>
-											<a href="#" th:href="@{/cargar-hincha-mantenedor}">
-												Normal y Abonados												
-											</a>
-								         </li>
-								         <li>
-											<a href="#" th:href="@{/cargar-entidad-lista}">
-												Entidades												
-											</a>
-								    </li>
-								</ul>
-							</li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true"></i> Administración  <i class="fa fa-caret-down"></i></a>
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true"></i> Administraci&oacute;n de Tickets  <i class="fa fa-caret-down"></i></a>
 								<ul class="dropdown-menu">
 									<!--  <li >
 										<a href="#" th:href="@{/carga-pagina-control}">
@@ -133,6 +124,35 @@
 									</li>								
 								</ul>
 							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart" aria-hidden="true"></i>Estad&iacute;sticas de Tickets <i class="fa fa-caret-down"></i></a>
+								<ul class="dropdown-menu">
+									<li >
+									   <a href="#" th:href="@{/carga-pagina-reportes}">Ventas</a>									
+								    </li>
+									<li><a href="#" th:href="@{/carga-pagina-reportes-acceso}">Acceso</a></li>
+									
+									<li></li>
+								</ul>
+							</li>
+							
+							
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-users" aria-hidden="true"></i> Hinchas y Abonados <i class="fa fa-caret-down"></i></a>
+								<ul class="dropdown-menu">
+									<li>
+											<a href="#" th:href="@{/cargar-hincha-mantenedor}">
+												Normal y Abonados												
+											</a>
+								         </li>
+								         <li>
+											<a href="#" th:href="@{/cargar-entidad-lista}">
+												Entidades												
+											</a>
+								    </li>
+								</ul>
+							</li>
+							
 							
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench" aria-hidden="true"></i> Herramientas  <i class="fa fa-caret-down"></i></a>

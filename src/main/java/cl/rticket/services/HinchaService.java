@@ -11,6 +11,7 @@ public interface HinchaService {
 	public void insertarHincha(Hincha hincha) throws UpdateException;
 	public void actualizarHincha(Hincha hincha) throws UpdateException;
 	public ArrayList<Hincha> obtenerEntidades(Integer idEquipo);
+	public ArrayList<Hincha> obtenerListaAbonados(Integer idEquipo);
 	public Integer[] ingresarListaNegra(ArrayList<Hincha> impedidos);
 	public Integer totalListaNegra();
 	public boolean estaEnListaNegra(Integer rut);

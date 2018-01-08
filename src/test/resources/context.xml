@@ -8,8 +8,5 @@
               initialSize="5" maxWait="5000"
               maxActive="10" maxIdle="8"
                />
-             
-
-    
 
 </Context>

@@ -25,7 +25,7 @@ public class Util {
 					//pasaporte
 					return true;
 				}
-				if (rut.matches("^([0-9]{7,8}-[0-9kK])")) {
+				if (rut.matches("^([0-9]{1,8}-[0-9kK])")) {
 					StringTokenizer str = new StringTokenizer(rut,"-");
 					rut =  str.nextToken();
 					dv =  str.nextToken();

@@ -75,7 +75,6 @@ public class PrinterService implements Printable {
 		return printerList;
 	}
 
-	@Override
 	public int print(Graphics g, PageFormat pf, int page)
 			throws PrinterException {
 		if (page > 0) { // We have only one page, and 'page' is zero-based 

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="es"
+	th:include="layout/page :: page">
+
+<div th:fragment="content">
+	<script type="text/javascript">
+		/*<![CDATA[*/
+			
+		$(document)
+				.ready(
+						function() {
+							
+							google.load("visualization", "1", {
+								packages : [ "corechart" ]
+							});
+							google.setOnLoadCallback(dibujarGrafico);
+							
+
+							function dibujarGrafico() {
+								var st = document
+										.getElementById('pruebaPartidosAcceso').value;
+								var num = document
+										.getElementById('pruebaCantidadIngresosEstadio').value;
+								var objetoString = st.split(",");
+								var objetoNum = num.split(",");
+								var b = [];
+								for (var i = 0; i < objetoString.length; i++) {
+									var dat = [ '' + objetoString[i],
+											parseInt(objetoNum[i])];
+									b.push(dat);
+								}					
+								// Tabla de datos: valores y etiquetas de la gráfica
+								var data = new google.visualization.DataTable();
+								data.addColumn('string', 'Topping');
+								data.addColumn('number', 'Cantidad de Personas');
+								data.addRows(b);
+								var options = {
+
+									'title' : 'Cantidad de ingreso a estadio por partido',
+									'width' : 900,
+									'height' : 600,
+									animation : {
+										"startup" : true,
+										duration : 1500,
+										easing : 'out',
+									},
+
+								};
+
+								// Dibujar el gráfico
+								new google.visualization.ColumnChart(
+								//ColumnChart sería el tipo de gráfico a dibujar
+								document.getElementById('graficoIngresoPartido')).draw(
+										data, options);
+							}
+						});
+					
+
+		/*]]>*/
+	</script>
+	<script>
+		google.load("visualization", "1", {
+			packages : [ "corechart" ]
+		});
+		google.setOnLoadCallback(dibujarGrafico);
+
+		function dibujarGrafico() {
+			var name = [ 'febrero', 5 ];
+			// Tabla de datos: valores y etiquetas de la gráfica
+			var data = google.visualization.arrayToDataTable([
+					[ 'Mes', 'Ventas' ], [ 'enero', 23 ], name, [ 'marzo', 0 ],
+					[ 'abril', 15 ], [ 'mayo', 0 ], [ 'junio', 8 ],
+					[ 'julio', 14 ], [ 'agosto', 0 ], [ 'septiembre', 0 ],
+					[ 'octubre', 4 ], [ 'noviembre', 0 ], [ 'diciembre', 3 ] ]);
+			var options = {
+
+				'title' : 'Cantidad de venta vs Mes',
+				'width' : 700,
+				'height' : 500,
+				animation : {
+					"startup" : true,
+					duration : 1500,
+					easing : 'out',
+				},
+
+			};
+
+			// Dibujar el gráfico
+			new google.visualization.ColumnChart(
+			//ColumnChart sería el tipo de gráfico a dibujar
+			document.getElementById('grafico12')).draw(data, options);
+		}
+	</script>
+		 <input id="pruebaCantidadIngresosEstadio" type="hidden"
+		 th:name="cantidadIngresosEstadio" th:value="*{listaDeCantidad}" />
+		 <input id="pruebaPartidos" type="hidden"
+		 th:name="partidosEnSistema" th:value="*{arrStringPartido}" />
+		 <input id="pruebaPartidosAcceso" type="hidden"
+		 th:name="partidosEenAcceso" th:value="*{listaPartidosAcceso}" />
+	
+	<div class="row">
+
+		<div class="col">
+			<br />
+			<br />
+			<br />
+			<br />
+			<h3 class="box-title" align="center"
+				style="margin-right: 200px; color: Black;">Reporte de Accesos</h3>
+		</div>
+	</div>
+	<div class="row">
+		<br />
+		<br />
+		<!-- /.col (LEFT) -->
+		<div id="m" class="col" align="center">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" 
+					>
+					<div id="graficoIngresoPartido" align="center"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+		
+	</div>
+
+
+</div>
+</html>

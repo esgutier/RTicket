@@ -13,6 +13,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -499,7 +500,19 @@ public class HinchaController {
 	}
 	
 	
-	
+	/**
+	aqui va lo del asiento 
+	 */
+	@ModelAttribute("asientos")
+	public String ingresarListaNegra(Model model, RedirectAttributes flash) {
+		String devuelve = "";
+		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		List<Hincha> listaHincha = hinchaService.obtenerListaAbonados(user.getIdEquipo());
+		for ( int index = 0 ; index < listaHincha.size(); index ++ ) {
+			devuelve += listaHincha.get(index).getAsiento()+"//";
+		}
+		return devuelve ;
+	}
 	//----------------------------------------------------------------------
 	// Metodo para verificar si un rut ya se encuentra en el carro de compra
 	//----------------------------------------------------------------------

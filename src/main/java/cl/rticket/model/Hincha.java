@@ -24,10 +24,20 @@ public class Hincha implements Serializable{
 	private String anioVigencia;
 	private String vigencia;
 	private Integer idSector;
+	private String asiento ;
 	
 	public Integer getRut() {
 		return rut;
 	}
+	
+	public String getAsiento() {
+		return asiento;
+	}
+
+	public void setAsiento(String asiento) {
+		this.asiento = asiento;
+	}
+
 	public void setRut(Integer rut) {
 		this.rut = rut;
 	}

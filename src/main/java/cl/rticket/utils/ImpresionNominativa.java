@@ -47,7 +47,7 @@ public class ImpresionNominativa {
 		
 		private SimpleDateFormat formateador = new SimpleDateFormat("EEEEEEEEE dd 'de' MMMMM 'de' yyyy", new Locale("es","ES"));
 		
-		@Override
+		
 		  public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {    
 			                int result = NO_SUCH_PAGE;    
 			                if (pageIndex == 0) {                    
