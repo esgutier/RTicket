@@ -14,7 +14,8 @@
           u.usr_nombre nombre,
           u.usr_apellidos apellidos,
           e.equ_id idEquipo,
-          e.equ_nombre nombreEquipo
+          e.equ_nombre nombreEquipo,
+          e.equ_estadio nombreEstadio
     from usuario u, equipo e 
 	 where usr_username = #{username} and
 	      u.equ_id = e.equ_id

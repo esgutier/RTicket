@@ -190,7 +190,7 @@ public class CortesiaController {
 		//final ServletContext servletContext = request.getSession().getServletContext();
 	    //final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    //final String temperotyFilePath = tempDirectory.getAbsolutePath();
- 
+		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
 	    String fileName = "tickets-cortesia.pdf";
 	    response.setContentType("application/pdf");
 	    
@@ -203,9 +203,11 @@ public class CortesiaController {
 	    	}
 	    	response.setHeader("Content-disposition", "attachment; filename="+ fileName);
 	        //GenerarEntradasCortesia.generaPDF(temperotyFilePath+"\\"+fileName);
-	        GenerarEntradasCortesia.generaPDF(fileName, tickets);
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        baos = convertPDFToByteArrayOutputStream(fileName);
+	    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    	baos = GenerarEntradasCortesia.generaPDF(fileName, tickets, usuario);
+	       
+	        //baos = convertPDFToByteArrayOutputStream(fileName);
+	        response.setContentLength(baos.size());
 	        ServletOutputStream os = response.getOutputStream();
 	        baos.writeTo(os);
 	        os.flush();
@@ -214,35 +216,4 @@ public class CortesiaController {
 	    }
 	}
 	
-	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName) {
-		 
-		InputStream inputStream = null;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
- 
-			inputStream = new FileInputStream(fileName);
-			byte[] buffer = new byte[1024];
-			baos = new ByteArrayOutputStream();
- 
-			int bytesRead;
-			while ((bytesRead = inputStream.read(buffer)) != -1) {
-				baos.write(buffer, 0, bytesRead);
-			}
- 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return baos;
-	}
-
 }

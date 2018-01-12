@@ -17,6 +17,7 @@ public class Usuario implements Serializable{
 	private String apellidos;
 	private Integer idEquipo;
 	private String nombreEquipo;
+	private String nombreEstadio;
 	
 	
 	public String getUsername() {
@@ -66,6 +67,12 @@ public class Usuario implements Serializable{
 	}
 	public void setNombreEquipo(String nombreEquipo) {
 		this.nombreEquipo = nombreEquipo;
+	}
+	public String getNombreEstadio() {
+		return nombreEstadio;
+	}
+	public void setNombreEstadio(String nombreEstadio) {
+		this.nombreEstadio = nombreEstadio;
 	}
 	
 

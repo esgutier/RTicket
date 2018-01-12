@@ -1,5 +1,6 @@
 package cl.rticket.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import cl.rticket.model.Ticket;
+import cl.rticket.model.Usuario;
 
 public class GenerarEntradasCortesia {
 	
@@ -30,69 +32,49 @@ public class GenerarEntradasCortesia {
 	private static Font SECTOR = new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD);
 	private static Font FOOTER = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
 	
-	public static Document generaPDF(String file, ArrayList<Ticket> tickets) {
+	public static ByteArrayOutputStream generaPDF(String file, ArrayList<Ticket> tickets, Usuario usuario) {
 		 
 		Document document = null; 
+		ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
 		try {
 			float left = 5;
 	        float right = 5;
 	        float top = 20;
 	        float bottom = 0;
 	        document = new Document(PageSize.A4, left, right, top, bottom);
-			PdfWriter.getInstance(document, new FileOutputStream(file));
+			PdfWriter.getInstance(document, baosPDF);
 			document.open();
 			for(Ticket ticket: tickets) {
-				tablaTicketBase(document, ticket);
+				tablaTicketBase(document, ticket, usuario);
 			}
-			
-			//tablaTicketBase(document);
- 
 			document.close();
  
-		} catch (FileNotFoundException e) {
- 
-			e.printStackTrace();
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
-		return document;
+		return baosPDF;
  
 	}
 	
-	/*private static void addTitlePage(Document document)
-			throws DocumentException {
- 
-		Paragraph preface = new Paragraph();
-		//creteEmptyLine(preface, 1);
-		preface.add(new Paragraph("PDF Report", TIME_ROMAN));
- 
-		//creteEmptyLine(preface, 1);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		preface.add(new Paragraph("Report created on "
-				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
-		document.add(preface);
- 
-	}*/
-	
-	private static void tablaTicketBase(Document document, Ticket ticket) throws DocumentException {
+	private static void tablaTicketBase(Document document, Ticket ticket, Usuario usuario) throws DocumentException {
 		 
 		 PdfPTable tableSuperior = new PdfPTable(1);
 		 float[] columnWidths = {7,3};
 		 PdfPTable table = new PdfPTable(columnWidths);
 		 
 		 
-		 PdfPCell cellTitulo = new PdfPCell( new Phrase("Ticket de Cortesía ["+ticket.getNombres().toUpperCase()+"]",NORMAL));
+		 PdfPCell cellTitulo = new PdfPCell( new Phrase("Ticket de Cortesía - "+ticket.getNombres().toUpperCase(),NORMAL));
 		 cellTitulo.setColspan(2);	
 		 cellTitulo.setHorizontalAlignment(Element.ALIGN_CENTER);
 		 cellTitulo.setBorder(0);
 		 
 		 
-		 PdfPCell cellPartido= new PdfPCell( new Phrase("ÑUBLENSE  V/S " + ticket.getRival(), PARTIDO));
+		 PdfPCell cellPartido= new PdfPCell( new Phrase(usuario.getNombreEquipo()+" V/S " + ticket.getRival(), PARTIDO));
 		 cellPartido.setColspan(2);	
 		 cellPartido.setHorizontalAlignment(Element.ALIGN_CENTER);
 		 cellPartido.setBorder(0);
 		 
-		 PdfPCell cellLugar= new PdfPCell( new Phrase("Estadio Bicentenario Nelson Oyarzún Arenas", FECHA));
+		 PdfPCell cellLugar= new PdfPCell( new Phrase(usuario.getNombreEstadio() != null ? usuario.getNombreEstadio(): "", FECHA));
 		 cellLugar.setColspan(2);
 		 cellLugar.setHorizontalAlignment(Element.ALIGN_CENTER);
 		 cellLugar.setBorder(0);
