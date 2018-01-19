@@ -3,11 +3,60 @@
   xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
  
   <div th:fragment="content"> 
+ 
+<script src="assets/js/jquery-ui/jquery-date.js"></script>
+<script src="assets/js/bootstrap/bootstrap-reloj.js"></script>
+
     <script type="text/javascript">
     /*<![CDATA[*/
         $(document).ready(function (){	
-        	
-        	
+        	var $input = $('#btn_hora').clockpicker({
+        	   
+        	    default: 'now',
+        	    placement: 'bottom',
+        	    align: 'left',
+        	    donetext: 'Listo',
+        	    autoclose: true,
+        	    vibrate: true,
+        	    fromnow: 0,
+        	    init: function () { console.log('iniciado') },
+        	    beforeShow: function () { console.log('antes de mostrarse') },
+        	    afterShow: function () { console.log('después de mostrarse') },
+        	    beforeHide: function () { console.log('antes de ocultarse') },
+        	    afterHide: function () { console.log('después de ocultarse') },
+        	    beforeHourSelect: function () { console.log('antes de seleccionar la hora') },
+        	    afterHourSelect: function () { console.log('después de seleccionar la hora') },
+        	    beforeDone: function () { console.log('antes de finalizar') },
+        	    afterDone: function () { console.log('después de finalizar') }
+        	});
+        	jQuery(function($){
+        		$.datepicker.regional['es'] = {
+        			closeText: 'Cerrar',
+        			prevText: '&#x3c;Ant',
+        			nextText: 'Sig&#x3e;',
+        			currentText: 'Hoy',
+        			monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+        			'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+        			monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
+        			'Jul','Ago','Sep','Oct','Nov','Dic'],
+        			dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
+        			dayNamesShort: ['Dom','Lun','Mar','Mi&eacute;','Juv','Vie','S&aacute;b'],
+        			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
+        			weekHeader: 'Sm',
+        			dateFormat: 'dd/mm/yy',
+        			firstDay: 1,
+        			isRTL: false,
+        			showMonthAfterYear: false,
+        			yearSuffix: ''};
+        		$.datepicker.setDefaults($.datepicker.regional['es']);
+        	}); 
+        	$(function () {
+        	$.datepicker.setDefaults($.datepicker.regional["es"]);
+        	$("#datepicker").datepicker({
+        		dateFormat: 'dd-mm-yy',
+        	firstDay: 1
+        	});
+        	});
 
         });      
        /*]]>*/ 
@@ -44,7 +93,7 @@
 														
 		                    <label class="col-md-2 control-label">Fecha</label>
 							<div class="col-md-2">
-								<input  th:field="*{fecha}" required="required" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"  maxlength="10" type="text" class="form-control input-sm" placeholder="formato dd-mm-aaaa" />	
+								<input id="datepicker" th:field="*{fecha}" required="required" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"  maxlength="10" type="text" class="form-control input-sm" placeholder="formato dd-mm-aaaa" />	
 							</div>
 													     
 					</div>
@@ -52,7 +101,7 @@
 					 <div class="form-group">
 						    <label class="col-md-2 control-label">Hora</label>
 							<div class="col-md-2">
-								<input  th:field="*{hora}" required="required" pattern="(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])"  maxlength="5" type="text" class="form-control input-sm"  placeholder="formato hh:mm" />
+								<input id="btn_hora" th:field="*{hora}" required="required" pattern="(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])"  maxlength="5" type="text" class="form-control input-sm"  placeholder="formato hh:mm" />
 							</div>
 					 </div>
 					 

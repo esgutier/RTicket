@@ -25,11 +25,20 @@ public class Hincha implements Serializable{
 	private String vigencia;
 	private Integer idSector;
 	private String asiento ;
+	private Integer dinero ;
 	
 	public Integer getRut() {
 		return rut;
 	}
 	
+	public Integer getDinero() {
+		return dinero;
+	}
+
+	public void setDinero(Integer dinero) {
+		this.dinero = dinero;
+	}
+
 	public String getAsiento() {
 		return asiento;
 	}

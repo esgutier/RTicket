@@ -7,10 +7,13 @@
      /*<![CDATA[*/
 		    $(document).ready(function (){	
 		    	$('#btnLoad').hide();
+		    	$('#btnlimpiando').hide();
 		    	$('#btnSubmit').click(function(){
 		    		$('#btnLoad').show();
 		    		$('#btnSubmit').hide();
+		    		$('#btnDelete').hide();
 		    	});
+		    	
 		    });      
      /*]]>*/ 
     </script>
@@ -30,6 +33,11 @@
 								Aqui van los mensajes de error																	
 					  		</div>
 						  </div>	
+						 	<div  th:if="${exito != null}" >
+				      		<div class="alert alert-info " th:text="${exito}">
+								Aqui van los mensajes de info																
+					  		</div>
+						  </div>
 			             
 													<div class="form-group">
 														<label class="col-md-2 control-label">Archivo</label>
@@ -40,8 +48,39 @@
 
 													<div align="center">
 													<button type="submit" class="btn btn-custom-primary" id="btnSubmit" >Cargar Archivo</button>
+													<a type="submit" data-toggle="modal" data-target="#myModal" class="btn btn-custom-secondary"  id="btnDelete" >Limpiar lista</a>
+													
 													<button type="button" class="btn btn-custom-primary" disabled="disabled" id="btnLoad"><i class="fa fa-spinner fa-spin"></i> Cargando...</button>
 													</div>
+													<div id="myModal" class="modal fade" role="dialog">
+										<div class="modal-dialog " >
+
+											<!-- Modal content-->
+											<div class="modal-content">
+												<div class="modal-header" align="center">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title" >Limpiar lista negra</h4>
+												</div>
+												<div class="modal-body"
+													>
+													
+													<div align="center">
+														<h1>¿ Esta seguro que desea limpiar la lista negra ?</h1>
+													</div>
+
+												</div>
+
+												<div class="modal-footer">
+												<button type="submit" class="btn btn-default"
+														data-dismiss="modal"  >cancelar</button>
+													<a type="submit" class="btn btn-custom-secondary"
+														  th:href="@{/eliminar-lista-negra}">limpiar</a>
+														
+												</div>
+											</div>
+
+										</div>
+									</div>
 													<br/>
 													<br/>
 													<p> Total Lista Negra: <span th:text="${total}"></span></p>

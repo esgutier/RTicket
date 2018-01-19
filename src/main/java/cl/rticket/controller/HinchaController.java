@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.rticket.exception.UpdateException;
+import cl.rticket.mappers.HinchaMapper;
 import cl.rticket.model.Compra;
 import cl.rticket.model.Entrada;
 import cl.rticket.model.Hincha;
@@ -39,7 +40,8 @@ public class HinchaController {
 	
 	@Autowired
 	ItemService itemService;
-	
+	@Autowired
+	HinchaMapper hinchaMapper ;
 	
 	//Ingresar hincha desde una compra
 	@RequestMapping(value="/cargar-hincha-mantenedor", method=RequestMethod.GET)
@@ -273,7 +275,15 @@ public class HinchaController {
 					model.addAttribute("total", map.get(compra.getIdEntrada()));
 					return "content/compra";
 				}
-				
+				// verifico si es abonado ya que el no deberia poder comprar si tiene carnet de entrada.
+				if (hinchaService.esAbonado(rut.getNumero())) {
+					model.addAttribute("error", "no se puede efectuar, el hincha es abonado");
+					model.addAttribute("partidos", itemService.obtenerPartidos(user.getIdEquipo()));
+					model.addAttribute("entradas", itemService.obtenerEntradas(compra.getIdPartido(), user.getIdEquipo()));
+					HashMap<Integer,TotalesEntrada> map = itemService.obtenerTotalesEntradas(compra.getIdPartido());
+					model.addAttribute("total", map.get(compra.getIdEntrada()));
+					return "content/compra";
+				}
 				//validar rut
 				
 				Hincha hincha = hinchaService.obtenerHincha(rut.getNumero(), user.getIdEquipo());
@@ -440,7 +450,12 @@ public class HinchaController {
 	// -----------------------------------------------------------------------------------
 	// LISTA NEGRA
 	//------------------------------------------------------------------------------------
-	
+	@RequestMapping(value="/eliminar-lista-negra", method=RequestMethod.GET)
+	public String eliminarListaNegra(Model model,Hincha hincha, RedirectAttributes flash) {
+		hinchaMapper.borrarListaNegra();
+		flash.addFlashAttribute("exito",  "lista negra limpiada con exito"); 
+		return "redirect:/carga-pagina-lista-negra";
+	}
 	@RequestMapping(value="/carga-pagina-lista-negra", method=RequestMethod.GET)
 	public String cargarPaginaListaNegra(Model model) {			
 		    model.addAttribute("total",hinchaService.totalListaNegra());

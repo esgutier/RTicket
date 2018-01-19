@@ -88,4 +88,31 @@
     where equ_id = #{idEquipo}
     
 </select>
+<select id="obtenerListaAbonosPorSector" parameterType="int" resultType="AbonosPorSector" >
+ select 
+ 		  equ_id idEquipo,
+ 		  EQUIPO nombreEquipo,
+          sec_desc sector,
+          MontoAbono monto,
+          CantAbonoPorSector cantidad
+        
+          
+    from TABLON_ABONOS_POR_SECTOR
+    where equ_id = #{idEquipo}
+    
+</select>
+<select id="obtenerListaAbonosPorSectorFecha" parameterType="int" resultType="AbonosPorSectorFecha" >
+ select 
+ 		  equ_id idEquipo,
+ 		  EQUIPO nombreEquipo,
+          sec_desc sector,
+          date_format(FECHA_INGRESO,'%d-%m-%Y') fechaIngreso,
+          MontoAbono monto,
+          CantAbonoPorFecha cantidad
+        
+          
+    from TABLON_ABONOS_POR_SECTOR_FECHA
+    where equ_id = #{idEquipo}
+    
+</select>
 </mapper>

@@ -21,6 +21,7 @@ public interface HinchaMapper {
 	public int insertarImpedido(Hincha hincha) throws DuplicateKeyException;
 	public int totalListaNegra();
 	public Integer estaEnListaNegra( @Param("rut")Integer rut);
+	public Integer esAbonado( @Param("rut")Integer rut);
 	public Hincha obtenerHinchaAbonado(@Param("rut")Integer rut);
 	public int insertarAbonado(Hincha hincha);
 	public int actualizarAbonado(Hincha hincha);

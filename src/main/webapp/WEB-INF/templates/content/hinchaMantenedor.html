@@ -41,9 +41,11 @@
 
 			if ($('select[name=categoria]').val() == 'A') {
 				$("#divDatosAbonado").show();
-
+				$("#DivSeleccion").show();
+				
 			} else {
 				$("#divDatosAbonado").hide();
+				$("#DivSeleccion").hide();
 			}
 
 			$("#selectCategoria").change(function() {
@@ -51,8 +53,10 @@
 				if ($('select[name=categoria]').val() == 'A') {
 					console.log('show');
 					$("#divDatosAbonado").show();
+					$("#DivSeleccion").show();
 				} else {
 					$("#divDatosAbonado").hide();
+					$("#DivSeleccion").hide();
 				}
 
 			});
@@ -87,6 +91,7 @@
 					
 					var str = [], seatNo, className;
 					for (i = 0; i < settings.rows; i++) {
+						
 						for (j = 0; j < settings.cols; j++) {
 							// aqui va los numeros de la fila 
 							//seatNo = (i + j * settings.rows + 1);
@@ -96,9 +101,12 @@
 									+ settings.colCssPrefix + j.toString();
 							if ($.isArray(reservedSeat)
 									&& $.inArray(seatNo, reservedSeat) != -1) {
-								alert("jooooo");
+							
 								className += ' ' + settings.selectedSeatCss;
 							}
+							if ( (j+1) == 29 && i%2 == 0){
+								
+							}else {
 							str
 									.push('<li class="'
 											+ className
@@ -110,8 +118,10 @@
 											+ 'px">'
 											+ '<a style="color:black;" title="' + seatNo + '">'
 											+ seatNo + '</a>' + '</li>');
+							}
 						}
 					}
+					
 					$('#place').html(str.join(''));
 				};
 
@@ -145,7 +155,7 @@
 													arr.push(item);
 												});
 										if (arr[arr.length - 1] == undefined) {
-											document.getElementById("inputButacas").value = 0;
+											document.getElementById("inputButacas").value = "00-00";
 										} else {
 											document.getElementById("inputButacas").value = arr[arr.length - 1];
 										}
@@ -184,6 +194,53 @@
 			} else {
 				alert('Algunos datos en el formulario no están correctos, favor verifique');
 			}
+		}
+		function checkRut(rut) {
+		    // Despejar Puntos
+		    var valor = rut.value.replace('.','');
+		    // Despejar Guión
+		    valor = valor.replace('-','');
+		    
+		    // Aislar Cuerpo y Dígito Verificador
+		    cuerpo = valor.slice(0,-1);
+		    dv = valor.slice(-1).toUpperCase();
+		    
+		    // Formatear RUN
+		    rut.value = cuerpo + '-'+ dv
+		    
+		    // Si no cumple con el mínimo ej. (n.nnn.nnn)
+		    if(cuerpo.length < 7) { rut.setCustomValidity("RUT Incompleto"); return false;}
+		    
+		    // Calcular Dígito Verificador
+		    suma = 0;
+		    multiplo = 2;
+		    
+		    // Para cada dígito del Cuerpo
+		    for(i=1;i<=cuerpo.length;i++) {
+		    
+		        // Obtener su Producto con el Múltiplo Correspondiente
+		        index = multiplo * valor.charAt(cuerpo.length - i);
+		        
+		        // Sumar al Contador General
+		        suma = suma + index;
+		        
+		        // Consolidar Múltiplo dentro del rango [2,7]
+		        if(multiplo < 7) { multiplo = multiplo + 1; } else { multiplo = 2; }
+		  
+		    }
+		    
+		    // Calcular Dígito Verificador en base al Módulo 11
+		    dvEsperado = 11 - (suma % 11);
+		    
+		    // Casos Especiales (0 y K)
+		    dv = (dv == 'K')?10:dv;
+		    dv = (dv == 0)?11:dv;
+		    
+		    // Validar que el Cuerpo coincide con su Dígito Verificador
+		    if(dvEsperado != dv) { rut.setCustomValidity("RUT mal ingresado"); return false; }
+		    
+		    // Si todo sale bien, eliminar errores (decretar que es válido)
+		    rut.setCustomValidity('');
 		}
 		/*]]>*/
 	</script>
@@ -239,8 +296,8 @@
 #place .seat {
 	background: url("assets/img/available_seat_img.png") no-repeat scroll 0 0
 		transparent;
-	height: 33px;
-	width: 33px;
+	height: 49px;
+	width: 36px;
 	display: block;
 }
 
@@ -252,7 +309,7 @@
 	background-image: url("assets/img/selected_seat_img.png");
 }
 
-#place .row-3, #place .row-4 {
+#place .row-4, #place .row-4 {
 	margin-top: 10px;
 }
 
@@ -298,7 +355,7 @@
 
 								<label class="col-md-2 control-label">RUT (digite)</label>
 								<div class="col-md-3">
-									<input th:field="*{rutCompleto}" maxlength="12" type="text"
+									<input th:field="*{rutCompleto}" maxlength="12" type="text" oninput="checkRut(this)"
 										class="form-control input-sm" placeholder="12345678-K"
 										id="inputRut" />
 								</div>
@@ -364,11 +421,21 @@
 														pattern="\d{4}" title="Ingrese número de 4 digitos"
 														class="form-control input-sm" placeholder="Año(4 digitos)" />
 												</div>
-												<div id="divButacas" class="col-md-7">
+												<div id="divButacas" class="col-md-1">
+												
 													<input id="inputButacas" th:field="*{asiento}" maxlength="5"
 														title="Butacas mal ingresadas"
-														class="form-control input-sm" placeholder="H08" />
+														class="form-control input-sm" placeholder="1-20" />
 												</div>
+												 
+												<div class="col-md-3">
+												
+							  <div class="input-group">
+							  <label class="col-md-2 control-label">Valor</label>
+							     <span class="input-group-addon">$</span>
+								 <input th:field="*{dinero}" pattern="[0-9]*" maxlength="6" type="text" class="form-control input-sm" />
+							  </div>
+							</div>
 											</div>
 										</div>
 									</div>
@@ -442,7 +509,7 @@
 
 									</div>
 								</div>
-
+								
 								<div align="center">
 									<button type="submit" class="btn btn-primary"
 										id="btnInsertarHincha" th:if="${accion == 'INSERTAR'}">Ingresar
@@ -452,10 +519,10 @@
 									<button type="submit" class="btn btn-primary"
 										id="btnActualizarHincha" th:if="${accion == 'ACTUALIZAR'}">Actualizar
 										Hincha</button>
-
-									<button type="button" class="btn btn-secondary"
+									
+									<button id="DivSeleccion" type="button" class="btn btn-secondary"
 										data-toggle="modal" data-target="#myModal">Seleccionar
-										Asiento</button>
+										Asiento Vip</button>
 									<!-- Modal -->
 									<div id="myModal" class="modal fade" role="dialog">
 										<div class="modal-dialog modal-lg" style="width: 80%">
@@ -464,7 +531,7 @@
 											<div class="modal-content">
 												<div class="modal-header">
 													<button type="button" class="close" data-dismiss="modal">&times;</button>
-													<h4 class="modal-title">Seleccion de asientos vip</h4>
+													<h4 class="modal-title">Selecci&oacute;n de asientos vip</h4>
 												</div>
 												<div class="modal-body"
 													style="width: 1086px; text-align: center; overflow: auto">
@@ -473,10 +540,10 @@
 														</ul>
 													</div>
 													<div align="center">
-														<ul id="seatDescription">
+														<ul id="seatDescription" >
 
 															<li
-																style="color: black; background: url('assets/img/available_seat_img.png') no-repeat scroll 0 0 transparent;">Disponible</li>
+																style="color: black; background: url('assets/img/available_seat_img.png') no-repeat scroll 0 0 transparent;" >Disponible</li>
 															<li
 																style="color: black; background: url('assets/img/booked_seat_img.png') no-repeat scroll 0 0 transparent;">Reservado</li>
 															<li

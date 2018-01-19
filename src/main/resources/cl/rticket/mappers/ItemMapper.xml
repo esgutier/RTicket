@@ -108,6 +108,14 @@ where
   sec_id = #{idSector} and
   hin_rut = #{rut}
 </select>
+<select id="buscaTicketCompraToken" parameterType="map" resultType="String">
+select com_token from compra
+where
+  equ_id = #{idEquipo} and
+  par_id = #{idPartido} and
+  sec_id = #{idSector} and
+  hin_rut = #{rut}
+</select>
 
 <!-- =================================================================================================== -->
 <!-- GENERACION MASIVA ================================================================================= -->

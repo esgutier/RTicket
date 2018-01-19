@@ -35,6 +35,10 @@ public interface ItemMapper {
 	public void insertarCompra(Compra compra);
 	public int actualizarTokenCompra(@Param("idCompra")Integer idCompra,
 			                         @Param("token")String token);
+	public String buscaTicketCompraToken(@Param("idEquipo")Integer idEquipo,
+            @Param("idPartido")Integer idPartido,
+            @Param("idSector")Integer idSector,
+            @Param("rut")Integer rut);
 	
 	public int anularTicket(String token);
 	public Integer obtenerTotalSectorVendidas(@Param("idEntrada")Integer idEntrada,

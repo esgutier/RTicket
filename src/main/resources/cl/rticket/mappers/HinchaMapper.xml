@@ -6,24 +6,24 @@
 <mapper namespace="cl.rticket.mappers.HinchaMapper">
 
 <insert id="insertarAbonado"  parameterType="Hincha">
-insert into abonados_sector (equ_id, hin_rut, sec_id, abs_vigencia, asiento) 
-values (#{idEquipo}, #{rut},#{idSector},STR_TO_DATE(#{vigencia}, '%d/%m/%Y'),#{asiento})
+insert into abonados_sector (equ_id, hin_rut, sec_id, abs_vigencia, abs_asiento, abs_valor) 
+values (#{idEquipo}, #{rut},#{idSector},STR_TO_DATE(#{vigencia}, '%d/%m/%Y'),#{asiento},#{dinero})
 </insert>
 
 <update id="actualizarAbonado" parameterType="Hincha">
    update abonados_sector 
-       set sec_id = #{idSector}, abs_vigencia= STR_TO_DATE(#{vigencia}, '%d/%m/%Y'), asiento=#{asiento}
+       set sec_id = #{idSector}, abs_vigencia= STR_TO_DATE(#{vigencia}, '%d/%m/%Y'), abs_asiento=#{asiento}, abs_valor=#{dinero}
    where
      hin_rut = #{rut} and equ_id = #{idEquipo}
 </update>
 <select id="obtenerListaAbonados"  resultType="Hincha" parameterType="map">
-select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia, a.asiento asiento
+select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia, a.abs_asiento asiento, a.abs_valor dinero
 	from abonados_sector a
 	where equ_id=#{idEquipo}
 	     
 </select>
 <select id="obtenerDatosAbonado"  resultType="Hincha" parameterType="map">
-select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia, a.asiento asiento
+select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE_FORMAT(a.abs_vigencia, '%Y')  anioVigencia, a.abs_asiento asiento, a.abs_valor dinero
 	from abonados_sector a
 	where a.hin_rut = #{rut} and equ_id=#{idEquipo}
 	     
@@ -37,15 +37,15 @@ select   a.sec_id idSector, DATE_FORMAT(a.abs_vigencia, '%m')  mesVigencia, DATE
   select    hin_rut rut, hin_dv dv, 
 	        hin_nombres nombres, hin_apellidos apellidos, hin_direccion direccion,
 	        hin_genero genero,  hin_telefono telefono,  hin_email email,DATE_FORMAT(hin_fecha_nac, '%d/%m/%Y') fechaNac,
-	        hin_fecha_ingreso, hin_categoria categoria
+	        hin_fecha_ingreso, hin_categoria categoria, hin_asiento asiento, hin_valor dinero
 	from hincha
 	where hin_rut = #{rut} and equ_id = #{idEquipo}
 
 </select>
 
 <insert id="insertarHincha"  parameterType="Hincha">
-insert into hincha (equ_id, hin_rut, hin_dv,hin_nombres, hin_apellidos, hin_direccion,hin_genero, hin_telefono,hin_email ,hin_fecha_nac,hin_fecha_ingreso,hin_categoria) 
-values (#{idEquipo}, #{rut},UPPER(#{dv}),UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#{genero},#{telefono},#{email},STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),NOW(),#{categoria})
+insert into hincha (equ_id, hin_rut, hin_dv,hin_nombres, hin_apellidos, hin_direccion,hin_genero, hin_telefono,hin_email ,hin_fecha_nac,hin_fecha_ingreso,hin_categoria,hin_asiento, hin_valor) 
+values (#{idEquipo}, #{rut},UPPER(#{dv}),UPPER(#{nombres}),UPPER(#{apellidos}),#{direccion},#{genero},#{telefono},#{email},STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),NOW(),#{categoria},#{asiento},#{dinero})
 </insert>
 
 <insert id="insertarHinchaEntidad"  parameterType="Hincha">
@@ -62,7 +62,9 @@ values (#{idEquipo}, #{rut},UPPER(#{dv}),UPPER(#{nombres}),#{direccion},#{telefo
                     hin_telefono = #{telefono},
                     hin_email = #{email},
                     hin_fecha_nac =STR_TO_DATE(#{fechaNac}, '%d/%m/%Y'),
-                    hin_categoria = #{categoria}
+                    hin_categoria = #{categoria},
+                    hin_asiento = #{asiento},
+                    hin_valor = #{dinero}
                  where hin_rut = #{rut} and equ_id = #{idEquipo}
 </update>
 
@@ -96,7 +98,9 @@ select count(*) from lista_negra
 <select id="estaEnListaNegra" resultType="int" parameterType="int">
 select 1 from lista_negra where lne_rut = #{rut}
 </select>
-
+<select id="esAbonado" resultType="int" parameterType="int">
+select 1 from abonados_sector where hin_rut = #{rut}
+</select>
 
 <select id="tieneEntradaPartido" resultType="int" parameterType="map">
      select 1 from compra c, entrada e 

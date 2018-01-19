@@ -122,9 +122,14 @@ public class AccesoRestController {
 					response = 0; // acceso no permitido - estadio seguro
 				} else {
 					result = itemService.esTicketNominativo(idEquipo, idPartido, idSector, rut);
+					System.out.println("el resultado es "+result);
+					String ticket = itemService.buscaTicketCompraToken(idEquipo, idPartido, idSector, rut);
+					
+					
+					System.out.println("el resultado es "+ticket);
 					if (result != null) {
 						try {
-							itemService.insertarAccesoEstadio(idEquipo, input, idPartido, idSector);
+							itemService.insertarAccesoEstadio(idEquipo, ticket, idPartido, idSector);
 							response = 20; // nominativa ok
 						} catch (DuplicateKeyException e) {
 							response = 22; // acceso no permitido - cedula ya utilizada

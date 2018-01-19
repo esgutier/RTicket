@@ -63,7 +63,7 @@ public interface ItemService {
 	
 	public Integer existeTicket(Integer idEquipo, String token,Integer idPartido, Integer idSector);
     public Integer esAbonadoVigente(Integer idEquipo,Integer idSector,Integer rut);
-	
+    public String buscaTicketCompraToken(Integer idEquipo, Integer idPartido, Integer idSector, Integer rut);
 	public HashMap<String, Integer> obtenerEntradasNormalesPorSector(Integer idPartido,Integer idSector );
 	public HashMap<Integer, Integer> obtenerEntradasNominativasPorSector(Integer idPartido,Integer idSector);
 	public HashMap<Integer, Integer> obtenerAbonadosPorSector(Integer idSector);

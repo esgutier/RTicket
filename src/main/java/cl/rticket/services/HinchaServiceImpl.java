@@ -119,7 +119,11 @@ public class HinchaServiceImpl implements HinchaService{
 		
 		Integer[] resumen = new Integer[3];
 		//borrar lista negra
-		hinchaMapper.borrarListaNegra();
+		
+		
+		//hinchaMapper.borrarListaNegra();
+		
+		
 		int totalProcesados = 0;
 		int totalDuplicados = 0;
 		int totalIngresados = 0;
@@ -193,6 +197,15 @@ public class HinchaServiceImpl implements HinchaService{
 			return false;
 		}
 		return true;
+	}
+
+	public boolean esAbonado(Integer rut) {
+		Integer res = hinchaMapper.esAbonado(rut);
+		if(res != null && res.intValue() == 1) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="es"
+	th:include="layout/page :: page">
+
+<div th:fragment="content">
+	<script type="text/javascript">
+		/*<![CDATA[*/
+
+		$(document)
+				.ready(
+						function() {
+
+							var procesoID;
+							var arrAbonadoSectorFecha = [];
+							var arrAbonadoCantidadFecha = [];
+							var arrAbonadoFechaFecha = [];
+							var arrAbonadoMontoFecha = [] ;
+							var elementosSelect = document
+									.getElementsByTagName('select');
+							for (var i = 0; i < elementosSelect.length; i++) {
+								elementosSelect[i].addEventListener("change",
+										actualizarDatos);
+							}
+							function actualizarDatos() {
+								arrAbonadoSectorFecha.length = 0;
+								arrAbonadoCantidadFecha.length = 0;
+								arrAbonadoFechaFecha.length = 0;
+								arrAbonadoMontoFecha.length = 0 ;
+								//Aqui va lo que se necesito los abonados sector fecha
+								var stSectorFecha = document
+										.getElementById('idSectorFecha').value;
+								var arrSectorFechaSplit = stSectorFecha
+										.split(",");
+								var stCantidadFecha = document
+										.getElementById('idCantidadFecha').value;
+								var arrCantidadFechaSplit = stCantidadFecha
+										.split(",");
+
+								var stMontoFecha = document
+										.getElementById('idMontoFecha').value;
+								var arrMontoFechaSplit = stMontoFecha
+										.split(",");
+
+								var stFechaFecha = document
+										.getElementById('idFechaFecha').value;
+								var arrFechaFechaSplit = stFechaFecha
+										.split(",");
+								var elementoMesSector = document.getElementById('seleccionSectorFechaSelect');
+								for (var index = 0; index < arrSectorFechaSplit.length - 1; index++) {
+
+									if ((elementoMesSector.options[elementoMesSector.selectedIndex].text)
+											.trim() == arrSectorFechaSplit[index]) {
+										arrAbonadoSectorFecha
+												.push(arrSectorFechaSplit[index]);
+										arrAbonadoCantidadFecha
+												.push(arrCantidadFechaSplit[index]);
+										arrAbonadoMontoFecha
+										.push(arrMontoFechaSplit[index]);
+										arrAbonadoFechaFecha
+										.push(arrFechaFechaSplit[index]);
+
+									}
+								}
+
+								dibujarGraficoFechaSector();
+								graficoVentaPorFechasPie();
+								
+							}
+							google.setOnLoadCallback(dibujarGraficoFechaSector);
+
+							function dibujarGraficoFechaSector() {
+								
+								var b = [];
+								for (var i = 0; i < arrAbonadoFechaFecha.length; i++) {
+									
+									var dat = [ '' + arrAbonadoFechaFecha[i],
+											parseInt(arrAbonadoCantidadFecha[i]) ];
+								
+									b.push(dat);
+								}
+								//console.log(b);
+
+								// Tabla de datos: valores y etiquetas de la gráfica
+								var data = new google.visualization.DataTable();
+								data.addColumn('string', 'Topping');
+								data.addColumn('number', 'Ventas');
+								data.addRows(b);
+								var options = {
+
+									'title' : 'Abonados por sector',
+									'width' : 700,
+									'height' : 500,
+									animation : {
+										"startup" : true,
+										duration : 1500,
+										easing : 'out',
+									},
+
+								};
+
+								// Dibujar el gráfico
+								new google.visualization.ColumnChart(
+								//ColumnChart sería el tipo de gráfico a dibujar
+								document.getElementById('graficoVentaFechaBarra')).draw(
+										data, options);
+							}
+							google.charts.load('current', {
+								'packages' : [ 'corechart' ]
+							});
+							google.charts.setOnLoadCallback(graficoVentaPorFechasPie);
+
+							function graficoVentaPorFechasPie() {
+								
+								var ps = [ [ 'datos', 'Dinero' ] ];
+								for (var i = 0; i < arrAbonadoMontoFecha.length; i++) {
+									var dat = [ '' + arrAbonadoFechaFecha[i],
+											parseInt(arrAbonadoMontoFecha[i]) ];
+									ps.push(dat);
+								}
+								var data = google.visualization
+										.arrayToDataTable(ps);
+
+								var options = {
+									'is3D' : true,
+									title : 'Ingresos abonados y sector',
+									'width' : 500,
+									'height' : 500
+								};
+
+								var chart = new google.visualization.PieChart(
+										document.getElementById('graficoVentaDineroFecha'));
+
+								chart.draw(data, options);
+							}
+							
+							//////////////////////////////////////
+							//////primer grafico sin select///////
+							//////////////////////////////////////
+
+							google.load("visualization", "1", {
+								packages : [ "corechart" ]
+							});
+							google.setOnLoadCallback(dibujarGrafico);
+
+							function dibujarGrafico() {
+								var st = document
+										.getElementById('idSectorAbonoSector').value;
+								var num = document
+										.getElementById('idSectorAbonoCantidad').value;
+								var objetoString = st.split(",");
+								var objetoNum = num.split(",");
+								var b = [];
+								for (var i = 0; i < objetoString.length - 1; i++) {
+									var dat = [ '' + objetoString[i],
+											parseInt(objetoNum[i]) ];
+									b.push(dat);
+								}
+								// Tabla de datos: valores y etiquetas de la gráfica
+								var data = new google.visualization.DataTable();
+								data.addColumn('string', 'Topping');
+								data
+										.addColumn('number',
+												'Cantidad de Personas');
+								data.addRows(b);
+								var options = {
+
+									'title' : 'Cantidad de abonados por sector',
+									'width' : 700,
+									'height' : 500,
+									animation : {
+										"startup" : true,
+										duration : 1500,
+										easing : 'out',
+									},
+
+								};
+
+								// Dibujar el gráfico
+								new google.visualization.ColumnChart(
+								//ColumnChart sería el tipo de gráfico a dibujar
+								document.getElementById('graficoSectorAbonado'))
+										.draw(data, options);
+							}
+
+							google.charts.load('current', {
+								'packages' : [ 'corechart' ]
+							});
+							google.charts
+									.setOnLoadCallback(graficoVentasAbonadosPie);
+
+							function graficoVentasAbonadosPie() {
+
+								var str = document
+										.getElementById('idSectorAbonoSector').value;
+								var strM = document
+										.getElementById('idSectorAbonoMonto').value;
+								var arrSectorAbono = str.split(",");
+								var arrMontoAbono = strM.split(",");
+								var ps = [ [ 'datos', 'Dinero' ] ];
+								for (var i = 0; i < arrSectorAbono.length - 1; i++) {
+									var dat = [ '' + arrSectorAbono[i],
+											parseInt(arrMontoAbono[i]) ];
+									ps.push(dat);
+								}
+								var data = google.visualization
+										.arrayToDataTable(ps);
+
+								var options = {
+									'is3D' : true,
+									title : 'Ingresos Abonados y sector',
+									'width' : 500,
+									'height' : 500
+								};
+
+								var chart = new google.visualization.PieChart(
+										document
+												.getElementById('graficoSectorDineroAbono'));
+
+								chart.draw(data, options);
+							}
+						});
+
+		/*]]>*/
+	</script>
+	<script>
+		google.load("visualization", "1", {
+			packages : [ "corechart" ]
+		});
+		google.setOnLoadCallback(dibujarGrafico);
+
+		function dibujarGrafico() {
+			var name = [ 'febrero', 5 ];
+			// Tabla de datos: valores y etiquetas de la gráfica
+			var data = google.visualization.arrayToDataTable([
+					[ 'Mes', 'Ventas' ], [ 'enero', 23 ], name, [ 'marzo', 0 ],
+					[ 'abril', 15 ], [ 'mayo', 0 ], [ 'junio', 8 ],
+					[ 'julio', 14 ], [ 'agosto', 0 ], [ 'septiembre', 0 ],
+					[ 'octubre', 4 ], [ 'noviembre', 0 ], [ 'diciembre', 3 ] ]);
+			var options = {
+
+				'title' : 'Cantidad de venta vs Mes',
+				'width' : 700,
+				'height' : 500,
+				animation : {
+					"startup" : true,
+					duration : 1500,
+					easing : 'out',
+				},
+
+			};
+
+			// Dibujar el gráfico
+			new google.visualization.ColumnChart(
+			//ColumnChart sería el tipo de gráfico a dibujar
+			document.getElementById('grafico12')).draw(data, options);
+		}
+	</script>
+	<!-- Abonos Sector -->
+	<input id="idSectorAbonoCantidad" type="hidden"
+		th:name="cantidadIngresosEstadio" th:value="*{arrSectorAbonoCantidad}" />
+	<input id="idSectorAbonoSector" type="hidden"
+		th:name="partidosEnSistema" th:value="*{arrSectorAbonoSector}" /> <input
+		id="idSectorAbonoMonto" type="hidden" th:name="partidosEenAcceso"
+		th:value="*{arrSectorAbonoMonto}" />
+
+	<!-- Abonos Sector fecha  -->
+	<input id="idCantidadFecha" type="hidden" th:name="aaa"
+		th:value="*{arrCantidadFecha}" /> <input id="idSectorFecha"
+		type="hidden" th:name="aaaa" th:value="*{arrSectorFecha}" /> <input
+		id="idMontoFecha" type="hidden" th:name="aaaaa" th:value="*{arrMontoFecha}" />
+	<input id="idFechaFecha" type="hidden" th:name="qqqq"
+		th:value="*{arrFechaFecha}" />
+
+	<div class="row">
+
+		<div class="col">
+			<br /> <br /> <br /> <br />
+			<h3 class="box-title" align="center"
+				style="margin-right: 200px; color: Black;">Reporte de Abonados
+				por sector</h3>
+		</div>
+	</div>
+	<div class="row">
+		<br /> <br />
+		<!-- /.col (LEFT) -->
+		<div id="m" class="col-md-6" align="left">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body">
+					<div id="graficoSectorAbonado" align="left"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+		<div class="col-md-6" align="left">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body">
+					<div id="graficoSectorDineroAbono" align="left"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+	<div class="row">
+
+		<div class="col">
+			<br /> <br /> <br /> <br />
+			<h3 class="box-title" align="center"
+				style="margin-right: 200px; color: Black;">Reporte abonados por
+				fecha y sector</h3>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<br /> <br /> <br />
+		<div class="col-md-3"></div>
+		<div Class="col-md-6">
+
+			<select id="seleccionSectorFechaSelect"
+				class="form-control input-sm col-md-3">
+				<option value="">Seleccione..</option>
+				<option th:each="sector : ${listaSectoresSele}"
+					th:value="${sector.descripcion}" th:text="${sector.descripcion}"></option>
+			</select>
+
+		</div>
+
+		<div class="col-md-3"></div>
+	</div>
+	<div class="row">
+		<br /> <br /> <br /> <br />
+		<!-- /.col (LEFT) -->
+		<div style="display: block;" class="col-md-5" align="left">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="left"
+					style="width: 600px; height: 500px">
+					<div id="graficoVentaFechaBarra" align="left"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+		<div class="col-md-6" align="center">
+			<div class="box box-danger">
+				<div class="box-header with-border"></div>
+				<div class="box-body" align="center"
+					style="width: 600px; height: 500px">
+					<div id="graficoVentaDineroFecha" align="center"></div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+</div>
+</html>

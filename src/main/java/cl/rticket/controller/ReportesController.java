@@ -1,6 +1,7 @@
 package cl.rticket.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cl.rticket.model.Partido;
+import cl.rticket.model.Sector;
 import cl.rticket.model.Usuario;
+import cl.rticket.model.modelReporte.AbonosPorSector;
+import cl.rticket.model.modelReporte.AbonosPorSectorFecha;
 import cl.rticket.model.modelReporte.AccesoPorPartido;
 import cl.rticket.model.modelReporte.Partidos;
 import cl.rticket.model.modelReporte.TicketEntradasPorMesSector;
@@ -19,232 +23,293 @@ import cl.rticket.model.modelReporte.TicketListaSector;
 import cl.rticket.model.modelReporte.TicketPartioPorSector;
 import cl.rticket.model.modelReporte.TicketPorDia;
 import cl.rticket.model.modelReporte.TicketPorPartido;
+import cl.rticket.services.ItemService;
 import cl.rticket.services.ReporteService;
 
 @Controller
 public class ReportesController {
 	@Autowired
-	ReporteService reporteService ;
-	
-	@RequestMapping(value="/carga-pagina-reportes", method=RequestMethod.GET)
+	ReporteService reporteService;
+	@Autowired
+	ItemService itemService ;
+	@RequestMapping(value = "/carga-pagina-reportes", method = RequestMethod.GET)
 	public String cargaPaginaPartidos(Model model) {
 		String devolver = "";
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		model.addAttribute("partido", new Partido());
 		ArrayList<Partidos> list = reporteService.obtenerListaDePartidos(user.getIdEquipo());
 		model.addAttribute("listaDeSectores", reporteService.obtenerListaTicketSector(user.getIdEquipo()));
-		model.addAttribute("ListaPartidos", reporteService.obtenerListaDePartidos(user.getIdEquipo())) ;
-		
-		for ( int index = 0 ; index < list.size() ; index ++ ) {
-			devolver += list.get(index).getPartido()+",";
+		model.addAttribute("ListaPartidos", reporteService.obtenerListaDePartidos(user.getIdEquipo()));
+
+		for (int index = 0; index < list.size(); index++) {
+			devolver += list.get(index).getPartido() + ",";
 		}
 		model.addAttribute("listaPartidosFor", devolver);
 		model.addAttribute("prueba", 1000);
 		return "content/reportes";
 	}
-	@RequestMapping(value="/carga-pagina-reportes-acceso", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/carga-pagina-reportes-acceso", method = RequestMethod.GET)
 	public String cargaPaginaPartidosAccesos(Model model) {
 		String devolverListaPartidos = "";
 		String devolver = "";
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<AccesoPorPartido> list = reporteService.obtenerListaAccesoPorPartido(user.getIdEquipo());
-		for ( int index = 0 ; index < list.size() ; index ++ ) {
-			devolver += list.get(index).getCantidad()+",";
+		for (int index = 0; index < list.size(); index++) {
+			devolver += list.get(index).getCantidad() + ",";
 			devolverListaPartidos += list.get(index).getRival();
 		}
-		model.addAttribute("listaDeCantidad",devolver);
-		model.addAttribute("listaPartidosAcceso",devolverListaPartidos);
-		
+		model.addAttribute("listaDeCantidad", devolver);
+		model.addAttribute("listaPartidosAcceso", devolverListaPartidos);
+
 		return "content/reportesAcceso";
 	}
+
+	@RequestMapping(value = "/estadistica-abonados", method = RequestMethod.GET)
+	public String cargaPaginaAbonadosReporte(Model model) {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		String arrSectorAbonoSector = "";
+		String arrSectorAbonoCantidad = "";
+		String arrSectorAbonoMonto = "";
+		String arrSectorFecha = "";
+		String arrMontoFecha = "" ;
+		String arrFechaFecha = "" ;
+		String arrCantidadFecha = "" ;
+		List<AbonosPorSector> listaAbonoPorSector = reporteService.obtenerListaAbonosPorSector(user.getIdEquipo());
+		List<AbonosPorSectorFecha> listaAbonoPorSectorFecha = reporteService.obtenerListaAbonosPorSectorFecha(user.getIdEquipo());
+		List<Sector> listaSectoresSelect = itemService.obtenerSectores(user.getIdEquipo());
+		for (int index = 0; index < listaAbonoPorSector.size(); index++) {
+
+			arrSectorAbonoCantidad +=  listaAbonoPorSector.get(index).getCantidad()+",";
+			arrSectorAbonoSector +=  listaAbonoPorSector.get(index).getSector()+",";
+			arrSectorAbonoMonto += listaAbonoPorSector.get(index).getMonto()+",";
+		}
+		for (int index = 0; index < listaAbonoPorSectorFecha.size(); index++) {
+
+			arrCantidadFecha +=  listaAbonoPorSectorFecha.get(index).getCantidad()+",";
+			arrSectorFecha +=  listaAbonoPorSectorFecha.get(index).getSector()+",";
+			arrMontoFecha += listaAbonoPorSectorFecha.get(index).getMonto()+",";
+			arrFechaFecha += listaAbonoPorSectorFecha.get(index).getFechaIngreso().substring(0, 10)+",";
+		}
+		model.addAttribute("arrSectorAbonoCantidad",arrSectorAbonoCantidad);
+		model.addAttribute("arrSectorAbonoSector",arrSectorAbonoSector);
+		model.addAttribute("arrSectorAbonoMonto",arrSectorAbonoMonto);
+		model.addAttribute("listaSectoresSele", listaSectoresSelect);
+		
+		model.addAttribute("arrCantidadFecha", arrCantidadFecha);
+		model.addAttribute("arrSectorFecha", arrSectorFecha);
+		model.addAttribute("arrMontoFecha", arrMontoFecha);
+		model.addAttribute("arrFechaFecha", arrFechaFecha);
+		
+		return "content/reportesAbonado";
+	}
+
 	@ModelAttribute("arrTicketSectorMesAnioSector")
-	public String  listaTicketPorSectorMesAnio( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		ArrayList<TicketEntradasPorMesSector> a = reporteService.obtenerListaTicketEntradasPorMesSector(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-			
-				devuelta += a.get(index).getSector()+",";
+	public String listaTicketPorSectorMesAnio() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		ArrayList<TicketEntradasPorMesSector> a = reporteService
+				.obtenerListaTicketEntradasPorMesSector(user.getIdEquipo());
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+
+			devuelta += a.get(index).getSector() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrTicketDineroMesAnioSector")
-	public String  listaTicketPorDineroMesAnio( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		ArrayList<TicketEntradasPorMesSector> a = reporteService.obtenerListaTicketEntradasPorMesSector(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-			
-				devuelta += a.get(index).getMonto()+",";
+	public String listaTicketPorDineroMesAnio() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		ArrayList<TicketEntradasPorMesSector> a = reporteService
+				.obtenerListaTicketEntradasPorMesSector(user.getIdEquipo());
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+
+			devuelta += a.get(index).getMonto() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrTicketCantidadMesAnioSector")
-	public String  listaTicketPorCantidadMesAnio( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		ArrayList<TicketEntradasPorMesSector> a = reporteService.obtenerListaTicketEntradasPorMesSector(user.getIdEquipo());
-	
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-			
-				devuelta += a.get(index).getCantidadEntradas()+",";
+	public String listaTicketPorCantidadMesAnio() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		ArrayList<TicketEntradasPorMesSector> a = reporteService
+				.obtenerListaTicketEntradasPorMesSector(user.getIdEquipo());
+
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+
+			devuelta += a.get(index).getCantidadEntradas() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrTicketMesAnioSector")
-	public String  listaTicketPorMesAnio( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		ArrayList<TicketEntradasPorMesSector> a = reporteService.obtenerListaTicketEntradasPorMesSector(user.getIdEquipo());
-		String [] arrMes = { "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"};
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				int val = a.get(index).getMes();
-				devuelta += a.get(index).getAnio()+"-"+arrMes[val-1].toUpperCase()+",";
+	public String listaTicketPorMesAnio() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		ArrayList<TicketEntradasPorMesSector> a = reporteService
+				.obtenerListaTicketEntradasPorMesSector(user.getIdEquipo());
+		String[] arrMes = { "ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic" };
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			int val = a.get(index).getMes();
+			devuelta += a.get(index).getAnio() + "-" + arrMes[val - 1].toUpperCase() + ",";
 		}
-		System.out.println("Aqui el mes año "+devuelta);
+		System.out.println("Aqui el mes año " + devuelta);
 		return devuelta;
 	}
-	
+
 	@ModelAttribute("arrTicketCantidadDinerPorDia")
-	public String  listaTicketPorDiaDinero( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String listaTicketPorDiaDinero() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TicketPorDia> a = reporteService.obtenerListaTicketPorDia(user.getIdEquipo());
-		
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getMonto()+",";
-		}
-	
-		return devuelta;
-	}
-	@ModelAttribute("arrTicketPorDiaDias")
-	public String  listaTicketPorDiaDias ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		ArrayList<TicketPorDia> a = reporteService.obtenerListaTicketPorDia(user.getIdEquipo());
-		String devuelta ="" ;
-		String [] arrMes = { "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"};
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-		
-				int var = Integer.parseInt(a.get(index).getFechaCompra().substring(3, 5));
-				devuelta += a.get(index).getFechaCompra().substring(0, 2)+"-"+arrMes[var-1]+",";
-		}
-	
-		return devuelta;
-	}
-	@ModelAttribute("arrTicketPorDiaCantidad")
-	public String  listaTicketPorDiaCantidad ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		ArrayList<TicketPorDia> a = reporteService.obtenerListaTicketPorDia(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getCantidadEntrada()+",";
-		}
-	
-		return devuelta;
-	}
-	@ModelAttribute("arrTicketPorDiaPartidos")
-	public String  listaTicketPorDiaPartidos ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		ArrayList<TicketPorDia> a = reporteService.obtenerListaTicketPorDia(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getIdPartido()+",";
-		}
-	
-		return devuelta;
-	}
-	@ModelAttribute("arrPartidosPorSectorMonto")
-	public String  listaPartidosPorSectorMonto ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
-		ArrayList<TicketPartioPorSector> a = reporteService.obtenerListaTicketPartidoPorSector(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getMonto()+",";
+
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getMonto() + ",";
 		}
 
 		return devuelta;
 	}
+
+	@ModelAttribute("arrTicketPorDiaDias")
+	public String listaTicketPorDiaDias() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		ArrayList<TicketPorDia> a = reporteService.obtenerListaTicketPorDia(user.getIdEquipo());
+		String devuelta = "";
+		String[] arrMes = { "ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic" };
+		for (int index = 0; index < a.size(); index++) {
+
+			int var = Integer.parseInt(a.get(index).getFechaCompra().substring(3, 5));
+			devuelta += a.get(index).getFechaCompra().substring(0, 2) + "-" + arrMes[var - 1] + ",";
+		}
+
+		return devuelta;
+	}
+
+	@ModelAttribute("arrTicketPorDiaCantidad")
+	public String listaTicketPorDiaCantidad() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		ArrayList<TicketPorDia> a = reporteService.obtenerListaTicketPorDia(user.getIdEquipo());
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getCantidadEntrada() + ",";
+		}
+
+		return devuelta;
+	}
+
+	@ModelAttribute("arrTicketPorDiaPartidos")
+	public String listaTicketPorDiaPartidos() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		ArrayList<TicketPorDia> a = reporteService.obtenerListaTicketPorDia(user.getIdEquipo());
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getIdPartido() + ",";
+		}
+
+		return devuelta;
+	}
+
+	@ModelAttribute("arrPartidosPorSectorMonto")
+	public String listaPartidosPorSectorMonto() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
+		ArrayList<TicketPartioPorSector> a = reporteService.obtenerListaTicketPartidoPorSector(user.getIdEquipo());
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getMonto() + ",";
+		}
+
+		return devuelta;
+	}
+
 	@ModelAttribute("arrPartidosPorSector")
-	public String  listaPartidosPorSector ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String listaPartidosPorSector() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TicketPartioPorSector> a = reporteService.obtenerListaTicketPartidoPorSector(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getRival()+",";
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getRival() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrCantidadDeEntradas")
-	public String  listaCantidadEntradas ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String listaCantidadEntradas() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TicketPartioPorSector> a = reporteService.obtenerListaTicketPartidoPorSector(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getCantidadEntradas()+",";
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getCantidadEntradas() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrPartidosPorSectorMuestraSector")
-	public String  listaPartidosPorSectorMuestra ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String listaPartidosPorSectorMuestra() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TicketPartioPorSector> a = reporteService.obtenerListaTicketPartidoPorSector(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getSector()+",";
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getSector() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrStringPartido")
-	public String  datoSectorPartidoEntrada ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String datoSectorPartidoEntrada() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<Partidos> a = reporteService.obtenerListaDePartidos(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getPartido()+",";
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getPartido() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrListaSectorString")
-	public String  datoSectorString ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String datoSectorString() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TicketListaSector> a = reporteService.obtenerListaTicketSector(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getNombreSector()+",";
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getNombreSector() + ",";
 		}
 		return devuelta;
 	}
 
 	@ModelAttribute("arrString")
-	public String  datoString ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String datoString() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TicketPorPartido> a = reporteService.obtenerListaTicketPartido(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getRival()+",";
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getRival() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrNum")
-	public String  datoNumeico ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String datoNumeico() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TicketPorPartido> a = reporteService.obtenerListaTicketPartido(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getCantidadEntradas()+",";
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getCantidadEntradas() + ",";
 		}
 		return devuelta;
 	}
+
 	@ModelAttribute("arrDinero")
-	public String  datoDinero ( ) {
-		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	public String datoDinero() {
+		Usuario user = (Usuario) SecurityUtils.getSubject().getSession().getAttribute("usuario");
 		ArrayList<TicketPorPartido> a = reporteService.obtenerListaTicketPartido(user.getIdEquipo());
-		String devuelta ="" ;
-		for ( int index = 0 ; index < a.size(); index ++ ) {
-				devuelta += a.get(index).getMonto()+",";
+		String devuelta = "";
+		for (int index = 0; index < a.size(); index++) {
+			devuelta += a.get(index).getMonto() + ",";
 		}
 		return devuelta;
 	}
-	
-	/*Solo*/
+
+	/* Solo */
 }

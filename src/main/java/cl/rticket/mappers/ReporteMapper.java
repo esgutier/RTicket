@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import cl.rticket.model.modelReporte.AbonosPorSector;
+import cl.rticket.model.modelReporte.AbonosPorSectorFecha;
 import cl.rticket.model.modelReporte.AccesoPorPartido;
 import cl.rticket.model.modelReporte.Partidos;
 import cl.rticket.model.modelReporte.TicketEntradasPorMesSector;
@@ -21,4 +23,6 @@ public interface ReporteMapper {
 	public ArrayList<AccesoPorPartido> obtenerListaAccesoPorPartido( Integer idEquipo );
 	public ArrayList<TicketPorDia> obtenerListaTicketPorDia( Integer idEquipo );
 	public ArrayList<TicketEntradasPorMesSector> obtenerListaTicketEntradasPorMesSector( Integer idEquipo );
+	public ArrayList<AbonosPorSector> obtenerListaAbonosPorSector( Integer idEquipo );
+	public ArrayList<AbonosPorSectorFecha> obtenerListaAbonosPorSectorFecha( Integer idEquipo );
 }

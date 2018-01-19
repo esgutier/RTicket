@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cl.rticket.mappers.ReporteMapper;
+import cl.rticket.model.modelReporte.AbonosPorSector;
+import cl.rticket.model.modelReporte.AbonosPorSectorFecha;
 import cl.rticket.model.modelReporte.AccesoPorPartido;
 import cl.rticket.model.modelReporte.Partidos;
 import cl.rticket.model.modelReporte.TicketEntradasPorMesSector;
@@ -48,6 +50,16 @@ public class ReporteServiceImpl implements ReporteService {
 	public ArrayList<TicketEntradasPorMesSector> obtenerListaTicketEntradasPorMesSector(Integer idEquipo) {
 		
 		return reporteMapper.obtenerListaTicketEntradasPorMesSector(idEquipo);
+	}
+
+	public ArrayList<AbonosPorSector> obtenerListaAbonosPorSector(Integer idEquipo) {
+		
+		return reporteMapper.obtenerListaAbonosPorSector(idEquipo);
+	}
+
+	public ArrayList<AbonosPorSectorFecha> obtenerListaAbonosPorSectorFecha(Integer idEquipo) {
+		
+		return reporteMapper.obtenerListaAbonosPorSectorFecha(idEquipo);
 	}
 	
 }

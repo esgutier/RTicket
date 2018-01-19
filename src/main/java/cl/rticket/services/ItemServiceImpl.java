@@ -286,5 +286,8 @@ public class ItemServiceImpl implements ItemService{
 		   itemMapper.insertarAccesoEstadio(idEquipo,id, idPartido, idSector);
 		
 	}
+	public String buscaTicketCompraToken(Integer idEquipo, Integer idPartido, Integer idSector, Integer rut) {
+		return itemMapper.buscaTicketCompraToken(idEquipo, idPartido, idSector, rut);
+	}
 
 }
