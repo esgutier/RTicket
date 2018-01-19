@@ -46,6 +46,7 @@ public class GenerarEntradasCortesia {
 			document.open();
 			for(Ticket ticket: tickets) {
 				tablaTicketBase(document, ticket, usuario);
+				document.newPage();
 			}
 			document.close();
  
