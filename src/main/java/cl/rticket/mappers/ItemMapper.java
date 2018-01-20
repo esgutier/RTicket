@@ -58,6 +58,10 @@ public interface ItemMapper {
 			                                       @Param("rut")Integer rut,
 			                                       @Param("tipo")String tipo);
 	
+	public ArrayList<Ticket> obtenerDatosTicketCortesia(@Param("idPartido")Integer idPartido,
+            											@Param("rut")Integer rut,
+            											@Param("tipo")String tipo);
+	
 	//MANTENEDOR DE PARTIDOS	
 	public int actualizarPartido(Partido partido);
 	public int insertarPartido(Partido partido);

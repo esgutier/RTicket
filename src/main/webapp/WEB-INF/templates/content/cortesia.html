@@ -17,11 +17,19 @@
         		document.forms[0].action = "obtener-totales-entidad-cortesia";          		
         		document.forms[0].submit();
         	});
+        	
+        	$("#descargarTickets").click(function(){
+        		
+        		document.forms[0].action = "generar-pdf-cortesia";          		
+        		document.forms[0].submit();
+       	    });
         
         	
         	$("#generarEntradasButton").click(function(){
         		 $('#generarEntradasButton').hide();  
         		 $("#cargandoButton").show();
+        		 document.forms[0].action = "generar-entradas-cortesia";          		
+         		 document.forms[0].submit();
         	});
         	
         	$(".imprimir").click(function(){
@@ -32,51 +40,6 @@
         	
 
         });     
-    
-       function imprimir(idPartido, idEntrada, rut) {
-    	   $.ajax({
-   			 type: "POST",  
-   			 headers: { "Accept" : "application/json; charset=utf-8","Content-Type": "application/json; charset=utf-8"},	
-	 	         url: "imprimir-entradas-cortesia-ajax?idPartido="+idPartido+"&idEntrada="+idEntrada+"&rut="+rut,        			    	     	    	    
-	    	     dataType : 'json',
-	    	     success: function(response){	
-	    	    	 console.log(response.object);
-	    	    	 //alert(response.object);
-	    	    	 if(response.codigo == 1 ) { //response ok
-	    	    		//pasar el json a printer-client para que imprima el ticket
-	    	    		//window.location.href = 'carga-pagina-cortesia';
-	    	    		$.ajax({
-	    	    		    type: 'get', 
-	    	    		    url: 'https://localhost/cortesia',
-	    	    		    dataType: 'JSON',
-	    	    		    data: {   	    	    		    
-	    	    		      tickets: JSON.stringify(response.object) // look here!
-	    	    		    },
-	    	    		    success: function(data) {
-	    	    		    	 //var resp = JSON.parse(data);
-	    	    		    	 //alert('success: '+data.codigo);
-	    	    		    	 //redirect
-	    	    		    	 window.location.href = 'carga-pagina-cortesia';
-	    	    		    },
-	    	    		    error: function(data) {
-	    	    		        alert('Ocurrio un error');
-	    	    		    }
-	    	    		});
-	  	    	    	
-	  	    	    	
-	    	    	 } else {
-	    	    		 alert(''+response.mensaje);
-	    	    		//$('#modalNotificaciones').modal('show');
-	    	    		//$('#mensajeNotificacion').html(response.mensaje);
-	    	    	 } 	  	    	    	  	    	    	
-     	     }, error: function(e){
-     	    	 alert('Error:'+e);
-     	    	//$('#modalNotificaciones').modal('show');
-	    	    	//$('#mensajeNotificacion').html("Ocurrió un error inesperado");
-	    	     } 
-	         });//fin ajax	  
-       }
-    
     
        /*]]>*/ 
     </script>
@@ -157,7 +120,7 @@
 									<tr>
 									  <th>SECTOR</th>
 									  <th>TOTAL</th>
-									  <th>IMPRIMIR</th>
+									 
 									  
 									</tr>
 								</thead>
@@ -165,21 +128,16 @@
 								<tbody>
 									<tr th:each="t : ${totales}"> 
 									    <td  th:text="${t.nombreSector}"></td> 
-									    <td  th:text="${t.total}"></td> 									    									   
-									    <td> 									     
-									      <div th:if="${t.total > 0 }">
-									       <a href="#" th:href="@{'javascript:imprimir(\''+${t.idPartido}+'\',\''+${t.idEntrada}+'\',\''+${entrada.rut}+'\')'}" >
-									       
-									         <span class="badge element-bg-color-blue">
-									          <i class="fa fa-print" aria-hidden="true"></i>  Imprimir
-									         </span>
-									        </a>
-									       </div>
-									     </td>  
+									    <td  th:text="${t.total}"></td> 										   
 									</tr> 										
 								</tbody>
 								
 						   </table>
+						   <div align="center">
+						      <button type="button" class="btn btn-custom-primary" id="descargarTickets" th:if="${entrada.idPartido != null and entrada.rut != null}">Descargar Tickets</button>
+						   </div>
+						   	
+						   
 						   </div>
 						   <div class="col-md-3">	</div>
 					   </div>
@@ -189,36 +147,8 @@
 			 </div>
 	   </div>
 	   
-	   <div class="modal fade" id="generandoTicketModal">
-						         <div class="modal-dialog">
-								 <div class="modal-content">
-										 <div class="modal-header">											  
-											  <h4 class="modal-title">AVISO</h4>
-										 </div>
-										 <div class="modal-body ">
-												<div class="alert alert-info">
-												   Generando registros en Base de Datos, por favor espere.
-												</div>														        
-										 </div>
-										
-								          </div>
-						            </div>
-		    </div>		    
-		    <div class="modal fade" id="imprimiendoTicketModal">
-						         <div class="modal-dialog">
-								 <div class="modal-content">
-										 <div class="modal-header">											  
-											  <h4 class="modal-title">AVISO</h4>
-										 </div>
-										 <div class="modal-body ">
-												<div class="alert alert-info">
-												   Imprimiendo tickets.....
-												</div>														        
-										 </div>
-										
-								          </div>
-						            </div>
-		    </div>
+	    
+		    
 	   
 	   
           

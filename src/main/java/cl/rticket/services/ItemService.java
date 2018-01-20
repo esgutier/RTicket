@@ -3,7 +3,6 @@ package cl.rticket.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -42,6 +41,8 @@ public interface ItemService {
 	public ArrayList<TotalesEntrada> obtenerTotalesCortesiaPorEntidad(Integer idPartido,Integer rut);
 	
 	public ArrayList<Ticket> obtenerDatosTicketRut(Integer idEntrada,Integer rut, String tipo);
+	
+	public ArrayList<Ticket> obtenerDatosTicketCortesia(Integer idPartido, Integer rut, String tipo);
 	
 	//Mantenedor de Partidos
 	public int actualizarPartido(Partido partido);

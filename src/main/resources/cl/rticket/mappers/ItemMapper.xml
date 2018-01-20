@@ -228,6 +228,29 @@ where
 
 </select>
 
+<select id="obtenerDatosTicketCortesia" parameterType="map" resultType="Ticket">
+   select  
+         h.hin_nombres nombres,
+		   p.par_desc rival ,
+	      p.par_fecha fecha,
+	      date_format(p.par_fecha,' %H:%i') hora,
+	      s.sec_desc sector ,
+	      e.ent_comentario comentario,
+	      c.com_token token,
+	      c.com_tipo tipo,
+	      c.com_monto precio
+	from compra c, entrada e, partido p, sector s, hincha h
+	where c.par_id = #{idPartido} and
+	      c.hin_rut = #{rut} and
+	      c.hin_rut = h.hin_rut and
+	      c.ent_id = e.ent_id and	     
+	      e.sec_id = s.sec_id and
+	      e.par_id = p.par_id and
+	      c.com_tipo = #{tipo} and
+	      c.com_anulada not in ('S')
+
+</select>
+
 <!-- ============================================================================================ -->
 <!-- MANTENEDOR PARTIDOS -->
 <!-- ============================================================================================ -->

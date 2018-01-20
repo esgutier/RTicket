@@ -1,8 +1,17 @@
 package cl.rticket.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
-import javax.print.PrintService;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import cl.rticket.exception.ImpresoraNoDisponibleException;
+import com.itextpdf.text.pdf.codec.Base64.OutputStream;
+
 import cl.rticket.exception.UpdateException;
 import cl.rticket.model.AjaxResponseBody;
 import cl.rticket.model.Compra;
@@ -24,8 +34,7 @@ import cl.rticket.model.TotalesEntrada;
 import cl.rticket.model.Usuario;
 import cl.rticket.services.HinchaService;
 import cl.rticket.services.ItemService;
-import cl.rticket.utils.ImpresionCortesia;
-import cl.rticket.utils.ImpresionMasiva;
+import cl.rticket.utils.GenerarEntradasCortesia;
 
 @Controller
 public class CortesiaController {
@@ -172,5 +181,39 @@ public class CortesiaController {
 		
 	}
 	
-
+	
+	@RequestMapping(value="/generar-pdf-cortesia", method=RequestMethod.POST)
+	public void imprimirEntradasCortesia(HttpServletRequest request, 
+			                             HttpServletResponse response,			                       
+			                             Entrada entrada) {
+		
+		//final ServletContext servletContext = request.getSession().getServletContext();
+	    //final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    //final String temperotyFilePath = tempDirectory.getAbsolutePath();
+		Usuario usuario = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
+	    String fileName = "tickets-cortesia.pdf";
+	    response.setContentType("application/pdf");
+	    
+ 
+	    try {
+	    	ArrayList<Ticket> tickets = itemService.obtenerDatosTicketCortesia(entrada.getIdPartido(), entrada.getRut(), "C");
+	    	if(tickets.size() > 0 ) {
+	    		Ticket tmp = tickets.get(0);
+	    		fileName = "cortesia-"+tmp.getNombres().toUpperCase()+"-"+tmp.getRival()+".pdf";
+	    	}
+	    	response.setHeader("Content-disposition", "attachment; filename="+ fileName);
+	        //GenerarEntradasCortesia.generaPDF(temperotyFilePath+"\\"+fileName);
+	    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    	baos = GenerarEntradasCortesia.generaPDF(fileName, tickets, usuario);
+	       
+	        //baos = convertPDFToByteArrayOutputStream(fileName);
+	        response.setContentLength(baos.size());
+	        ServletOutputStream os = response.getOutputStream();
+	        baos.writeTo(os);
+	        os.flush();
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
+	}
+	
 }

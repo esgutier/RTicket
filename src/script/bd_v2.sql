@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS acceso_estadio;
 CREATE TABLE equipo (
   equ_id int(2) NOT NULL,
   equ_nombre varchar(100) NOT NULL,
+  equ_estadio varchar(100),
   PRIMARY KEY  (equ_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
