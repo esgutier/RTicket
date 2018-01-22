@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"  lang="es"  th:include="layout/page :: page" >
+ 
+  <div th:fragment="content">  
+  			<br/>
+  			<br/>
+                                
+							    <div class="row">
+								  <div class="col-md-3"></div>
+								  <div class="col-md-6">
+								     <div class="widget">								     
+										<div class="widget-content">																					
+													<div class="alert alert-danger alert-dismissable" align="center">	
+													     <h4 class="titPagina" id="noAutorizado" th:text="${titulo}" style="font-weight: bold;">xxxx</h4><br/>
+													     <h4 th:text="${texto}">xxxxx</h4>
+													</div>									    																																																																																                                                                                    
+										</div>
+									 </div>								  								  								  
+								  </div>
+								  <div class="col-md-1"></div>
+								</div>
+  </div>
+</html>

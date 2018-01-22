@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +31,7 @@ public class CompraController {
 	@Autowired
 	ItemService itemService;
 	
+	@RequiresRoles(value = {"ADMIN","JEFE"}, logical = Logical.OR)
 	@RequestMapping(value="/carga-ingreso-compra", method=RequestMethod.GET)
 	public String cargaIngresoCompra(Model model) {
 		Usuario user = (Usuario)SecurityUtils.getSubject().getSession().getAttribute("usuario");
